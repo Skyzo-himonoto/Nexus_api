@@ -1,0 +1,32 @@
+{
+  "users": [
+    {
+      "id": "1775261179714",
+      "username": "iciboy",
+      "email": "mustofaaahmad020@gmail.com",
+      "password": "$2a$10$9oipLWbL5COSRqj2n2XsH.gp5ZclDpCqMhHQC/SzxBtI1RcWg.FiW",
+      "plan": "pro",
+      "apiKey": "nx_nw35y6l6omh",
+      "totalRequests": 0,
+      "joinedAt": "2026-04-04T00:06:19.714Z",
+      "planExpiry": "2026-04-11T00:07:04.743Z"
+    }
+  ],
+  "messages": [
+    {
+      "id": "1",
+      "username": "System",
+      "message": "Selamat datang di Nexus",
+      "userId": "system",
+      "time": "2026-04-04T00:06:19.446Z"
+    },
+    {
+      "id": "1775261208411",
+      "username": "iciboy",
+      "message": "Assalamualaikum bang",
+      "userId": "1775261179714",
+      "time": "2026-04-04T00:06:48.412Z"
+    }
+  ],
+  "activities": []
+}
