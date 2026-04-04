@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Nexus API Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'DM Sans',sans-serif;background:#0a0c15;color:#e2e8f0}
+        :root{--primary:#6366f1;--secondary:#06b6d4;--accent:#f59e0b}
+        
+        .glass-card{background:rgba(30,41,59,0.5);backdrop-filter:blur(12px);border:1px solid rgba(99,102,241,0.2);border-radius:20px;transition:all 0.3s}
+        .glass-card:hover{transform:translateY(-4px);border-color:rgba(99,102,241,0.5)}
+        
+        .sidebar{width:280px;background:rgba(15,23,42,0.95);border-right:1px solid rgba(99,102,241,0.15);position:fixed;left:0;top:0;height:100vh;z-index:50;transition:transform 0.3s}
+        main{margin-left:280px;min-height:100vh}
+        @media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}main{margin-left:0}}
+        
+        .nav-item{padding:12px 20px;margin:4px 12px;border-radius:12px;cursor:pointer;color:#94a3b8;transition:all 0.2s}
+        .nav-item:hover{background:rgba(99,102,241,0.1);color:white}
+        .nav-item.active{background:rgba(99,102,241,0.2);color:var(--primary)}
+        
+        .badge-free{background:#334155;color:#94a3b8;padding:4px 12px;border-radius:20px;font-size:11px}
+        .badge-pro{background:rgba(245,158,11,0.15);color:#f59e0b;padding:4px 12px;border-radius:20px;font-size:11px}
+        .badge-enterprise{background:linear-gradient(135deg,#8b5cf6,#ec4899);color:white;padding:4px 12px;border-radius:20px;font-size:11px}
+        
+        .btn-primary{background:linear-gradient(135deg,var(--primary),var(--secondary));border:none;padding:10px 20px;border-radius:12px;font-weight:600;color:white;cursor:pointer;transition:all 0.3s}
+        .btn-primary:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(99,102,241,0.4)}
+        .btn-outline{background:transparent;border:1px solid rgba(99,102,241,0.3);padding:10px 20px;border-radius:12px;color:#94a3b8;cursor:pointer}
+        .btn-outline:hover{border-color:var(--primary);color:var(--primary)}
+        
+        .nexus-input{background:rgba(15,23,42,0.6);border:1px solid rgba(99,102,241,0.2);border-radius:12px;padding:12px 16px;width:100%;color:white}
+        .nexus-input:focus{outline:none;border-color:var(--primary)}
+        
+        .stat-card{background:rgba(30,41,59,0.5);border-radius:16px;padding:20px;border:1px solid rgba(99,102,241,0.15)}
+        .stat-number{font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        
+        .chart-container{position:relative;height:280px;width:100%}
+        canvas{max-height:280px;width:100%}
+        
+        .toast{position:fixed;bottom:20px;right:20px;background:#1e293b;border:1px solid rgba(99,102,241,0.3);border-radius:12px;padding:12px 20px;z-index:1000;animation:slideIn 0.3s}
+        @keyframes slideIn{from{transform:translateX(100px);opacity:0}to{transform:translateX(0);opacity:1}}
+        
+        .chat-message{background:rgba(51,65,85,0.3);border-radius:16px;padding:12px;margin-bottom:12px}
+        .chat-message.own{background:rgba(99,102,241,0.15);border-left:3px solid var(--primary)}
+        
+        .avatar-upload{position:relative;cursor:pointer}
+        .avatar-upload:hover .avatar-overlay{opacity:1}
+        .avatar-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.6);border-radius:20px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.3s}
+        
+        .page{display:none}.page.active{display:block}
+        .status-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+        .status-online{background:#10b981;box-shadow:0 0 8px #10b981}
+        
+        .pricing-card{background:rgba(30,41,59,0.6);border:1px solid rgba(99,102,241,0.15);border-radius:24px;padding:24px;transition:all 0.3s}
+        .pricing-card:hover{transform:translateY(-8px);border-color:rgba(99,102,241,0.4)}
+        .pricing-card.popular{border:2px solid var(--accent);position:relative}
+        .popular-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--accent);color:#0f172a;padding:4px 16px;border-radius:20px;font-size:12px;font-weight:bold}
+        
+        .progress-bar{height:8px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden}
+        .progress-fill{height:100%;border-radius:4px;transition:width 0.5s}
+        
+        .leaderboard-item{display:flex;align-items:center;gap:16px;padding:12px;border-bottom:1px solid rgba(255,255,255,0.05)}
+        .rank-1{color:#fbbf24;font-weight:bold}
+        .rank-2{color:#94a3b8;font-weight:bold}
+        .rank-3{color:#cd7f32;font-weight:bold}
+        
+        .audit-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+        .audit-row:last-child{border-bottom:none}
+        
+        .system-stat-card{background:rgba(30,41,59,0.3);border-radius:16px;padding:16px;text-align:center}
+        
+        table{width:100%}
+        th,td{padding:12px;text-align:left}
+        .border-b{border-bottom:1px solid rgba(255,255,255,0.05)}
+    </style>
+</head>
+<body>
+
+<!-- AUTH SECTION -->
+<section id="authSection" class="min-h-screen flex items-center justify-center p-4 relative" style="background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 100%)">
+    <div class="glass-card w-full max-w-md p-8 relative z-10">
+        <div class="text-center mb-6">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center mx-auto mb-3"><i class="fa-solid fa-bolt text-white text-2xl"></i></div>
+            <h1 class="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">Nexus API Pro</h1>
+            <p class="text-slate-400 text-sm mt-1">Complete API Management Platform</p>
+        </div>
+        
+        <div id="loginPanel">
+            <div class="space-y-4">
+                <div><label class="text-xs text-slate-400 block mb-1">Email / Username</label><input type="text" id="loginEmail" class="nexus-input" placeholder="kamu@email.com"></div>
+                <div><label class="text-xs text-slate-400 block mb-1">Password</label><input type="password" id="loginPassword" class="nexus-input" placeholder="Password"></div>
+                <button onclick="handleLogin()" class="btn-primary w-full">Masuk ke Dashboard</button>
+                <p class="text-center text-sm text-slate-400">Belum punya akun? <a href="#" onclick="showRegister()" class="text-indigo-400">Daftar gratis</a></p>
+                <div class="text-center text-xs text-slate-500 border-t border-white/10 pt-4 mt-2">Demo: demo@nexus.com / demo123</div>
+            </div>
+        </div>
+        
+        <div id="registerPanel" style="display:none">
+            <div class="space-y-4">
+                <div><label class="text-xs text-slate-400 block mb-1">Username</label><input type="text" id="regUsername" class="nexus-input" placeholder="username"></div>
+                <div><label class="text-xs text-slate-400 block mb-1">Email</label><input type="email" id="regEmail" class="nexus-input" placeholder="email@example.com"></div>
+                <div><label class="text-xs text-slate-400 block mb-1">Password</label><input type="password" id="regPassword" class="nexus-input" placeholder="Min. 6 karakter"></div>
+                <button onclick="handleRegister()" class="btn-primary w-full">Daftar Sekarang</button>
+                <p class="text-center text-sm text-slate-400">Sudah punya akun? <a href="#" onclick="showLogin()" class="text-indigo-400">Masuk</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- DASHBOARD SECTION -->
+<section id="dashboardSection" style="display:none">
+    <aside class="sidebar" id="sidebar">
+        <div class="p-5 border-b border-white/10">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center"><i class="fa-solid fa-bolt text-white"></i></div>
+                <span class="font-bold text-lg bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">Nexus Pro</span>
+            </div>
+        </div>
+        
+        <div class="p-4 text-center border-b border-white/10">
+            <div class="avatar-upload w-20 h-20 mx-auto mb-2" onclick="document.getElementById('avatarInput').click()">
+                <img id="profileAvatar" class="w-20 h-20 rounded-2xl object-cover" src="https://ui-avatars.com/api/?background=6366f1&color=fff&bold=true&size=80" alt="Avatar">
+                <div class="avatar-overlay rounded-2xl"><i class="fa-solid fa-camera text-white text-xl"></i></div>
+            </div>
+            <input type="file" id="avatarInput" accept="image/*" style="display:none">
+            <h3 class="font-semibold" id="profileName">User</h3>
+            <span class="badge-free text-xs" id="profileBadge">FREE</span>
+        </div>
+        
+        <nav class="flex-1 py-4">
+            <div class="nav-item active" data-page="dashboard" onclick="switchPage('dashboard')"><i class="fa-solid fa-chart-line w-5 mr-3"></i>Dashboard</div>
+            <div class="nav-item" data-page="api-keys" onclick="switchPage('api-keys')"><i class="fa-solid fa-key w-5 mr-3"></i>API Keys</div>
+            <div class="nav-item" data-page="profile" onclick="switchPage('profile')"><i class="fa-solid fa-user w-5 mr-3"></i>Profile</div>
+            <div class="nav-item" data-page="chat" onclick="switchPage('chat')"><i class="fa-solid fa-comments w-5 mr-3"></i>Community Chat</div>
+            <div class="nav-item" data-page="leaderboard" onclick="switchPage('leaderboard')"><i class="fa-solid fa-trophy w-5 mr-3"></i>Leaderboard</div>
+            <div class="nav-item" data-page="pricing" onclick="switchPage('pricing')"><i class="fa-solid fa-tag w-5 mr-3"></i>Pricing</div>
+            <div class="nav-item" data-page="settings" onclick="switchPage('settings')"><i class="fa-solid fa-gear w-5 mr-3"></i>Settings</div>
+        </nav>
+        
+        <div class="p-4 border-t border-white/10">
+            <div class="flex items-center gap-3 text-slate-400 hover:text-white cursor-pointer p-2 rounded-xl" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Log Out</span></div>
+            <div class="flex items-center gap-2 mt-3 text-xs text-slate-500"><span class="status-dot status-online"></span><span>Online</span></div>
+        </div>
+    </aside>
+    
+    <main>
+        <header class="sticky top-0 z-20 bg-slate-900/80 backdrop-blur-xl border-b border-white/10 px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <button class="md:hidden w-9 h-9 rounded-xl border border-white/10" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+                <h2 id="pageTitle" class="text-xl font-semibold">Dashboard</h2>
+            </div>
+            <div id="headerClock" class="text-xs font-mono text-slate-400"></div>
+        </header>
+        
+        <div class="p-6">
+            <!-- DASHBOARD PAGE -->
+            <div id="page-dashboard" class="page active">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div class="system-stat-card"><div class="text-indigo-400 text-2xl mb-2"><i class="fa-solid fa-database"></i></div><p class="text-2xl font-bold" id="storageSize">0 MB</p><p class="text-xs text-slate-400">Storage Used</p></div>
+                    <div class="system-stat-card"><div class="text-cyan-400 text-2xl mb-2"><i class="fa-solid fa-users"></i></div><p class="text-2xl font-bold" id="totalUsers">1</p><p class="text-xs text-slate-400">Total Users</p></div>
+                    <div class="system-stat-card"><div class="text-emerald-400 text-2xl mb-2"><i class="fa-solid fa-key"></i></div><p class="text-2xl font-bold" id="totalApiKeys">0</p><p class="text-xs text-slate-400">API Keys</p></div>
+                    <div class="system-stat-card"><div class="text-amber-400 text-2xl mb-2"><i class="fa-solid fa-clock"></i></div><p class="text-2xl font-bold" id="serverTimeDisplay">-</p><p class="text-xs text-slate-400">Server Time</p></div>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div class="glass-card p-5 text-center"><p class="text-3xl font-bold text-indigo-400" id="todayRequests">0</p><p class="text-xs text-slate-400">TODAY</p></div>
+                    <div class="glass-card p-5 text-center"><p class="text-3xl font-bold text-cyan-400" id="totalRequests">0</p><p class="text-xs text-slate-400">TOTAL</p></div>
+                    <div class="glass-card p-5 text-center"><p class="text-3xl font-bold text-emerald-400" id="avgRequests">0</p><p class="text-xs text-slate-400">AVG / DAY</p></div>
+                    <div class="glass-card p-5 text-center"><p class="text-3xl font-bold text-amber-400" id="estMonth">0</p><p class="text-xs text-slate-400">EST. MONTH</p></div>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <div class="glass-card p-6">
+                        <h3 class="font-semibold mb-4">📊 Audit Statistics</h3>
+                        <div class="audit-row"><span class="text-slate-400">ALL TIME</span><span class="font-bold" id="auditAllTime">0</span></div>
+                        <div class="audit-row"><span class="text-slate-400">THIS MONTH</span><span class="font-bold" id="auditThisMonth">0</span></div>
+                        <div class="audit-row"><span class="text-slate-400">AVG / DAY</span><span class="font-bold" id="auditAvgDay">0</span></div>
+                        <div class="audit-row"><span class="text-slate-400">TODAY</span><span class="font-bold" id="auditToday">0</span></div>
+                        <div class="audit-row"><span class="text-slate-400">YESTERDAY</span><span class="font-bold" id="auditYesterday">0</span></div>
+                        <div class="audit-row"><span class="text-slate-400">EST. MONTH</span><span class="font-bold" id="auditEstMonth">0</span></div>
+                        <div class="mt-4 pt-3 border-t border-white/10">
+                            <div class="flex justify-between text-sm mb-2"><span>MONTH PROGRESS</span><span id="monthProgress">0%</span></div>
+                            <div class="progress-bar"><div class="progress-fill bg-indigo-500" id="monthProgressBar" style="width:0%"></div></div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-white/10">
+                            <div class="flex justify-between"><span class="text-slate-400">BUSIEST DAY</span><span class="font-bold" id="busiestDay">-</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-6">
+                        <h3 class="font-semibold mb-4">📈 Daily Requests (Last 30 Days)</h3>
+                        <div class="chart-container">
+                            <canvas id="dailyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="glass-card p-6"><h3 class="font-semibold mb-3">🔑 API Keys</h3><p class="text-3xl font-bold text-indigo-400" id="userApiKeysCount">0</p><p class="text-xs text-slate-400 mt-1">Your Active Keys</p><div class="mt-4"><button onclick="switchPage('api-keys')" class="btn-outline w-full text-sm py-2">Manage Keys →</button></div></div>
+                    <div class="glass-card p-6"><h3 class="font-semibold mb-3">👥 Users Online</h3><p class="text-3xl font-bold text-emerald-400" id="usersOnline">1</p><p class="text-xs text-slate-400 mt-1">Active Now</p></div>
+                    <div class="glass-card p-6"><h3 class="font-semibold mb-3">💾 Your Storage</h3><p class="text-3xl font-bold text-cyan-400" id="userStorage">0 MB</p><p class="text-xs text-slate-400 mt-1">Local Data</p></div>
+                </div>
+            </div>
+            
+            <!-- API KEYS PAGE -->
+            <div id="page-api-keys" class="page">
+                <div class="flex justify-between items-center mb-6 flex-wrap gap-4"><div><p class="text-slate-400 text-sm">Manage your API keys for endpoint access</p></div><button onclick="generateApiKey()" class="btn-primary"><i class="fa-solid fa-plus mr-2"></i>Create New Key</button></div>
+                <div class="glass-card overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b border-white/10"><th class="text-left p-4">Name</th><th class="text-left p-4">API Key</th><th class="text-left p-4">Created</th><th class="text-left p-4">Status</th><th class="text-right p-4">Action</th></tr></thead><tbody id="apiKeysTable"></tbody></table></div></div>
+                <div class="mt-4 p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20"><p class="text-sm"><i class="fa-solid fa-key mr-2 text-indigo-400"></i> <strong>Usage:</strong> Include API key in header: <code class="bg-slate-900 px-2 py-1 rounded text-xs">Authorization: Bearer YOUR_API_KEY</code></p></div>
+            </div>
+            
+            <!-- PROFILE PAGE -->
+            <div id="page-profile" class="page">
+                <div class="glass-card p-6 max-w-2xl mx-auto">
+                    <div class="text-center mb-6">
+                        <div class="avatar-upload w-24 h-24 mx-auto mb-3" onclick="document.getElementById('avatarInput2').click()">
+                            <img id="profileAvatarLarge" class="w-24 h-24 rounded-2xl object-cover mx-auto" src="https://ui-avatars.com/api/?background=6366f1&color=fff&bold=true&size=96" alt="Avatar">
+                            <div class="avatar-overlay rounded-2xl"><i class="fa-solid fa-camera text-white text-xl"></i></div>
+                        </div>
+                        <input type="file" id="avatarInput2" accept="image/*" style="display:none">
+                        <h2 class="text-2xl font-bold mt-3" id="profileFullName">User</h2>
+                        <span class="badge-free" id="profileBadgeLarge">FREE</span>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between py-3 border-b border-white/10"><span class="text-slate-400">User ID</span><span class="font-mono" id="profileUserId">#0000</span></div>
+                        <div class="flex justify-between py-3 border-b border-white/10"><span class="text-slate-400">Email</span><span id="profileEmail">-</span></div>
+                        <div class="flex justify-between py-3 border-b border-white/10"><span class="text-slate-400">API Key</span><code id="profileApiKey" class="text-indigo-400 text-sm">-</code><button onclick="copyText(document.getElementById('profileApiKey').innerText)" class="ml-2 text-slate-400 hover:text-indigo-400"><i class="fa-solid fa-copy"></i></button></div>
+                        <div class="flex justify-between py-3 border-b border-white/10"><span class="text-slate-400">Member Since</span><span id="profileJoined">-</span></div>
+                        <div class="flex justify-between py-3"><span class="text-slate-400">Plan</span><span id="profilePlan">FREE</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- COMMUNITY CHAT -->
+            <div id="page-chat" class="page">
+                <div class="glass-card p-6">
+                    <div class="flex justify-between items-center mb-4"><h3 class="font-semibold">💬 Nexus Community Chat</h3><div class="text-xs text-slate-400"><span class="status-dot status-online mr-1"></span><span id="chatOnlineCount">1</span> online</div></div>
+                    <div id="chatMessagesContainer" class="h-[400px] overflow-y-auto mb-4 space-y-2 p-2 bg-slate-900/30 rounded-xl"></div>
+                    <div class="flex gap-2"><input type="text" id="chatInput" class="nexus-input flex-1" placeholder="Type message... (Enter to send)" onkeypress="if(event.key==='Enter') sendMessage()"><button onclick="sendMessage()" class="btn-primary px-6">Send</button></div>
+                    <div class="text-xs text-slate-500 mt-2">Enter = send • @username to mention</div>
+                </div>
+            </div>
+            
+            <!-- LEADERBOARD -->
+            <div id="page-leaderboard" class="page">
+                <div class="glass-card p-6"><h3 class="font-semibold mb-4">🏆 Global Usage Ranking</h3><div id="leaderboardList" class="space-y-2"></div></div>
+            </div>
+            
+            <!-- PRICING -->
+            <div id="page-pricing" class="page">
+                <div class="text-center mb-8"><h2 class="text-2xl font-bold">Choose Your Plan</h2><p class="text-slate-400">Scale your API usage with flexible pricing</p></div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="pricing-card"><h3 class="text-xl font-bold">Starter</h3><div class="mt-4"><span class="text-3xl font-bold">Rp5K</span><span class="text-slate-400"> /3 days</span></div><ul class="mt-4 space-y-2 text-sm"><li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>All endpoints</li><li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>10K requests/day</li><li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>Basic support</li></ul><button onclick="upgradePlan('starter')" class="btn-primary w-full mt-6">Get Started</button></div>
+                    <div class="pricing-card popular"><div class="popular-badge">★ MOST POPULAR ★</div><h3 class="text-xl font-bold">Pro</h3><div class="mt-4"><span class="text-3xl font-bold">Rp10K</span><span class="text-slate-400"> /7 days</span></div><ul class="mt-4 space-y-2 text-sm"><li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>Unlimited requests</li><li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>Custom API key</li><li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>Priority support</li><li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>Pro badge</li></ul><button onclick="upgradePlan('pro')" class="btn-primary w-full mt-6">Upgrade Now</button></div>
+                    <div class="pricing-card"><h3 class="text-xl font-bold">Enterprise</h3><div class="mt-4"><span class="text-3xl font-bold">Rp30K</span><span class="text-slate-400"> /30 days</span></div><ul class="mt-4 space-y-2 text-sm"><li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>Unlimited requests</li><li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>IP whitelist</li><li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>Dedicated support</li><li><i class="fa-solid fa-check text-emerald-400 mr-2"></i>Enterprise badge</li></ul><button onclick="upgradePlan('enterprise')" class="btn-primary w-full mt-6">Contact Sales</button></div>
+                </div>
+                <p class="text-center text-xs text-slate-500 mt-8">*Pricing includes API key access and dashboard features</p>
+            </div>
+            
+            <!-- SETTINGS PAGE -->
+            <div id="page-settings" class="page">
+                <div class="glass-card p-6 max-w-2xl mx-auto"><h3 class="font-semibold text-xl mb-4">⚙️ Account Settings</h3><div class="space-y-6">
+                    <div class="border-b border-white/10 pb-4"><label class="text-slate-400 text-sm block mb-2">Change Username</label><input type="text" id="settingsNewUsername" class="nexus-input" placeholder="New username"><input type="password" id="settingsPassword" class="nexus-input mt-2" placeholder="Current password"><button onclick="changeUsername()" class="btn-primary mt-3 w-full">Update Username</button></div>
+                    <div class="border-b border-white/10 pb-4"><label class="text-slate-400 text-sm block mb-2">Change Password</label><input type="password" id="oldPassword" class="nexus-input" placeholder="Current password"><input type="password" id="newPassword" class="nexus-input mt-2" placeholder="New password (min 6 char)"><input type="password" id="confirmPassword" class="nexus-input mt-2" placeholder="Confirm new password"><button onclick="changePassword()" class="btn-primary mt-3 w-full">Update Password</button></div>
+                    <div><label class="text-rose-400 text-sm block mb-2">Danger Zone</label><button onclick="revokeAllKeys()" class="btn-outline w-full text-rose-400 border-rose-400/30 mb-2">Revoke All API Keys</button><button onclick="deleteAccount()" class="btn-outline w-full text-rose-400 border-rose-400/30">Delete Account</button></div>
+                </div></div>
+            </div>
+        </div>
+    </main>
+</section>
+
+<script>
+// ========== CORE SYSTEM ==========
+let currentUser = null;
+let chatMessages = [];
+
+function showToast(msg, type='success') {
+    let container = document.getElementById('toastContainer');
+    if (!container) { container = document.createElement('div'); container.id = 'toastContainer'; container.className = 'fixed bottom-4 right-4 z-50 space-y-2'; document.body.appendChild(container); }
+    let toast = document.createElement('div'); toast.className = 'toast'; toast.innerHTML = `<i class="fa-solid fa-${type==='success'?'check-circle':'exclamation-circle'} mr-2"></i>${msg}`;
+    container.appendChild(toast); setTimeout(() => toast.remove(), 3000);
+}
+function formatNumber(n) { return n ? n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '0'; }
+function generateId(len) { return Math.random().toString(36).substring(2, len+2); }
+function copyText(text) { if(text && text!='-'){ navigator.clipboard.writeText(text); showToast('Copied!'); } }
+
+// ========== TRACK ACTIVITY ==========
+function trackActivity(action) {
+    if (!currentUser) return;
+    let activities = JSON.parse(localStorage.getItem(`nexus_activities_${currentUser.email}`) || '[]');
+    activities.unshift({ action, time: new Date().toISOString() });
+    if (activities.length > 500) activities.pop();
+    localStorage.setItem(`nexus_activities_${currentUser.email}`, JSON.stringify(activities));
+    
+    let users = JSON.parse(localStorage.getItem('nexus_users') || '{}');
+    if (users[currentUser.email]) {
+        users[currentUser.email].totalRequests = (users[currentUser.email].totalRequests || 0) + 1;
+        users[currentUser.email].lastActive = Date.now();
+        localStorage.setItem('nexus_users', JSON.stringify(users));
+        currentUser.totalRequests = users[currentUser.email].totalRequests;
+    }
+    updateDashboardStats();
+}
+
+// ========== AUTH ==========
+function initUsers() {
+    if (!localStorage.getItem('nexus_users')) {
+        let defaultUsers = { 
+            'demo@nexus.com': { 
+                id: '1', username: 'Mustofa', email: 'demo@nexus.com', password: 'demo123', 
+                plan: 'pro', apiKey: 'nx_' + generateId(32), joinedAt: new Date().toISOString(), 
+                totalRequests: 12500, avatar: null, lastActive: Date.now() 
+            } 
+        };
+        localStorage.setItem('nexus_users', JSON.stringify(defaultUsers));
+    }
+    if (!localStorage.getItem('nexus_chat')) { 
+        localStorage.setItem('nexus_chat', JSON.stringify([{ id: '1', username: 'System', message: 'Welcome to Nexus Community Chat!', userId: 'system', time: new Date().toISOString() }])); 
+    }
+}
+
+function handleLogin() {
+    let email = document.getElementById('loginEmail').value.trim();
+    let password = document.getElementById('loginPassword').value;
+    let users = JSON.parse(localStorage.getItem('nexus_users') || '{}');
+    let found = null;
+    for (let key in users) { 
+        if ((key === email || users[key].username === email) && users[key].password === password) { 
+            found = { ...users[key], email: key }; break; 
+        } 
+    }
+    if (found) { 
+        currentUser = found; 
+        localStorage.setItem('nexus_current', JSON.stringify(currentUser)); 
+        trackActivity('Login'); 
+        enterDashboard(); 
+        showToast(`Welcome back, ${currentUser.username}!`); 
+    } else { 
+        showToast('Email/Username or password incorrect!', 'error'); 
+    }
+}
+
+function handleRegister() {
+    let username = document.getElementById('regUsername').value.trim();
+    let email = document.getElementById('regEmail').value.trim();
+    let password = document.getElementById('regPassword').value;
+    if (!username || !email || !password) return showToast('Please fill all fields!', 'warning');
+    if (password.length < 6) return showToast('Password must be at least 6 characters!', 'warning');
+    let users = JSON.parse(localStorage.getItem('nexus_users') || '{}');
+    if (users[email]) return showToast('Email already registered!', 'error');
+    let newUser = { 
+        id: Date.now().toString(), username, email, password, plan: 'free', 
+        apiKey: 'nx_' + generateId(32), joinedAt: new Date().toISOString(), 
+        totalRequests: 0, avatar: null, lastActive: Date.now() 
+    };
+    users[email] = newUser; 
+    localStorage.setItem('nexus_users', JSON.stringify(users));
+    showToast('Registration successful! Please login.'); 
+    showLogin();
+}
+function showRegister() { document.getElementById('loginPanel').style.display = 'none'; document.getElementById('registerPanel').style.display = 'block'; }
+function showLogin() { document.getElementById('registerPanel').style.display = 'none'; document.getElementById('loginPanel').style.display = 'block'; }
+function logout() { localStorage.removeItem('nexus_current'); currentUser = null; document.getElementById('dashboardSection').style.display = 'none'; document.getElementById('authSection').style.display = 'flex'; showToast('Logged out'); }
+
+// ========== AVATAR ==========
+function setupAvatarUpload() {
+    let input1 = document.getElementById('avatarInput');
+    let input2 = document.getElementById('avatarInput2');
+    if(input1) input1.onchange = (e) => uploadAvatar(e.target);
+    if(input2) input2.onchange = (e) => uploadAvatar(e.target);
+}
+function uploadAvatar(input) {
+    let file = input.files[0]; if (!file) return;
+    let reader = new FileReader();
+    reader.onload = function(e) {
+        let users = JSON.parse(localStorage.getItem('nexus_users')); 
+        users[currentUser.email].avatar = e.target.result;
+        localStorage.setItem('nexus_users', JSON.stringify(users)); 
+        currentUser.avatar = e.target.result;
+        localStorage.setItem('nexus_current', JSON.stringify(currentUser));
+        let avatar1 = document.getElementById('profileAvatar');
+        let avatar2 = document.getElementById('profileAvatarLarge');
+        if(avatar1) avatar1.src = e.target.result;
+        if(avatar2) avatar2.src = e.target.result;
+        showToast('Avatar updated successfully!'); 
+        trackActivity('Avatar changed');
+    }; 
+    reader.readAsDataURL(file);
+}
+
+// ========== API KEYS ==========
+function getApiKeys() { let keys = localStorage.getItem(`api_keys_${currentUser.email}`); return keys ? JSON.parse(keys) : []; }
+function saveApiKeys(keys) { localStorage.setItem(`api_keys_${currentUser.email}`, JSON.stringify(keys)); }
+function renderApiKeys() {
+    let keys = getApiKeys(), tbody = document.getElementById('apiKeysTable');
+    if (!tbody) return;
+    if (keys.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8 text-slate-500">No API keys yet</td></tr>'; document.getElementById('userApiKeysCount').innerText = '0'; return; }
+    tbody.innerHTML = keys.map((key, idx) => `<tr class="border-b border-white/10"><td class="p-4">${escapeHtml(key.name)}</td><td class="p-4"><code class="text-indigo-400 text-xs">${key.key.substring(0,16)}...</code><button onclick="copyText('${key.key}')" class="ml-2 text-slate-400 hover:text-indigo-400"><i class="fa-solid fa-copy"></i></button></td><td class="p-4 text-xs">${new Date(key.created).toLocaleDateString()}</td><td class="p-4"><span class="badge-free text-[10px]">${key.active?'Active':'Revoked'}</span></td><td class="p-4 text-right"><button onclick="revokeApiKey(${idx})" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('');
+    document.getElementById('userApiKeysCount').innerText = keys.length;
+    let users = JSON.parse(localStorage.getItem('nexus_users') || '{}');
+    let totalKeys = 0;
+    for (let email in users) { let uKeys = JSON.parse(localStorage.getItem(`api_keys_${email}`) || '[]'); totalKeys += uKeys.length; }
+    document.getElementById('totalApiKeys').innerText = totalKeys;
+}
+function generateApiKey() {
+    let name = prompt('Name for this API key:', 'My API Key'); if (!name) return;
+    let keys = getApiKeys();
+    if (keys.length >= 5 && currentUser.plan === 'free') return showToast('Maximum 5 API keys on FREE plan. Upgrade for more.', 'warning');
+    let newKey = { id: Date.now().toString(), name, key: 'nx_' + generateId(40), created: new Date().toISOString(), active: true };
+    keys.push(newKey); saveApiKeys(keys); renderApiKeys(); trackActivity(`API key "${name}" created`); showToast('API key created successfully!');
+}
+function revokeApiKey(index) { if (!confirm('Delete this API key?')) return; let keys = getApiKeys(); keys.splice(index,1); saveApiKeys(keys); renderApiKeys(); trackActivity('API key deleted'); showToast('API key deleted'); }
+function revokeAllKeys() { if (!confirm('Revoke ALL API keys?')) return; saveApiKeys([]); renderApiKeys(); trackActivity('All API keys revoked'); showToast('All API keys revoked'); }
+
+function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+// ========== CHAT ==========
+function loadChatMessages() { let stored = localStorage.getItem('nexus_chat'); if (stored) chatMessages = JSON.parse(stored); renderChatMessages(); }
+function renderChatMessages() {
+    let container = document.getElementById('chatMessagesContainer'); if (!container) return;
+    if (!chatMessages || chatMessages.length === 0) { container.innerHTML = '<p class="text-center text-slate-500 py-8">No messages yet</p>'; return; }
+    container.innerHTML = chatMessages.slice(-50).reverse().map(msg => `<div class="chat-message ${msg.userId === currentUser?.id ? 'own' : ''}"><div class="flex justify-between items-start"><span class="font-semibold text-sm ${msg.userId === currentUser?.id ? 'text-indigo-400' : 'text-cyan-400'}">${escapeHtml(msg.username)}</span><span class="text-[10px] text-slate-500">${new Date(msg.time).toLocaleTimeString('id-ID')}</span></div><p class="text-sm mt-1">${escapeHtml(msg.message)}</p></div>`).join('');
+    container.scrollTop = container.scrollHeight;
+}
+function sendMessage() {
+    let input = document.getElementById('chatInput'); let message = input.value.trim(); if (!message) return;
+    let today = new Date().toDateString(); let limitKey = `chat_limit_${currentUser.email}`; let limitData = JSON.parse(localStorage.getItem(limitKey) || '{"date":"","count":0}'); let maxPerDay = currentUser.plan === 'free' ? 20 : 999;
+    if (limitData.date !== today) limitData = { date: today, count: 0 };
+    if (limitData.count >= maxPerDay && currentUser.plan === 'free') return showToast('Daily message limit reached! Upgrade for unlimited.', 'warning');
+    limitData.count++; localStorage.setItem(limitKey, JSON.stringify(limitData));
+    let newMessage = { id: Date.now().toString(), username: currentUser.username, message, userId: currentUser.id, time: new Date().toISOString() };
+    chatMessages.push(newMessage); if (chatMessages.length > 200) chatMessages.shift();
+    localStorage.setItem('nexus_chat', JSON.stringify(chatMessages)); renderChatMessages(); input.value = ''; trackActivity('Sent a message in chat');
+}
+
+// ========== LEADERBOARD ==========
+function loadLeaderboard() {
+    let users = JSON.parse(localStorage.getItem('nexus_users') || '{}');
+    let leaderboard = Object.keys(users).map(email => ({ username: users[email].username, totalRequests: users[email].totalRequests || 0, plan: users[email].plan || 'free' })).sort((a,b) => b.totalRequests - a.totalRequests).slice(0,20);
+    let container = document.getElementById('leaderboardList');
+    if (!container) return;
+    if (leaderboard.length === 0) { container.innerHTML = '<p class="text-center text-slate-500 py-8">No data yet</p>'; return; }
+    container.innerHTML = leaderboard.map((user, idx) => `<div class="leaderboard-item"><div class="w-8 font-bold ${idx===0?'rank-1':idx===1?'rank-2':idx===2?'rank-3':'text-slate-500'}">#${idx+1}</div><div class="flex-1"><span class="font-medium">${escapeHtml(user.username)}</span>${user.plan==='pro'?' <span class="badge-pro text-[10px]">PRO</span>':user.plan==='enterprise'?' <span class="badge-enterprise text-[10px]">ENT</span>':''}</div><div class="text-right"><span class="font-bold">${formatNumber(user.totalRequests)}</span><span class="text-xs text-slate-500 ml-1">req</span></div></div>`).join('');
+    document.getElementById('totalUsers').innerText = Object.keys(users).length;
+}
+
+// ========== UPGRADE PLAN ==========
+function upgradePlan(plan) {
+    let prices = { starter: 5000, pro: 10000, enterprise: 30000 };
+    if (!confirm(`Upgrade to ${plan.toUpperCase()} plan for Rp${prices[plan].toLocaleString()}?`)) return;
+    let users = JSON.parse(localStorage.getItem('nexus_users')); 
+    users[currentUser.email].plan = plan;
+    localStorage.setItem('nexus_users', JSON.stringify(users)); 
+    currentUser.plan = plan; 
+    localStorage.setItem('nexus_current', JSON.stringify(currentUser));
+    
+    let badgeClass = 'badge-free', badgeText = 'FREE';
+    if (plan === 'pro') { badgeClass = 'badge-pro'; badgeText = 'PRO'; } 
+    else if (plan === 'enterprise') { badgeClass = 'badge-enterprise'; badgeText = 'ENTERPRISE'; }
+    else if (plan === 'starter') { badgeClass = 'badge-free'; badgeText = 'STARTER'; }
+    
+    let badgeEl = document.getElementById('profileBadge');
+    let badgeLargeEl = document.getElementById('profileBadgeLarge');
+    let planEl = document.getElementById('profilePlan');
+    if(badgeEl) { badgeEl.className = badgeClass; badgeEl.innerText = badgeText; }
+    if(badgeLargeEl) { badgeLargeEl.className = badgeClass; badgeLargeEl.innerText = badgeText; }
+    if(planEl) planEl.innerText = badgeText;
+    
+    trackActivity(`Upgraded to ${plan.toUpperCase()} plan`); 
+    showToast(`Successfully upgraded to ${plan.toUpperCase()}!`);
+}
+
+// ========== SETTINGS ==========
+function changeUsername() {
+    let newUsername = document.getElementById('settingsNewUsername').value.trim(); 
+    let password = document.getElementById('settingsPassword').value;
+    if (!newUsername) return showToast('New username cannot be empty', 'warning');
+    if (!password) return showToast('Enter password to verify', 'warning');
+    if (password !== currentUser.password) return showToast('Incorrect password!', 'error');
+    let users = JSON.parse(localStorage.getItem('nexus_users')); 
+    users[currentUser.email].username = newUsername;
+    localStorage.setItem('nexus_users', JSON.stringify(users)); 
+    currentUser.username = newUsername; 
+    localStorage.setItem('nexus_current', JSON.stringify(currentUser));
+    document.getElementById('profileName').innerText = newUsername; 
+    document.getElementById('profileFullName').innerText = newUsername;
+    trackActivity(`Username changed to ${newUsername}`); 
+    showToast('Username updated successfully!');
+    document.getElementById('settingsNewUsername').value = ''; 
+    document.getElementById('settingsPassword').value = '';
+}
+function changePassword() {
+    let oldPass = document.getElementById('oldPassword').value; 
+    let newPass = document.getElementById('newPassword').value; 
+    let confirmPass = document.getElementById('confirmPassword').value;
+    if (!oldPass || !newPass || !confirmPass) return showToast('Please fill all fields!', 'warning');
+    if (oldPass !== currentUser.password) return showToast('Current password is incorrect!', 'error');
+    if (newPass !== confirmPass) return showToast('New passwords do not match!', 'error');
+    if (newPass.length < 6) return showToast('Password must be at least 6 characters!', 'warning');
+    let users = JSON.parse(localStorage.getItem('nexus_users')); 
+    users[currentUser.email].password = newPass;
+    localStorage.setItem('nexus_users', JSON.stringify(users)); 
+    currentUser.password = newPass; 
+    localStorage.setItem('nexus_current', JSON.stringify(currentUser));
+    trackActivity('Password changed'); 
+    showToast('Password updated successfully!');
+    document.getElementById('oldPassword').value = ''; 
+    document.getElementById('newPassword').value = ''; 
+    document.getElementById('confirmPassword').value = '';
+}
+function deleteAccount() {
+    if (!confirm('WARNING: Delete account and ALL data? This cannot be undone!')) return;
+    let users = JSON.parse(localStorage.getItem('nexus_users')); 
+    delete users[currentUser.email];
+    localStorage.setItem('nexus_users', JSON.stringify(users)); 
+    localStorage.removeItem('nexus_current');
+    localStorage.removeItem(`api_keys_${currentUser.email}`); 
+    localStorage.removeItem(`chat_limit_${currentUser.email}`);
+    localStorage.removeItem(`nexus_activities_${currentUser.email}`);
+    logout(); 
+    showToast('Account deleted successfully');
+}
+
+// ========== DASHBOARD STATS ==========
+let dailyChartInstance = null;
+
+function updateDashboardStats() {
+    if (!currentUser) return;
+    let users = JSON.parse(localStorage.getItem('nexus_users') || '{}');
+    let allRequests = 0; let today = new Date().toDateString(); let todayRequests = 0;
+    let yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1); let yesterdayRequests = 0;
+    let dailyData = {};
+    
+    for (let email in users) {
+        allRequests += users[email].totalRequests || 0;
+        let activities = JSON.parse(localStorage.getItem(`nexus_activities_${email}`) || '[]');
+        activities.forEach(act => { 
+            let actDate = new Date(act.time).toDateString(); 
+            if (actDate === today) todayRequests++; 
+            if (actDate === yesterday.toDateString()) yesterdayRequests++;
+            let shortDate = new Date(act.time).toISOString().slice(0,10);
+            dailyData[shortDate] = (dailyData[shortDate] || 0) + 1;
+        });
+    }
+    
+    let avg = Math.floor(allRequests / 30) || 0; 
+    let estMonth = avg * 30;
+    document.getElementById('todayRequests').innerText = formatNumber(todayRequests);
+    document.getElementById('totalRequests').innerText = formatNumber(allRequests);
+    document.getElementById('avgRequests').innerText = formatNumber(avg);
+    document.getElementById('estMonth').innerText = formatNumber(estMonth);
+    
+    document.getElementById('auditAllTime').innerText = formatNumber(allRequests);
+    document.getElementById('auditThisMonth').innerText = formatNumber(Math.floor(allRequests * 0.3));
+    document.getElementById('auditAvgDay').innerText = formatNumber(avg);
+    document.getElementById('auditToday').innerText = formatNumber(todayRequests);
+    document.getElementById('auditYesterday').innerText = formatNumber(yesterdayRequests);
+    document.getElementById('auditEstMonth').innerText = formatNumber(estMonth);
+    
+    let monthProgress = allRequests > 0 ? ((allRequests * 0.3) / (estMonth || 1)) * 100 : 0;
+    document.getElementById('monthProgress').innerText = monthProgress.toFixed(1) + '%';
+    document.getElementById('monthProgressBar').style.width = Math.min(monthProgress, 100) + '%';
+    
+    let busiest = Object.entries(dailyData).sort((a,b) => b[1] - a[1])[0];
+    document.getElementById('busiestDay').innerText = busiest ? `${busiest[0]} (${formatNumber(busiest[1])} req)` : '-';
+    
+    // Storage
+    let storage = 0;
+    for (let i = 0; i < localStorage.length; i++) { storage += (localStorage.getItem(localStorage.key(i)) || '').length * 2; }
+    let storageMB = (storage / (1024 * 1024)).toFixed(2);
+    document.getElementById('storageSize').innerText = storageMB + ' MB';
+    
+    let userStorage = 0;
+    for (let i = 0; i < localStorage.length; i++) { 
+        let key = localStorage.key(i);
+        if (key && key.includes(currentUser.email)) userStorage += (localStorage.getItem(key) || '').length * 2;
+    }
+    document.getElementById('userStorage').innerText = (userStorage / (1024 * 1024)).toFixed(2) + ' MB';
+    
+    // Time
+    let now = new Date();
+    document.getElementById('serverTimeDisplay').innerHTML = `<span class="text-sm">${now.toLocaleTimeString('id-ID')}</span>`;
+    document.getElementById('headerClock').innerText = now.toLocaleTimeString('id-ID');
+    
+    // Online users
+    let online = 0; let nowMs = Date.now();
+    for (let email in users) { let lastActive = users[email].lastActive || 0; if (nowMs - lastActive < 5 * 60 * 1000) online++; }
+    document.getElementById('usersOnline').innerText = online || 1;
+    document.getElementById('chatOnlineCount').innerText = online || 1;
+    
+    initDailyChart();
+}
+
+function initDailyChart() {
+    let ctx = document.getElementById('dailyChart')?.getContext('2d'); 
+    if (!ctx) return;
+    
+    let activities = JSON.parse(localStorage.getItem(`nexus_activities_${currentUser.email}`) || '[]');
+    let last30Days = [], labels = [];
+    for (let i = 29; i >= 0; i--) {
+        let date = new Date(); date.setDate(date.getDate() - i);
+        let dateStr = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }); 
+        labels.push(dateStr);
+        let count = activities.filter(a => new Date(a.time).toDateString() === date.toDateString()).length;
+        last30Days.push(count);
+    }
+    if (dailyChartInstance) dailyChartInstance.destroy();
+    dailyChartInstance = new Chart(ctx, { 
+        type: 'bar', 
+        data: { labels: labels, datasets: [{ label: 'Requests', data: last30Days, backgroundColor: 'rgba(99,102,241,0.6)', borderRadius: 8 }] }, 
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } }, x: { ticks: { color: '#94a3b8', maxRotation: 45, minRotation: 45 } } } } 
+    });
+}
+
+// ========== ENTER DASHBOARD ==========
+function enterDashboard() {
+    document.getElementById('authSection').style.display = 'none'; 
+    document.getElementById('dashboardSection').style.display = 'block';
+    document.getElementById('profileName').innerText = currentUser.username; 
+    document.getElementById('profileFullName').innerText = currentUser.username;
+    document.getElementById('profileEmail').innerText = currentUser.email; 
+    document.getElementById('profileApiKey').innerText = currentUser.apiKey;
+    document.getElementById('profileUserId').innerText = '#1' + currentUser.id; 
+    document.getElementById('profileJoined').innerText = new Date(currentUser.joinedAt).toLocaleDateString('id-ID');
+    document.getElementById('profilePlan').innerText = currentUser.plan === 'pro' ? 'PRO' : currentUser.plan === 'enterprise' ? 'ENTERPRISE' : currentUser.plan === 'starter' ? 'STARTER' : 'FREE';
+    
+    let badgeClass = 'badge-free', badgeText = 'FREE';
+    if (currentUser.plan === 'pro') { badgeClass = 'badge-pro'; badgeText = 'PRO'; } 
+    else if (currentUser.plan === 'enterprise') { badgeClass = 'badge-enterprise'; badgeText = 'ENTERPRISE'; }
+    else if (currentUser.plan === 'starter') { badgeClass = 'badge-free'; badgeText = 'STARTER'; }
+    
+    let badgeEl = document.getElementById('profileBadge');
+    let badgeLargeEl = document.getElementById('profileBadgeLarge');
+    if(badgeEl) { badgeEl.className = badgeClass; badgeEl.innerText = badgeText; }
+    if(badgeLargeEl) { badgeLargeEl.className = badgeClass; badgeLargeEl.innerText = badgeText; }
+    
+    if (currentUser.avatar) { 
+        let avatar1 = document.getElementById('profileAvatar');
+        let avatar2 = document.getElementById('profileAvatarLarge');
+        if(avatar1) avatar1.src = currentUser.avatar;
+        if(avatar2) avatar2.src = currentUser.avatar;
+    }
+    renderApiKeys(); 
+    loadChatMessages(); 
+    loadLeaderboard(); 
+    updateDashboardStats();
+    setupAvatarUpload();
+    setInterval(() => { updateDashboardStats(); updateLastActive(); }, 30000);
+}
+
+function updateLastActive() {
+    if (!currentUser) return;
+    let users = JSON.parse(localStorage.getItem('nexus_users') || '{}');
+    if (users[currentUser.email]) { users[currentUser.email].lastActive = Date.now(); localStorage.setItem('nexus_users', JSON.stringify(users)); }
+}
+
+// ========== NAVIGATION ==========
+function switchPage(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    let targetPage = document.getElementById(`page-${page}`);
+    if(targetPage) targetPage.classList.add('active');
+    let targetNav = document.querySelector(`.nav-item[data-page="${page}"]`);
+    if(targetNav) targetNav.classList.add('active');
+    let titles = { dashboard: 'Dashboard', 'api-keys': 'API Keys', profile: 'Profile', chat: 'Community Chat', leaderboard: 'Leaderboard', pricing: 'Pricing', settings: 'Settings' };
+    document.getElementById('pageTitle').innerText = titles[page] || page; 
+    closeSidebar();
+    if (page === 'chat') renderChatMessages(); 
+    if (page === 'leaderboard') loadLeaderboard(); 
+    if (page === 'api-keys') renderApiKeys(); 
+    if (page === 'dashboard') updateDashboardStats();
+}
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+function closeSidebar() { document.getElementById('sidebar')?.classList.remove('open'); }
+
+initUsers();
+let savedUser = localStorage.getItem('nexus_current');
+if (savedUser) { currentUser = JSON.parse(savedUser); enterDashboard(); }
+</script>
+</body>
+</html>
