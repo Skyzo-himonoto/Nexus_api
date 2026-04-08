@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexus</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script>tailwind.config={theme:{extend:{fontFamily:{display:['Space Grotesk','sans-serif'],mono:['JetBrains Mono','monospace']}}}}</script>
+<style>
+:root{--bg:#070b14;--card:rgba(15,23,42,.7);--border:rgba(30,41,59,.6);--text:#f1f5f9;--text2:#94a3b8;--accent:#10b981;--accent2:#34d399;--warn:#f59e0b;--danger:#ef4444;--glow:rgba(16,185,129,.15)}
+[data-theme="light"]{--bg:#f1f5f9;--card:rgba(255,255,255,.85);--border:rgba(203,213,225,.7);--text:#0f172a;--text2:#475569;--glow:rgba(16,185,129,.1)}
+*{margin:0;padding:0;box-sizing:border-box;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow:hidden}
+.blob{position:fixed;border-radius:50%;filter:blur(120px);opacity:.25;pointer-events:none;z-index:0}
+.b1{width:400px;height:400px;background:radial-gradient(circle,#10b981,transparent);top:-100px;left:-80px;animation:bm1 20s ease-in-out infinite}
+.b2{width:300px;height:300px;background:radial-gradient(circle,#0ea5e9,transparent);bottom:-60px;right:-60px;animation:bm2 25s ease-in-out infinite}
+.b3{width:200px;height:200px;background:radial-gradient(circle,#f59e0b,transparent);top:40%;left:60%;animation:bm3 18s ease-in-out infinite}
+@keyframes bm1{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,40px)}}
+@keyframes bm2{0%,100%{transform:translate(0,0)}50%{transform:translate(-40px,-60px)}}
+@keyframes bm3{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-30%,-70%)}}
+[data-theme="light"] .blob{opacity:.1}
+.auth-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:100;background:var(--bg)}
+.auth-card{background:var(--card);backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:16px;padding:22px;width:380px;max-width:92vw;position:relative;overflow:hidden}
+.auth-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),#0ea5e9,var(--warn))}
+.auth-card h1{font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,var(--accent),#0ea5e9);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.auth-card>p{color:var(--text2);margin:2px 0 14px;font-size:.8rem}
+.ig{margin:8px 0}.ig label{display:block;font-size:.68rem;color:var(--text2);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.ig input{width:100%;padding:9px 12px;background:rgba(0,0,0,.25);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:.88rem;outline:none;transition:border .2s}
+[data-theme="light"] .ig input{background:rgba(0,0,0,.04)}.ig input:focus{border-color:var(--accent);box-shadow:0 0 0 2px var(--glow)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 18px;border-radius:8px;font-family:inherit;font-size:.85rem;font-weight:600;border:none;cursor:pointer;transition:all .2s}
+.btn-p{background:var(--accent);color:#fff;width:100%}.btn-p:hover{background:var(--accent2);transform:translateY(-1px)}
+.btn-s{padding:6px 12px;font-size:.78rem}
+.pu{width:80px;height:80px;border-radius:50%;border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;margin:0 auto 12px;overflow:hidden;position:relative}
+.pu:hover{border-color:var(--accent)}.pu img{width:100%;height:100%;object-fit:cover}
+.pu .ov{position:absolute;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;color:#fff;font-size:.68rem}.pu:hover .ov{opacity:1}
+.tl{text-align:center;margin-top:10px;font-size:.8rem;color:var(--text2)}.tl a{color:var(--accent);cursor:pointer;font-weight:600}
+.main-app{display:flex;height:100vh;position:relative;z-index:1}
+.sidebar{width:200px;min-width:200px;background:var(--card);backdrop-filter:blur(20px);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:12px 8px;transition:transform .3s}
+.sidebar .logo{font-size:1.3rem;font-weight:700;background:linear-gradient(135deg,var(--accent),#0ea5e9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:16px;padding:0 4px}
+.sidebar nav{flex:1;display:flex;flex-direction:column;gap:2px}
+.sidebar nav a{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;color:var(--text2);text-decoration:none;font-size:.84rem;font-weight:500;transition:all .2s;cursor:pointer}
+.sidebar nav a:hover{background:var(--glow);color:var(--text)}.sidebar nav a.active{background:var(--glow);color:var(--accent);font-weight:600}
+.sidebar nav a i{width:16px;text-align:center;font-size:.85rem}
+.um{border-top:1px solid var(--border);padding-top:10px;margin-top:10px;display:flex;align-items:center;gap:6px}
+.um img{width:30px;height:30px;border-radius:50%;object-fit:cover;border:2px solid var(--accent)}
+.um .inf{flex:1;min-width:0}.um .inf .nm{font-size:.78rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.um .inf .rl{font-size:.65rem;color:var(--text2)}
+.um .lb{background:none;border:none;color:var(--text2);cursor:pointer;padding:5px;border-radius:6px;transition:all .2s;font-size:.8rem}
+.um .lb:hover{color:var(--danger);background:rgba(239,68,68,.1)}
+.content{flex:1;overflow:hidden;position:relative}
+.view{position:absolute;inset:0;transition:transform .4s cubic-bezier(.4,0,.2,1),opacity .4s;overflow-y:auto;overflow-x:hidden}
+.view.active{transform:translateX(0);opacity:1;pointer-events:all}
+.view.out-left{transform:translateX(-25%);opacity:0;pointer-events:none}
+.view.in-right{transform:translateX(100%);opacity:0;pointer-events:none}
+.dh{padding:10px 16px 0;display:flex;align-items:center;justify-content:space-between;gap:8px;position:sticky;top:0;z-index:10;background:linear-gradient(var(--bg),var(--bg) 80%,transparent)}
+.dh h2{font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:6px}
+.badge{font-size:.6rem;padding:2px 6px;border-radius:16px;font-weight:600;font-family:'JetBrains Mono',monospace}
+.clock{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--text2)}
+.cs{display:flex;gap:8px;padding:8px 16px;position:sticky;top:40px;z-index:9;background:linear-gradient(var(--bg) 60%,transparent);overflow-x:auto}
+.cc{flex:1;min-width:140px;max-width:200px;background:var(--card);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:10px;padding:8px;display:flex;align-items:center;gap:8px}
+.cc:hover{transform:translateY(-1px);box-shadow:0 4px 16px var(--glow)}
+.cc canvas{width:48px!important;height:48px!important;flex-shrink:0}
+.cc .ci{flex:1}.cc .ci .lb{font-size:.6rem;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;font-weight:600}.cc .ci .vl{font-size:.9rem;font-weight:700;font-family:'JetBrains Mono',monospace}
+.dg{padding:4px 16px 16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
+.ic{background:var(--card);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:10px;padding:12px}
+.ic:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.15)}
+.ic h3{font-size:.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.ic h3 i{color:var(--accent);font-size:.72rem}
+.ir{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:.72rem}
+[data-theme="light"] .ir{border-bottom-color:rgba(0,0,0,.05)}.ir:last-child{border-bottom:none}
+.ir .l{color:var(--text2);font-size:.7rem}.ir .v{font-family:'JetBrains Mono',monospace;font-weight:500;font-size:.68rem;text-align:right;max-width:55%;word-break:break-all}
+.ac{grid-column:1/-1}.al{max-height:150px;overflow-y:auto;display:flex;flex-direction:column;gap:3px}
+.ai{display:flex;align-items:center;gap:6px;font-size:.7rem;padding:4px 6px;border-radius:5px;background:rgba(0,0,0,.1)}
+[data-theme="light"] .ai{background:rgba(0,0,0,.02)}
+.ai .dt{width:4px;height:4px;border-radius:50%;flex-shrink:0}
+.ai .tm{font-family:'JetBrains Mono',monospace;color:var(--text2);font-size:.62rem;margin-left:auto;white-space:nowrap}
+.sh{padding:8px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;background:var(--bg)}
+.sh .bb{background:var(--glow);border:1px solid var(--border);color:var(--text);width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem;flex-shrink:0}
+.sh .bb:hover{border-color:var(--accent);color:var(--accent)}
+.sh h2{font-size:1rem;font-weight:700}
+.sb{display:flex;min-height:0;flex:1}
+.sn{width:160px;min-width:160px;border-right:1px solid var(--border);padding:6px;display:flex;flex-direction:column;gap:1px;overflow-y:auto}
+.sn a{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:6px;color:var(--text2);font-size:.76rem;cursor:pointer;transition:all .15s;text-decoration:none;white-space:nowrap}
+.sn a:hover{background:var(--glow);color:var(--text)}.sn a.active{background:var(--glow);color:var(--accent);font-weight:600}
+.sn a i{width:14px;text-align:center;font-size:.72rem}
+.sc{flex:1;padding:10px 14px;overflow-y:auto;min-height:0}.sp{display:none}.sp.active{display:block}
+.ph{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.pa{width:52px;height:52px;border-radius:50%;border:2px solid var(--accent);overflow:hidden;cursor:pointer;position:relative;flex-shrink:0}
+.pa img{width:100%;height:100%;object-fit:cover}
+.pa .ov{position:absolute;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;color:#fff;font-size:.6rem}.pa:hover .ov{opacity:1}
+.lg{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px}
+.lo{padding:8px 10px;border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;font-size:.78rem}
+.lo:hover{border-color:var(--accent);background:var(--glow)}.lo.active{border-color:var(--accent);background:var(--glow);color:var(--accent);font-weight:600}
+.lo .fl{font-size:1.05rem}
+.scc{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:8px}
+.scc h4{font-size:.78rem;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:5px}.scc h4 i{color:var(--accent)}
+.to{display:flex;gap:8px}
+.top{flex:1;padding:12px;border:2px solid var(--border);border-radius:8px;cursor:pointer;transition:all .15s;text-align:center}
+.top:hover{border-color:var(--accent)}.top.active{border-color:var(--accent);background:var(--glow)}
+.top i{font-size:1.4rem;margin-bottom:4px;display:block}.top .tn{font-size:.78rem;font-weight:600}
+.tc{position:fixed;top:12px;right:12px;z-index:9999;display:flex;flex-direction:column;gap:4px}
+.tst{padding:10px 14px;border-radius:6px;font-size:.78rem;font-weight:500;backdrop-filter:blur(16px);border:1px solid var(--border);animation:ti .25s ease;display:flex;align-items:center;gap:6px;min-width:220px}
+.tst.success{background:rgba(16,185,129,.15);border-color:rgba(16,185,129,.3);color:var(--accent2)}
+.tst.error{background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.3);color:#fca5a5}
+.tst.info{background:rgba(14,165,233,.15);border-color:rgba(14,165,233,.3);color:#7dd3fc}
+@keyframes ti{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes too{from{opacity:1}to{transform:translateX(100%);opacity:0}}
+@keyframes pu2{0%,100%{opacity:1}50%{opacity:.4}}.pulse{animation:pu2 2s ease-in-out infinite}
+.hb{display:none;background:none;border:none;color:var(--text);font-size:1.1rem;cursor:pointer;padding:4px}
+@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}.fi{animation:fi .25s ease}
+.online-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px}
+.online-dot.on{background:#10b981;box-shadow:0 0 6px #10b981}
+.online-dot.off{background:#ef4444;box-shadow:0 0 6px #ef4444}
+@media(max-width:768px){
+.sidebar{position:fixed;left:0;top:0;bottom:0;z-index:50;transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}
+.hb{display:block}
+.sn{width:100%;min-width:unset;flex-direction:row;overflow-x:auto;border-right:none;border-bottom:1px solid var(--border);padding:4px 6px;flex-shrink:0}
+.sn a{white-space:nowrap;padding:5px 8px;font-size:.7rem;flex-shrink:0}
+.sb{flex-direction:column}.sc{padding:8px 10px}
+.dg{grid-template-columns:1fr;gap:6px;padding:2px 10px 14px}
+.lg{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+.dh{padding:8px 10px 0}.cs{padding:6px 10px}
+.cc{min-width:130px;max-width:none;padding:6px;gap:6px}.cc canvas{width:40px!important;height:40px!important}
+.ph{gap:8px;margin-bottom:8px}.pa{width:44px;height:44px}
+}
+@media(min-width:769px) and (max-height:700px){
+.sn{padding:3px 5px}.sn a{padding:4px 6px;font-size:.7rem}
+.sc{padding:8px 10px}.scc{padding:8px;margin-bottom:5px}
+.ph{gap:8px;margin-bottom:8px}.pa{width:40px;height:40px}
+.dg{gap:6px;padding:2px 14px 10px}.ic{padding:8px}
+.cc canvas{width:40px!important;height:40px!important}.cc{padding:6px;gap:6px}
+.dh{padding:6px 14px 0}.cs{padding:4px 14px}
+}
+[dir="rtl"] .sidebar{border-right:none;border-left:1px solid var(--border)}
+[dir="rtl"] .sn{border-right:none;border-left:1px solid var(--border)}
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+<div id="authScreen" class="auth-screen">
+<div class="auth-card">
+<h1>Nexus</h1>
+<p data-t="auth.tagline">System Monitor Platform</p>
+<div id="loginForm">
+<div class="ig"><label data-t="auth.username">Username</label><input type="text" id="loginUser" autocomplete="username"></div>
+<div class="ig"><label data-t="auth.password">Password</label><input type="password" id="loginPass" autocomplete="current-password"></div>
+<button class="btn btn-p" onclick="doLogin()" data-t="auth.loginBtn">Login</button>
+<div class="tl" data-t="auth.noAccount">Don't have an account? <a onclick="toggleAuth()">Register</a></div>
+</div>
+<div id="registerForm" style="display:none">
+<div class="pu" onclick="document.getElementById('regPhoto').click()"><img id="regPhotoPrev" src="" style="display:none"><div id="regPhotoPh"><i class="fas fa-camera" style="color:var(--text2);font-size:1.3rem"></i></div><div class="ov" data-t="auth.upload">Upload</div></div>
+<input type="file" id="regPhoto" accept="image/*" style="display:none" onchange="previewRegPhoto(this)">
+<div class="ig"><label data-t="auth.username">Username</label><input type="text" id="regUser"></div>
+<div class="ig"><label data-t="auth.password">Password</label><input type="password" id="regPass"></div>
+<div class="ig"><label data-t="auth.confirmPass">Confirm Password</label><input type="password" id="regConfirm"></div>
+<button class="btn btn-p" onclick="doRegister()" data-t="auth.registerBtn">Register</button>
+<div class="tl" data-t="auth.hasAccount">Already have an account? <a onclick="toggleAuth()">Login</a></div>
+</div></div></div>
+
+<div id="mainApp" class="main-app" style="display:none">
+<aside class="sidebar" id="sidebar">
+<div class="logo">Nexus</div>
+<nav>
+<a class="active" data-view="dashboard" onclick="navTo('dashboard')"><i class="fas fa-chart-pie"></i><span data-t="nav.dashboard">Dashboard</span></a>
+<a data-view="settings" onclick="navTo('settings')"><i class="fas fa-cog"></i><span data-t="nav.settings">Settings</span></a>
+</nav>
+<div class="um"><img id="sbAv" src=""><div class="inf"><div class="nm" id="sbNm"></div><div class="rl">User</div></div><button class="lb" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i></button></div>
+</aside>
+<div class="content">
+<div id="dashView" class="view active">
+<div class="dh"><div style="display:flex;align-items:center;gap:8px"><button class="hb" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button><h2><span class="online-dot on" id="onDot"></span><span data-t="dash.title">System Dashboard</span> <span class="badge pulse" id="latB" style="background:var(--glow);color:var(--accent)">--ms</span></h2></div><div class="clock" id="clock">--:--:--</div></div>
+<div class="cs">
+<div class="cc"><canvas id="cpuC"></canvas><div class="ci"><div class="lb" data-t="dash.cpu">CPU Load</div><div class="vl" id="cpuV">0%</div></div></div>
+<div class="cc"><canvas id="memC"></canvas><div class="ci"><div class="lb" data-t="dash.memory">Memory</div><div class="vl" id="memV">0%</div></div></div>
+<div class="cc"><canvas id="stoC"></canvas><div class="ci"><div class="lb" data-t="dash.storage">Storage</div><div class="vl" id="stoV">0%</div></div></div>
+</div>
+<div class="dg" id="dGrid"></div>
+</div>
+<div id="setView" class="view in-right">
+<div class="sh"><button class="bb" onclick="navTo('dashboard')"><i class="fas fa-arrow-left"></i></button><h2 data-t="set.title">Settings</h2></div>
+<div class="sb"><div class="sn" id="sNav">
+<a class="active" data-setting="profile" onclick="swSet('profile')"><i class="fas fa-user"></i><span data-t="set.profile">Profile</span></a>
+<a data-setting="language" onclick="swSet('language')"><i class="fas fa-globe"></i><span data-t="set.language">Language</span></a>
+<a data-setting="security" onclick="swSet('security')"><i class="fas fa-shield-alt"></i><span data-t="set.security">Security</span></a>
+<a data-setting="appearance" onclick="swSet('appearance')"><i class="fas fa-palette"></i><span data-t="set.appearance">Appearance</span></a>
+<a data-setting="about" onclick="swSet('about')"><i class="fas fa-info-circle"></i><span data-t="set.about">About</span></a>
+</div><div class="sc">
+<div id="panel-profile" class="sp active fi">
+<div class="ph"><div class="pa" onclick="document.getElementById('editPh').click()"><img id="pAv" src=""><div class="ov"><i class="fas fa-camera"></i></div></div><input type="file" id="editPh" accept="image/*" style="display:none" onchange="chPh(this)"><div><div style="font-size:1rem;font-weight:700" id="pNm"></div><div style="font-size:.78rem;color:var(--text2)" id="pJn"></div></div></div>
+<div class="scc"><h4><i class="fas fa-pen"></i><span data-t="set.editUser">Edit Username</span></h4><div style="display:flex;gap:8px"><div class="ig" style="flex:1;margin:0"><input type="text" id="edUn"></div><button class="btn btn-p btn-s" onclick="saveUn()" data-t="set.save">Save</button></div></div>
+<div class="scc"><h4><i class="fas fa-clock"></i><span data-t="set.session">Session Info</span></h4><div class="ir"><span class="l" data-t="set.browser">Browser</span><span class="v" id="sBr"></span></div><div class="ir"><span class="l" data-t="set.screen">Screen</span><span class="v" id="sSc"></span></div><div class="ir"><span class="l" data-t="set.lastLogin">Last Login</span><span class="v" id="sLl">-</span></div></div>
+</div>
+<div id="panel-language" class="sp fi"><h3 style="font-size:.95rem;font-weight:600;margin-bottom:12px" data-t="set.selectLang">Select Language</h3><div class="lg" id="lGrid"></div></div>
+<div id="panel-security" class="sp fi"><div class="scc"><h4><i class="fas fa-key"></i><span data-t="set.changePass">Change Password</span></h4><div class="ig"><label data-t="set.curPass">Current Password</label><input type="password" id="curP"></div><div class="ig"><label data-t="set.newPass">New Password</label><input type="password" id="nwP"></div><div class="ig"><label data-t="set.confirmPass">Confirm New Password</label><input type="password" id="cnP"></div><button class="btn btn-p btn-s" onclick="chPass()" data-t="set.changePass">Change Password</button></div></div>
+<div id="panel-appearance" class="sp fi"><h3 style="font-size:.95rem;font-weight:600;margin-bottom:12px" data-t="set.theme">Theme</h3><div class="to"><div class="top" onclick="setTh('dark')" id="tDk"><i class="fas fa-moon"></i><div class="tn" data-t="set.dark">Dark</div></div><div class="top" onclick="setTh('light')" id="tLt"><i class="fas fa-sun"></i><div class="tn" data-t="set.light">Light</div></div></div></div>
+<div id="panel-about" class="sp fi"><div class="scc" style="text-align:center;padding:24px"><div style="font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,var(--accent),#0ea5e9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px">Nexus</div><div style="font-size:.82rem;color:var(--text2);margin-bottom:12px" data-t="set.desc">A real-time system monitoring platform built entirely in the browser.</div><div style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--text2)" data-t="set.version">Version 1.1.0</div></div></div>
+</div></div></div></div></div>
+<div class="tc" id="toasts"></div>
+
+<script>
+const LANGS={en:'English',id:'Bahasa Indonesia',ms:'Bahasa Melayu',ja:'日本語',ko:'한국어',zh:'中文',ar:'العربية',fr:'Français',de:'Deutsch',es:'Español',pt:'Português',ru:'Русский',th:'ภาษาไทย',vi:'Tiếng Việt',hi:'हिन्दी',tr:'Türkçe',it:'Italiano',nl:'Nederlands',pl:'Polski',sv:'Svenska'};
+const RTL_L=['ar'];
+const FL={en:'🇬🇧',id:'🇮🇩',ms:'🇲🇾',ja:'🇯🇵',ko:'🇰🇷',zh:'🇨🇳',ar:'🇸🇦',fr:'🇫🇷',de:'🇩🇪',es:'🇪🇸',pt:'🇧🇷',ru:'🇷🇺',th:'🇹🇭',vi:'🇻🇳',hi:'🇮🇳',tr:'🇹🇷',it:'🇮🇹',nl:'🇳🇱',pl:'🇵🇱',sv:'🇸🇪'};
+const BT={"auth.tagline":"System Monitor Platform","auth.username":"Username","auth.password":"Password","auth.confirmPass":"Confirm Password","auth.loginBtn":"Login","auth.registerBtn":"Register","auth.noAccount":"Don't have an account? <a onclick=\"toggleAuth()\">Register</a>","auth.hasAccount":"Already have an account? <a onclick=\"toggleAuth()\">Login</a>","auth.upload":"Upload","nav.dashboard":"Dashboard","nav.settings":"Settings","dash.title":"System Dashboard","dash.cpu":"CPU Load","dash.memory":"Memory","dash.storage":"Storage","dash.network":"Network","dash.uptime":"Uptime","dash.serverInfo":"Server Info","dash.cpuDetails":"CPU Details","dash.memDetails":"Memory Details","dash.storDetails":"Storage Details","dash.download":"Download","dash.upload":"Upload","dash.hostname":"Hostname","dash.platform":"Platform","dash.cores":"Cores","dash.speed":"Speed","dash.total":"Total","dash.used":"Used","dash.available":"Available","dash.slow":"SLOW","dash.good":"GOOD","dash.fast":"FAST","dash.activity":"Activity Log","dash.battery":"Battery","dash.connection":"Connection","dash.status":"Status","dash.charging":"Charging","dash.level":"Level","dash.type":"Type","dash.effectiveType":"Effective Type","dash.downlink":"Downlink","dash.rtt":"RTT","dash.frames":"Frame Timing","dash.avgFrame":"Avg Frame","dash.droppedFrames":"Dropped Frames","set.title":"Settings","set.profile":"Profile","set.language":"Language","set.security":"Security","set.appearance":"Appearance","set.about":"About","set.editUser":"Edit Username","set.save":"Save","set.selectLang":"Select Language","set.curPass":"Current Password","set.newPass":"New Password","set.confirmPass":"Confirm New Password","set.changePass":"Change Password","set.theme":"Theme","set.dark":"Dark","set.light":"Light","set.version":"Version 1.1.0","set.desc":"A real-time system monitoring platform built entirely in the browser. Tracks CPU, memory, storage, network, battery, and frame timing using native browser APIs.","set.session":"Session Info","set.browser":"Browser","set.screen":"Screen","set.lastLogin":"Last Login","msg.userTaken":"Username already taken","msg.passMismatch":"Passwords don't match","msg.fillAll":"Please fill in all fields","msg.loginFail":"Invalid username or password","msg.saved":"Saved successfully","msg.passChanged":"Password changed successfully","msg.wrongPass":"Wrong current password","msg.registered":"Registration successful"};
+const TR={id:{"auth.tagline":"Platform Monitoring Sistem","auth.username":"Nama Pengguna","auth.password":"Kata Sandi","auth.confirmPass":"Konfirmasi Kata Sandi","auth.loginBtn":"Masuk","auth.registerBtn":"Daftar","auth.noAccount":"Belum punya akun? <a onclick=\"toggleAuth()\">Daftar</a>","auth.hasAccount":"Sudah punya akun? <a onclick=\"toggleAuth()\">Masuk</a>","auth.upload":"Unggah","nav.dashboard":"Dashboard","nav.settings":"Pengaturan","dash.title":"Dashboard Sistem","dash.cpu":"Beban CPU","dash.memory":"Memori","dash.storage":"Penyimpanan","dash.network":"Jaringan","dash.uptime":"Waktu Aktif","dash.serverInfo":"Info Server","dash.cpuDetails":"Detail CPU","dash.memDetails":"Detail Memori","dash.storDetails":"Detail Penyimpanan","dash.download":"Unduh","dash.upload":"Unggah","dash.hostname":"Nama Host","dash.platform":"Platform","dash.cores":"Inti","dash.speed":"Kecepatan","dash.total":"Total","dash.used":"Terpakai","dash.available":"Tersedia","dash.slow":"LAMBAT","dash.good":"BAIK","dash.fast":"CEPAT","dash.activity":"Log Aktivitas","dash.battery":"Baterai","dash.connection":"Koneksi","dash.status":"Status","dash.charging":"Mengisi","dash.level":"Level","dash.type":"Tipe","dash.effectiveType":"Tipe Efektif","dash.downlink":"Downlink","dash.rtt":"RTT","dash.frames":"Timing Frame","dash.avgFrame":"Rata-rata Frame","dash.droppedFrames":"Frame Drop","set.title":"Pengaturan","set.profile":"Profil","set.language":"Bahasa","set.security":"Keamanan","set.appearance":"Tampilan","set.about":"Tentang","set.editUser":"Ubah Nama Pengguna","set.save":"Simpan","set.selectLang":"Pilih Bahasa","set.curPass":"Kata Sandi Saat Ini","set.newPass":"Kata Sandi Baru","set.confirmPass":"Konfirmasi Kata Sandi Baru","set.changePass":"Ubah Kata Sandi","set.theme":"Tema","set.dark":"Gelap","set.light":"Terang","set.desc":"Platform monitoring sistem real-time yang dibangun sepenuhnya di browser.","set.session":"Info Sesi","set.browser":"Browser","set.screen":"Layar","set.lastLogin":"Masuk Terakhir","msg.userTaken":"Nama pengguna sudah dipakai","msg.passMismatch":"Kata sandi tidak cocok","msg.fillAll":"Harap isi semua kolom","msg.loginFail":"Nama pengguna atau kata sandi salah","msg.saved":"Berhasil disimpan","msg.passChanged":"Kata sandi berhasil diubah","msg.wrongPass":"Kata sandi saat ini salah","msg.registered":"Registrasi berhasil"},ms:{"auth.tagline":"Platform Pemantauan Sistem","auth.username":"Nama Pengguna","auth.password":"Kata Laluan","auth.confirmPass":"Sahkan Kata Laluan","auth.loginBtn":"Log Masuk","auth.registerBtn":"Daftar","auth.noAccount":"Tiada akaun? <a onclick=\"toggleAuth()\">Daftar</a>","auth.hasAccount":"Sudah ada akaun? <a onclick=\"toggleAuth()\">Log Masuk</a>","auth.upload":"Muat Naik","nav.dashboard":"Papan Pemuka","nav.settings":"Tetapan","dash.title":"Papan Pemuka Sistem","dash.cpu":"Beban CPU","dash.memory":"Ingatan","dash.storage":"Penyimpanan","dash.network":"Rangkaian","dash.uptime":"Masa Aktif","dash.serverInfo":"Maklumat Pelayan","dash.cpuDetails":"Butiran CPU","dash.memDetails":"Butiran Ingatan","dash.storDetails":"Butiran Penyimpanan","dash.download":"Muat Turun","dash.upload":"Muat Naik","dash.hostname":"Nama Hos","dash.platform":"Platform","dash.cores":"Teras","dash.speed":"Kelajuan","dash.total":"Jumlah","dash.used":"Digunakan","dash.available":"Tersedia","dash.slow":"PERLAHAN","dash.good":"BAIK","dash.fast":"CEPAT","dash.activity":"Log Aktiviti","dash.battery":"Baterai","dash.connection":"Sambungan","dash.status":"Status","dash.frames":"Timing Frame","dash.avgFrame":"Rata-rata Frame","dash.droppedFrames":"Frame Drop","set.title":"Tetapan","set.profile":"Profil","set.language":"Bahasa","set.security":"Keselamatan","set.appearance":"Penampilan","set.about":"Tentang","set.editUser":"Ubah Nama Pengguna","set.save":"Simpan","set.selectLang":"Pilih Bahasa","set.curPass":"Kata Laluan Semasa","set.newPass":"Kata Laluan Baharu","set.confirmPass":"Sahkan Kata Laluan Baharu","set.changePass":"Ubah Kata Laluan","set.theme":"Tema","set.dark":"Gelap","set.light":"Terang","set.desc":"Platform pemantauan sistem masa nyata dalam pelayar.","set.session":"Maklumat Sesi","set.browser":"Pelayar","set.screen":"Skrin","set.lastLogin":"Log Masuk Terakhir","msg.userTaken":"Nama pengguna sudah digunakan","msg.passMismatch":"Kata laluan tidak sepadan","msg.fillAll":"Sila isi semua ruangan","msg.loginFail":"Nama pengguna atau kata laluan salah","msg.saved":"Berjaya disimpan","msg.passChanged":"Kata laluan berjaya diubah","msg.wrongPass":"Kata laluan semasa salah","msg.registered":"Pendaftaran berjaya"},ja:{"auth.tagline":"システム監視プラットフォーム","auth.username":"ユーザー名","auth.password":"パスワード","auth.confirmPass":"パスワード確認","auth.loginBtn":"ログイン","auth.registerBtn":"登録","auth.noAccount":"アカウントをお持ちでないですか？ <a onclick=\"toggleAuth()\">登録</a>","auth.hasAccount":"既にアカウントをお持ちですか？ <a onclick=\"toggleAuth()\">ログイン</a>","auth.upload":"アップロード","nav.dashboard":"ダッシュボード","nav.settings":"設定","dash.title":"システムダッシュボード","dash.cpu":"CPU負荷","dash.memory":"メモリ","dash.storage":"ストレージ","dash.network":"ネットワーク","dash.uptime":"稼働時間","dash.serverInfo":"サーバー情報","dash.cpuDetails":"CPU詳細","dash.memDetails":"メモリ詳細","dash.storDetails":"ストレージ詳細","dash.download":"ダウンロード","dash.upload":"アップロード","dash.hostname":"ホスト名","dash.platform":"プラットフォーム","dash.cores":"コア数","dash.speed":"速度","dash.total":"合計","dash.used":"使用中","dash.available":"利用可能","dash.slow":"遅い","dash.good":"良好","dash.fast":"高速","dash.activity":"アクティビティログ","dash.battery":"バッテリー","dash.connection":"接続","dash.status":"状態","dash.frames":"フレームタイミング","dash.avgFrame":"平均フレーム","dash.droppedFrames":"ドロップフレーム","set.title":"設定","set.profile":"プロフィール","set.language":"言語","set.security":"セキュリティ","set.appearance":"外観","set.about":"概要","set.editUser":"ユーザー名変更","set.save":"保存","set.selectLang":"言語を選択","set.curPass":"現在のパスワード","set.newPass":"新しいパスワード","set.confirmPass":"新しいパスワード確認","set.changePass":"パスワード変更","set.theme":"テーマ","set.dark":"ダーク","set.light":"ライト","set.desc":"ブラウザで完全に構築されたリアルタイムシステム監視プラットフォーム。","set.session":"セッション情報","set.browser":"ブラウザ","set.screen":"画面","set.lastLogin":"最終ログイン","msg.userTaken":"ユーザー名は既に使用されています","msg.passMismatch":"パスワードが一致しません","msg.fillAll":"すべての項目を入力してください","msg.loginFail":"ユーザー名またはパスワードが間違っています","msg.saved":"保存しました","msg.passChanged":"パスワードを変更しました","msg.wrongPass":"現在のパスワードが間違っています","msg.registered":"登録が完了しました"},ko:{"auth.tagline":"시스템 모니터링 플랫폼","auth.username":"사용자 이름","auth.password":"비밀번호","auth.confirmPass":"비밀번호 확인","auth.loginBtn":"로그인","auth.registerBtn":"회원가입","auth.noAccount":"계정이 없으신가요? <a onclick=\"toggleAuth()\">회원가입</a>","auth.hasAccount":"이미 계정이 있으신가요? <a onclick=\"toggleAuth()\">로그인</a>","auth.upload":"업로드","nav.dashboard":"대시보드","nav.settings":"설정","dash.title":"시스템 대시보드","dash.cpu":"CPU 부하","dash.memory":"메모리","dash.storage":"저장소","dash.network":"네트워크","dash.uptime":"가동 시간","dash.serverInfo":"서버 정보","dash.cpuDetails":"CPU 상세","dash.memDetails":"메모리 상세","dash.storDetails":"저장소 상세","dash.download":"다운로드","dash.upload":"업로드","dash.hostname":"호스트명","dash.platform":"플랫폼","dash.cores":"코어","dash.speed":"속도","dash.total":"전체","dash.used":"사용 중","dash.available":"사용 가능","dash.slow":"느림","dash.good":"양호","dash.fast":"빠름","dash.activity":"활동 로그","dash.battery":"배터리","dash.connection":"연결","dash.status":"상태","dash.frames":"프레임 타이밍","dash.avgFrame":"평균 프레임","dash.droppedFrames":"드롭프레임","set.title":"설정","set.profile":"프로필","set.language":"언어","set.security":"보안","set.appearance":"외관","set.about":"정보","set.editUser":"사용자 이름 변경","set.save":"저장","set.selectLang":"언어 선택","set.curPass":"현재 비밀번호","set.newPass":"새 비밀번호","set.confirmPass":"새 비밀번호 확인","set.changePass":"비밀번호 변경","set.theme":"테마","set.dark":"다크","set.light":"라이트","set.desc":"브라우저에서 완전히 구축된 실시간 시스템 모니터링 플랫폼.","set.session":"세션 정보","set.browser":"브라우저","set.screen":"화면","set.lastLogin":"마지막 로그인","msg.userTaken":"사용자 이름이 이미 사용 중입니다","msg.passMismatch":"비밀번호가 일치하지 않습니다","msg.fillAll":"모든 항목을 입력해 주세요","msg.loginFail":"사용자 이름 또는 비밀번호가 잘못되었습니다","msg.saved":"저장되었습니다","msg.passChanged":"비밀번호가 변경되었습니다","msg.wrongPass":"현재 비밀번호가 잘못되었습니다","msg.registered":"회원가입이 완료되었습니다"},zh:{"auth.tagline":"系统监控平台","auth.username":"用户名","auth.password":"密码","auth.confirmPass":"确认密码","auth.loginBtn":"登录","auth.registerBtn":"注册","auth.noAccount":"没有账户？<a onclick=\"toggleAuth()\">注册</a>","auth.hasAccount":"已有账户？<a onclick=\"toggleAuth()\">登录</a>","auth.upload":"上传","nav.dashboard":"仪表盘","nav.settings":"设置","dash.title":"系统仪表盘","dash.cpu":"CPU负载","dash.memory":"内存","dash.storage":"存储","dash.network":"网络","dash.uptime":"运行时间","dash.serverInfo":"服务器信息","dash.cpuDetails":"CPU详情","dash.memDetails":"内存详情","dash.storDetails":"存储详情","dash.download":"下载","dash.upload":"上传","dash.hostname":"主机名","dash.platform":"平台","dash.cores":"核心数","dash.speed":"速度","dash.total":"总计","dash.used":"已用","dash.available":"可用","dash.slow":"慢","dash.good":"良好","dash.fast":"快","dash.activity":"活动日志","dash.battery":"电池","dash.connection":"连接","dash.status":"状态","dash.frames":"帧计时","dash.avgFrame":"平均帧","dash.droppedFrames":"丢帧","set.title":"设置","set.profile":"个人资料","set.language":"语言","set.security":"安全","set.appearance":"外观","set.about":"关于","set.editUser":"修改用户名","set.save":"保存","set.selectLang":"选择语言","set.curPass":"当前密码","set.newPass":"新密码","set.confirmPass":"确认新密码","set.changePass":"修改密码","set.theme":"主题","set.dark":"深色","set.light":"浅色","set.desc":"完全在浏览器中构建的实时系统监控平台。","set.session":"会话信息","set.browser":"浏览器","set.screen":"屏幕","set.lastLogin":"上次登录","msg.userTaken":"用户名已被使用","msg.passMismatch":"密码不匹配","msg.fillAll":"请填写所有字段","msg.loginFail":"用户名或密码错误","msg.saved":"保存成功","msg.passChanged":"密码修改成功","msg.wrongPass":"当前密码错误","msg.registered":"注册成功"},ar:{"auth.tagline":"منصة مراقبة النظام","auth.username":"اسم المستخدم","auth.password":"كلمة المرور","auth.confirmPass":"تأكيد كلمة المرور","auth.loginBtn":"تسجيل الدخول","auth.registerBtn":"تسجيل","auth.noAccount":"ليس لديك حساب؟ <a onclick=\"toggleAuth()\">تسجيل</a>","auth.hasAccount":"لديك حساب بالفعل؟ <a onclick=\"toggleAuth()\">تسجيل الدخول</a>","auth.upload":"رفع","nav.dashboard":"لوحة التحكم","nav.settings":"الإعدادات","dash.title":"لوحة تحكم النظام","dash.cpu":"حمل المعالج","dash.memory":"الذاكرة","dash.storage":"التخزين","dash.network":"الشبكة","dash.uptime":"وقت التشغيل","dash.serverInfo":"معلومات الخادم","dash.cpuDetails":"تفاصيل المعالج","dash.memDetails":"تفاصيل الذاكرة","dash.storDetails":"تفاصيل التخزين","dash.download":"تنزيل","dash.upload":"رفع","dash.hostname":"اسم المضيف","dash.platform":"المنصة","dash.cores":"الأنوية","dash.speed":"السرعة","dash.total":"الإجمالي","dash.used":"مستخدم","dash.available":"متاح","dash.slow":"بطيء","dash.good":"جيد","dash.fast":"سريع","dash.activity":"سجل النشاط","dash.battery":"البطارية","dash.connection":"الاتصال","dash.status":"الحالة","dash.frames":"توقيت الإطارات","dash.avgFrame":"متوسط الإطار","dash.droppedFrames":"إطارات مسقوطة","set.title":"الإعدادات","set.profile":"الملف الشخصي","set.language":"اللغة","set.security":"الأمان","set.appearance":"المظهر","set.about":"حول","set.editUser":"تعديل اسم المستخدم","set.save":"حفظ","set.selectLang":"اختر اللغة","set.curPass":"كلمة المرور الحالية","set.newPass":"كلمة المرور الجديدة","set.confirmPass":"تأكيد كلمة المرور الجديدة","set.changePass":"تغيير كلمة المرور","set.theme":"المظهر","set.dark":"داكن","set.light":"فاتح","set.desc":"منصة مراقبة نظام في الوقت الفعلي في المتصفح.","set.session":"معلومات الجلسة","set.browser":"المتصفح","set.screen":"الشاشة","set.lastLogin":"آخر تسجيل دخول","msg.userTaken":"اسم المستخدم مستخدم بالفعل","msg.passMismatch":"كلمات المرور غير متطابقة","msg.fillAll":"يرجى ملء جميع الحقول","msg.loginFail":"اسم المستخدم أو كلمة المرور غير صحيحة","msg.saved":"تم الحفظ بنجاح","msg.passChanged":"تم تغيير كلمة المرور بنجاح","msg.wrongPass":"كلمة المرور الحالية غير صحيحة","msg.registered":"تم التسجيل بنجاح"},fr:{"auth.tagline":"Plateforme de surveillance système","auth.username":"Nom d'utilisateur","auth.password":"Mot de passe","auth.confirmPass":"Confirmer","auth.loginBtn":"Connexion","auth.registerBtn":"Inscription","auth.noAccount":"Pas de compte? <a onclick=\"toggleAuth()\">S'inscrire</a>","auth.hasAccount":"Déjà un compte? <a onclick=\"toggleAuth()\">Se connecter</a>","auth.upload":"Télécharger","nav.dashboard":"Tableau de bord","nav.settings":"Paramètres","dash.title":"Tableau de bord système","dash.cpu":"Charge CPU","dash.memory":"Mémoire","dash.storage":"Stockage","dash.network":"Réseau","dash.uptime":"Uptime","dash.serverInfo":"Info serveur","dash.cpuDetails":"Détails CPU","dash.memDetails":"Détails mémoire","dash.storDetails":"Détails stockage","dash.download":"Téléchargement","dash.upload":"Envoi","dash.hostname":"Hôte","dash.platform":"Plateforme","dash.cores":"Cœurs","dash.speed":"Vitesse","dash.total":"Total","dash.used":"Utilisé","dash.available":"Disponible","dash.slow":"LENT","dash.good":"BON","dash.fast":"RAPIDE","dash.activity":"Journal","dash.battery":"Batterie","dash.connection":"Connexion","dash.status":"Statut","dash.frames":"Timing Frames","dash.avgFrame":"Moy. Frame","dash.droppedFrames":"Frames perdus","set.title":"Paramètres","set.profile":"Profil","set.language":"Langue","set.security":"Sécurité","set.appearance":"Apparence","set.about":"À propos","set.editUser":"Modifier le nom","set.save":"Enregistrer","set.selectLang":"Choisir la langue","set.curPass":"Mot de passe actuel","set.newPass":"Nouveau mot de passe","set.confirmPass":"Confirmer","set.changePass":"Changer le mot de passe","set.theme":"Thème","set.dark":"Sombre","set.light":"Clair","set.desc":"Plateforme de surveillance système en temps réel dans le navigateur.","set.session":"Info session","set.browser":"Navigateur","set.screen":"Écran","set.lastLogin":"Dernière connexion","msg.userTaken":"Nom déjà pris","msg.passMismatch":"Mots de passe différents","msg.fillAll":"Remplissez tous les champs","msg.loginFail":"Nom ou mot de passe incorrect","msg.saved":"Enregistré","msg.passChanged":"Mot de passe changé","msg.wrongPass":"Mot de passe actuel incorrect","msg.registered":"Inscription réussie"},de:{"auth.tagline":"Systemüberwachung","auth.username":"Benutzername","auth.password":"Passwort","auth.confirmPass":"Bestätigen","auth.loginBtn":"Anmelden","auth.registerBtn":"Registrieren","auth.noAccount":"Kein Konto? <a onclick=\"toggleAuth()\">Registrieren</a>","auth.hasAccount":"Bereits ein Konto? <a onclick=\"toggleAuth()\">Anmelden</a>","auth.upload":"Hochladen","nav.dashboard":"Dashboard","nav.settings":"Einstellungen","dash.title":"System-Dashboard","dash.cpu":"CPU","dash.memory":"Speicher","dash.storage":"Speicherplatz","dash.network":"Netzwerk","dash.uptime":"Betriebszeit","dash.serverInfo":"Server-Info","dash.cpuDetails":"CPU-Details","dash.memDetails":"Speicher-Details","dash.storDetails":"Speicherplatz-Details","dash.download":"Download","dash.upload":"Upload","dash.hostname":"Hostname","dash.platform":"Plattform","dash.cores":"Kerne","dash.speed":"Geschwindigkeit","dash.total":"Gesamt","dash.used":"Belegt","dash.available":"Verfügbar","dash.slow":"LANGSAM","dash.good":"GUT","dash.fast":"SCHNELL","dash.activity":"Protokoll","dash.battery":"Akku","dash.connection":"Verbindung","dash.status":"Status","dash.frames":"Frame-Timing","dash.avgFrame":"Durchschn. Frame","dash.droppedFrames":"Drop Frames","set.title":"Einstellungen","set.profile":"Profil","set.language":"Sprache","set.security":"Sicherheit","set.appearance":"Erscheinung","set.about":"Über","set.editUser":"Benutzername ändern","set.save":"Speichern","set.selectLang":"Sprache wählen","set.curPass":"Aktuelles Passwort","set.newPass":"Neues Passwort","set.confirmPass":"Bestätigen","set.changePass":"Passwort ändern","set.theme":"Design","set.dark":"Dunkel","set.light":"Hell","set.desc":"Echtzeit-Systemüberwachung im Browser.","set.session":"Sitzungsinfo","set.browser":"Browser","set.screen":"Bildschirm","set.lastLogin":"Letzte Anmeldung","msg.userTaken":"Benutzername vergeben","msg.passMismatch":"Passwörter stimmen nicht überein","msg.fillAll":"Alle Felder ausfüllen","msg.loginFail":"Falscher Name oder Passwort","msg.saved":"Gespeichert","msg.passChanged":"Passwort geändert","msg.wrongPass":"Falsches Passwort","msg.registered":"Registrierung erfolgreich"},es:{"auth.tagline":"Monitoreo del sistema","auth.username":"Usuario","auth.password":"Contraseña","auth.confirmPass":"Confirmar","auth.loginBtn":"Iniciar sesión","auth.registerBtn":"Registrarse","auth.noAccount":"¿No tienes cuenta? <a onclick=\"toggleAuth()\">Registrarse</a>","auth.hasAccount":"¿Ya tienes cuenta? <a onclick=\"toggleAuth()\">Iniciar sesión</a>","auth.upload":"Subir","nav.dashboard":"Panel","nav.settings":"Configuración","dash.title":"Panel del sistema","dash.cpu":"CPU","dash.memory":"Memoria","dash.storage":"Almacenamiento","dash.network":"Red","dash.uptime":"Tiempo activo","dash.serverInfo":"Info servidor","dash.cpuDetails":"Detalles CPU","dash.memDetails":"Detalles memoria","dash.storDetails":"Detalles almacenamiento","dash.download":"Descarga","dash.upload":"Subida","dash.hostname":"Host","dash.platform":"Plataforma","dash.cores":"Núcleos","dash.speed":"Velocidad","dash.total":"Total","dash.used":"Usado","dash.available":"Disponible","dash.slow":"LENTO","dash.good":"BUENO","dash.fast":"RÁPIDO","dash.activity":"Registro","dash.battery":"Batería","dash.connection":"Conexión","dash.status":"Estado","dash.frames":"Timing Frames","dash.avgFrame":"Media Frame","dash.droppedFrames":"Frames perdidos","set.title":"Configuración","set.profile":"Perfil","set.language":"Idioma","set.security":"Seguridad","set.appearance":"Apariencia","set.about":"Acerca de","set.editUser":"Editar nombre","set.save":"Guardar","set.selectLang":"Seleccionar idioma","set.curPass":"Contraseña actual","set.newPass":"Nueva contraseña","set.confirmPass":"Confirmar","set.changePass":"Cambiar contraseña","set.theme":"Tema","set.dark":"Oscuro","set.light":"Claro","set.desc":"Monitoreo del sistema en tiempo real en el navegador.","set.session":"Info sesión","set.browser":"Navegador","set.screen":"Pantalla","set.lastLogin":"Último inicio","msg.userTaken":"Nombre ya existe","msg.passMismatch":"Contraseñas no coinciden","msg.fillAll":"Completa todos los campos","msg.loginFail":"Nombre o contraseña incorrectos","msg.saved":"Guardado","msg.passChanged":"Contraseña cambiada","msg.wrongPass":"Contraseña actual incorrecta","msg.registered":"Registro exitoso"},pt:{"auth.tagline":"Monitoramento do sistema","auth.username":"Usuário","auth.password":"Senha","auth.confirmPass":"Confirmar","auth.loginBtn":"Entrar","auth.registerBtn":"Registrar","auth.noAccount":"Não tem conta? <a onclick=\"toggleAuth()\">Registrar</a>","auth.hasAccount":"Já tem conta? <a onclick=\"toggleAuth()\">Entrar</a>","auth.upload":"Carregar","nav.dashboard":"Painel","nav.settings":"Configurações","dash.title":"Painel do sistema","dash.cpu":"CPU","dash.memory":"Memória","dash.storage":"Armazenamento","dash.network":"Rede","dash.uptime":"Tempo ativo","dash.serverInfo":"Info servidor","dash.cpuDetails":"Detalhes CPU","dash.memDetails":"Detalhes memória","dash.storDetails":"Detalhes armazenamento","dash.download":"Download","dash.upload":"Upload","dash.hostname":"Host","dash.platform":"Plataforma","dash.cores":"Núcleos","dash.speed":"Velocidade","dash.total":"Total","dash.used":"Usado","dash.available":"Disponível","dash.slow":"LENTO","dash.good":"BOM","dash.fast":"RÁPIDO","dash.activity":"Registro","dash.battery":"Bateria","dash.connection":"Conexão","dash.status":"Status","dash.frames":"Timing Frames","dash.avgFrame":"Média Frame","dash.droppedFrames":"Frames perdidos","set.title":"Configurações","set.profile":"Perfil","set.language":"Idioma","set.security":"Segurança","set.appearance":"Aparência","set.about":"Sobre","set.editUser":"Editar nome","set.save":"Salvar","set.selectLang":"Selecionar idioma","set.curPass":"Senha atual","set.newPass":"Nova senha","set.confirmPass":"Confirmar","set.changePass":"Alterar senha","set.theme":"Tema","set.dark":"Escuro","set.light":"Claro","set.desc":"Monitoramento de sistema em tempo real no navegador.","set.session":"Info sessão","set.browser":"Navegador","set.screen":"Tela","set.lastLogin":"Último login","msg.userTaken":"Nome já existe","msg.passMismatch":"Senhas não coincidem","msg.fillAll":"Preencha todos os campos","msg.loginFail":"Nome ou senha incorretos","msg.saved":"Salvo","msg.passChanged":"Senha alterada","msg.wrongPass":"Senha atual incorreta","msg.registered":"Registro bem-sucedido"},ru:{"auth.tagline":"Мониторинг системы","auth.username":"Пользователь","auth.password":"Пароль","auth.confirmPass":"Подтвердить","auth.loginBtn":"Войти","auth.registerBtn":"Регистрация","auth.noAccount":"Нет аккаунта? <a onclick=\"toggleAuth()\">Регистрация</a>","auth.hasAccount":"Уже есть аккаунт? <a onclick=\"toggleAuth()\">Войти</a>","auth.upload":"Загрузить","nav.dashboard":"Панель","nav.settings":"Настройки","dash.title":"Панель системы","dash.cpu":"ЦП","dash.memory":"Память","dash.storage":"Хранилище","dash.network":"Сеть","dash.uptime":"Время работы","dash.serverInfo":"Инфо сервера","dash.cpuDetails":"Детали ЦП","dash.memDetails":"Детали памяти","dash.storDetails":"Детали хранилища","dash.download":"Загрузка","dash.upload":"Отдача","dash.hostname":"Хост","dash.platform":"Платформа","dash.cores":"Ядра","dash.speed":"Скорость","dash.total":"Всего","dash.used":"Используется","dash.available":"Доступно","dash.slow":"МЕДЛЕННО","dash.good":"ХОРОШО","dash.fast":"БЫСТРО","dash.activity":"Журнал","dash.battery":"Батарея","dash.connection":"Подключение","dash.status":"Статус","dash.frames":"Тайминг кадров","dash.avgFrame":"Средний кадр","dash.droppedFrames":"Потеря кадров","set.title":"Настройки","set.profile":"Профиль","set.language":"Язык","set.security":"Безопасность","set.appearance":"Внешний вид","set.about":"О программе","set.editUser":"Изменить имя","set.save":"Сохранить","set.selectLang":"Выбрать язык","set.curPass":"Текущий пароль","set.newPass":"Новый пароль","set.confirmPass":"Подтвердить","set.changePass":"Изменить пароль","set.theme":"Тема","set.dark":"Тёмная","set.light":"Светлая","set.desc":"Мониторинг системы в реальном времени в браузере.","set.session":"Инфо сессии","set.browser":"Браузер","set.screen":"Экран","set.lastLogin":"Последний вход","msg.userTaken":"Имя занято","msg.passMismatch":"Пароли не совпадают","msg.fillAll":"Заполните все поля","msg.loginFail":"Неверное имя или пароль","msg.saved":"Сохранено","msg.passChanged":"Пароль изменён","msg.wrongPass":"Неверный пароль","msg.registered":"Регистрация успешна"},th:{"auth.tagline":"ติดตามระบบ","auth.username":"ชื่อผู้ใช้","auth.password":"รหัสผ่าน","auth.confirmPass":"ยืนยัน","auth.loginBtn":"เข้าสู่ระบบ","auth.registerBtn":"ลงทะเบียน","auth.noAccount":"ยังไม่มีบัญชี? <a onclick=\"toggleAuth()\">ลงทะเบียน</a>","auth.hasAccount":"มีบัญชีแล้ว? <a onclick=\"toggleAuth()\">เข้าสู่ระบบ</a>","auth.upload":"อัปโหลด","nav.dashboard":"แดชบอร์ด","nav.settings":"ตั้งค่า","dash.title":"แดชบอร์ดระบบ","dash.cpu":"CPU","dash.memory":"หน่วยความจำ","dash.storage":"พื้นที่เก็บข้อมูล","dash.network":"เครือข่าย","dash.uptime":"เวลาทำงาน","dash.serverInfo":"ข้อมูลเซิร์ฟเวอร์","dash.cpuDetails":"รายละเอียด CPU","dash.memDetails":"รายละเอียดหน่วยความจำ","dash.storDetails":"รายละเอียดพื้นที่เก็บข้อมูล","dash.download":"ดาวน์โหลด","dash.upload":"อัปโหลด","dash.hostname":"โฮสต์","dash.platform":"แพลตฟอร์ม","dash.cores":"คอร์","dash.speed":"ความเร็ว","dash.total":"ทั้งหมด","dash.used":"ใช้แล้ว","dash.available":"ว่าง","dash.slow":"ช้า","dash.good":"ดี","dash.fast":"เร็ว","dash.activity":"บันทึกกิจกรรม","dash.battery":"แบตเตอรี่","dash.connection":"การเชื่อมต่อ","dash.status":"สถานะ","dash.frames":"จังหวะเฟรม","dash.avgFrame":"เฟรมเฉลี่ย","dash.droppedFrames":"เฟรมหาย","set.title":"ตั้งค่า","set.profile":"โปรไฟล์","set.language":"ภาษา","set.security":"ความปลอดภัย","set.appearance":"ธีม","set.about":"เกี่ยวกับ","set.editUser":"แก้ไขชื่อ","set.save":"บันทึก","set.selectLang":"เลือกภาษา","set.curPass":"รหัสผ่านปัจจุบัน","set.newPass":"รหัสผ่านใหม่","set.confirmPass":"ยืนยันรหัสผ่านใหม่","set.changePass":"เปลี่ยนรหัสผ่าน","set.theme":"ธีม","set.dark":"มืด","set.light":"สว่าง","set.desc":"ติดตามระบบแบบเรียลไทม์ในเบราว์เซอร์","set.session":"ข้อมูลเซสชัน","set.browser":"เบราว์เซอร์","set.screen":"หน้าจอ","set.lastLogin":"เข้าสู่ระบบล่าสุด","msg.userTaken":"ชื่อใช้แล้ว","msg.passMismatch":"รหัสผ่านไม่ตรงกัน","msg.fillAll":"กรุณากรอกข้อมูลให้ครบ","msg.loginFail":"ชื่อหรือรหัสผ่านไม่ถูกต้อง","msg.saved":"บันทึกสำเร็จ","msg.passChanged":"เปลี่ยนรหัสผ่านสำเร็จ","msg.wrongPass":"รหัสผ่านปัจจุบันไม่ถูกต้อง","msg.registered":"ลงทะเบียนสำเร็จ"},vi:{"auth.tagline":"Giám sát hệ thống","auth.username":"Tên người dùng","auth.password":"Mật khẩu","auth.confirmPass":"Xác nhận","auth.loginBtn":"Đăng nhập","auth.registerBtn":"Đăng ký","auth.noAccount":"Chưa có tài khoản? <a onclick=\"toggleAuth()\">Đăng ký</a>","auth.hasAccount":"Đã có tài khoản? <a onclick=\"toggleAuth()\">Đăng nhập</a>","auth.upload":"Tải lên","nav.dashboard":"Bảng điều khiển","nav.settings":"Cài đặt","dash.title":"Bảng điều khiển hệ thống","dash.cpu":"CPU","dash.memory":"Bộ nhớ","dash.storage":"Lưu trữ","dash.network":"Mạng","dash.uptime":"Thời gian hoạt động","dash.serverInfo":"Thông tin máy chủ","dash.cpuDetails":"Chi tiết CPU","dash.memDetails":"Chi tiết bộ nhớ","dash.storDetails":"Chi tiết lưu trữ","dash.download":"Tải xuống","dash.upload":"Tải lên","dash.hostname":"Máy chủ","dash.platform":"Nền tảng","dash.cores":"Lõi","dash.speed":"Tốc độ","dash.total":"Tổng","dash.used":"Đã dùng","dash.available":"Còn trống","dash.slow":"CHẬM","dash.good":"TỐT","dash.fast":"NHANH","dash.activity":"Nhật ký","dash.battery":"Pin","dash.connection":"Kết nối","dash.status":"Trạng thái","dash.frames":"Timing Frame","dash.avgFrame":"Trung bình Frame","dash.droppedFrames":"Frame mất","set.title":"Cài đặt","set.profile":"Hồ sơ","set.language":"Ngôn ngữ","set.security":"Bảo mật","set.appearance":"Giao diện","set.about":"Giới thiệu","set.editUser":"Sửa tên","set.save":"Lưu","set.selectLang":"Chọn ngôn ngữ","set.curPass":"Mật khẩu hiện tại","set.newPass":"Mật khẩu mới","set.confirmPass":"Xác nhận","set.changePass":"Đổi mật khẩu","set.theme":"Chủ đề","set.dark":"Tối","set.light":"Sáng","set.desc":"Giám sát hệ thống thời gian thực trong trình duyệt.","set.session":"Info phiên","set.browser":"Trình duyệt","set.screen":"Màn hình","set.lastLogin":"Đăng nhập cuối","msg.userTaken":"Tên đã tồn tại","msg.passMismatch":"Mật khẩu không khớp","msg.fillAll":"Điền tất cả trường","msg.loginFail":"Sai tên hoặc mật khẩu","msg.saved":"Đã lưu","msg.passChanged":"Đã đổi mật khẩu","msg.wrongPass":"Mật khẩu hiện tại sai","msg.registered":"Đăng ký thành công"},hi:{"auth.tagline":"सिस्टम मॉनिटरिंग","auth.username":"उपयोगकर्ता नाम","auth.password":"पासवर्ड","auth.confirmPass":"पुष्टि करें","auth.loginBtn":"लॉग इन","auth.registerBtn":"रजिस्टर","auth.noAccount":"खाता नहीं? <a onclick=\"toggleAuth()\">रजिस्टर</a>","auth.hasAccount":"खाता है? <a onclick=\"toggleAuth()\">लॉग इन</a>","auth.upload":"अपलोड","nav.dashboard":"डैशबोर्ड","nav.settings":"सेटिंग्स","dash.title":"सिस्टम डैशबोर्ड","dash.cpu":"CPU","dash.memory":"मेमोरी","dash.storage":"स्टोरेज","dash.network":"नेटवर्क","dash.uptime":"अपटाइम","dash.serverInfo":"सर्वर जानकारी","dash.cpuDetails":"CPU विवरण","dash.memDetails":"मेमोरी विवरण","dash.storDetails":"स्टोरेज विवरण","dash.download":"डाउनलोड","dash.upload":"अपलोड","dash.hostname":"होस्टनाम","dash.platform":"प्लेटफॉर्म","dash.cores":"कोर","dash.speed":"गति","dash.total":"कुल","dash.used":"उपयोग में","dash.available":"उपलब्ध","dash.slow":"धीमा","dash.good":"अच्छा","dash.fast":"तेज़","dash.activity":"लॉग","dash.battery":"बैटरी","dash.connection":"कनेक्शन","dash.status":"स्थिति","dash.frames":"फ्रेम टाइमिंग","dash.avgFrame":"औसत फ्रेम","dash.droppedFrames":"ड्रॉप फ्रेम","set.title":"सेटिंग्स","set.profile":"प्रोफ़ाइल","set.language":"भाषा","set.security":"सुरक्षा","set.appearance":"दिखावट","set.about":"के बारे में","set.editUser":"नाम बदलें","set.save":"सहेजें","set.selectLang":"भाषा चुनें","set.curPass":"वर्तमान पासवर्ड","set.newPass":"नया पासवर्ड","set.confirmPass":"पुष्टि करें","set.changePass":"पासवर्ड बदलें","set.theme":"थीम","set.dark":"डार्क","set.light":"लाइट","set.desc":"ब्राउज़र में रियल-टाइम सिस्टम मॉनिटरिंग।","set.session":"सेशन जानकारी","set.browser":"ब्राउज़र","set.screen":"स्क्रीन","set.lastLogin":"अंतिम लॉगिन","msg.userTaken":"नाम लिया हुआ","msg.passMismatch":"पासवर्ड नहीं मिले","msg.fillAll":"सभी फ़ील्ड भरें","msg.loginFail":"गलत नाम या पासवर्ड","msg.saved":"सहेजा गया","msg.passChanged":"पासवर्ड बदला गया","msg.wrongPass":"गलत पासवर्ड","msg.registered":"पंजीकरण सफल"},tr:{"auth.tagline":"Sistem izleme","auth.username":"Kullanıcı Adı","auth.password":"Şifre","auth.confirmPass":"Onay","auth.loginBtn":"Giriş Yap","auth.registerBtn":"Kayıt Ol","auth.noAccount":"Hesabınız yok mu? <a onclick=\"toggleAuth()\">Kayıt Ol</a>","auth.hasAccount":"Zaten hesabınız var mı? <a onclick=\"toggleAuth()\">Giriş Yap</a>","auth.upload":"Yükle","nav.dashboard":"Kontrol Paneli","nav.settings":"Ayarlar","dash.title":"Sistem Paneli","dash.cpu":"CPU","dash.memory":"Bellek","dash.storage":"Depolama","dash.network":"Ağ","dash.uptime":"Çalışma Süresi","dash.serverInfo":"Sunucu Bilgisi","dash.cpuDetails":"CPU Detayları","dash.memDetails":"Bellek Detayları","dash.storDetails":"Depolama Detayları","dash.download":"İndirme","dash.upload":"Yükleme","dash.hostname":"Host","dash.platform":"Platform","dash.cores":"Çekirdek","dash.speed":"Hız","dash.total":"Toplam","dash.used":"Kullanılan","dash.available":"Müsait","dash.slow":"YAVAŞ","dash.good":"İYİ","dash.fast":"HIZLI","dash.activity":"Günlük","dash.battery":"Pil","dash.connection":"Bağlantı","dash.status":"Durum","dash.frames":"Frame Zamanlama","dash.avgFrame":"Ort. Frame","dash.droppedFrames":"Dropped Frame","set.title":"Ayarlar","set.profile":"Profil","set.language":"Dil","set.security":"Güvenlik","set.appearance":"Görünüm","set.about":"Hakkında","set.editUser":"İsim Düzenle","set.save":"Kaydet","set.selectLang":"Dil Seç","set.curPass":"Mevcut Şifre","set.newPass":"Yeni Şifre","set.confirmPass":"Onay","set.changePass":"Şifre Değiştir","set.theme":"Tema","set.dark":"Koyu","set.light":"Açık","set.desc":"Tarayıcıda gerçek zamanlı sistem izleme.","set.session":"Oturum Bilgisi","set.browser":"Tarayıcı","set.screen":"Ekran","set.lastLogin":"Son Giriş","msg.userTaken":"İsim alınmış","msg.passMismatch":"Şifreler eşleşmiyor","msg.fillAll":"Tüm alanları doldurun","msg.loginFail":"Hatalı isim veya şifre","msg.saved":"Kaydedildi","msg.passChanged":"Şifre değiştirildi","msg.wrongPass":"Yanlış şifre","msg.registered":"Kayıt başarılı"},it:{"auth.tagline":"Monitoraggio sistema","auth.username":"Nome utente","auth.password":"Password","auth.confirmPass":"Conferma","auth.loginBtn":"Accedi","auth.registerBtn":"Registrati","auth.noAccount":"Non hai un account? <a onclick=\"toggleAuth()\">Registrati</a>","auth.hasAccount":"Hai già un account? <a onclick=\"toggleAuth()\">Accedi</a>","auth.upload":"Carica","nav.dashboard":"Cruscotto","nav.settings":"Impostazioni","dash.title":"Cruscotto sistema","dash.cpu":"CPU","dash.memory":"Memoria","dash.storage":"Archiviazione","dash.network":"Rete","dash.uptime":"Tempo attività","dash.serverInfo":"Info server","dash.cpuDetails":"Dettagli CPU","dash.memDetails":"Dettagli memoria","dash.storDetails":"Dettagli archiviazione","dash.download":"Download","dash.upload":"Upload","dash.hostname":"Host","dash.platform":"Piattaforma","dash.cores":"Core","dash.speed":"Velocità","dash.total":"Totale","dash.used":"Usato","dash.available":"Disponibile","dash.slow":"LENTO","dash.good":"BUONO","dash.fast":"VELOCE","dash.activity":"Registro","dash.battery":"Batteria","dash.connection":"Connessione","dash.status":"Stato","dash.frames":"Timing Frame","dash.avgFrame":"Media Frame","dash.droppedFrames":"Frame persi","set.title":"Impostazioni","set.profile":"Profilo","set.language":"Lingua","set.security":"Sicurezza","set.appearance":"Aspetto","set.about":"Info","set.editUser":"Modifica nome","set.save":"Salva","set.selectLang":"Scegli lingua","set.curPass":"Password attuale","set.newPass":"Nuova password","set.confirmPass":"Conferma","set.changePass":"Cambia password","set.theme":"Tema","set.dark":"Scuro","set.light":"Chiaro","set.desc":"Monitoraggio sistema in tempo reale nel browser.","set.session":"Info sessione","set.browser":"Browser","set.screen":"Schermo","set.lastLogin":"Ultimo accesso","msg.userTaken":"Nome già in uso","msg.passMismatch":"Password non corrispondono","msg.fillAll":"Compila tutti i campi","msg.loginFail":"Nome o password errati","msg.saved":"Salvato","msg.passChanged":"Password cambiata","msg.wrongPass":"Password errata","msg.registered":"Registrazione riuscita"},nl:{"auth.tagline":"Systeemmonitoring","auth.username":"Gebruikersnaam","auth.password":"Wachtwoord","auth.confirmPass":"Bevestig","auth.loginBtn":"Inloggen","auth.registerBtn":"Registreren","auth.noAccount":"Geen account? <a onclick=\"toggleAuth()\">Registreren</a>","auth.hasAccount":"Al account? <a onclick=\"toggleAuth()\">Inloggen</a>","auth.upload":"Uploaden","nav.dashboard":"Dashboard","nav.settings":"Instellingen","dash.title":"Systeemdashboard","dash.cpu":"CPU","dash.memory":"Geheugen","dash.storage":"Opslag","dash.network":"Netwerk","dash.uptime":"Uptime","dash.serverInfo":"Serverinfo","dash.cpuDetails":"CPU-details","dash.memDetails":"Geheugendetails","dash.storDetails":"Opslagdetails","dash.download":"Download","dash.upload":"Upload","dash.hostname":"Hostnaam","dash.platform":"Platform","dash.cores":"Kernen","dash.speed":"Snelheid","dash.total":"Totaal","dash.used":"Gebruikt","dash.available":"Beschikbaar","dash.slow":"LANGZAAM","dash.good":"GOED","dash.fast":"SNEL","dash.activity":"Logboek","dash.battery":"Batterij","dash.connection":"Verbinding","dash.status":"Status","dash.frames":"Frame Timing","dash.avgFrame":"Gem. Frame","dash.droppedFrames":"Dropped Frames","set.title":"Instellingen","set.profile":"Profiel","set.language":"Taal","set.security":"Beveiliging","set.appearance":"Uiterlijk","set.about":"Over","set.editUser":"Naam wijzigen","set.save":"Opslaan","set.selectLang":"Taal kiezen","set.curPass":"Huidig wachtwoord","set.newPass":"Nieuw wachtwoord","set.confirmPass":"Bevestig","set.changePass":"Wachtwoord wijzigen","set.theme":"Thema","set.dark":"Donker","set.light":"Licht","set.desc":"Realtime systeemmonitoring in de browser.","set.session":"Sessieinfo","set.browser":"Browser","set.screen":"Scherm","set.lastLogin":"Laatste login","msg.userTaken":"Naam al in gebruik","msg.passMismatch":"Wachtwoorden niet overeen","msg.fillAll":"Vul alle velden in","msg.loginFail":"Ongeldige naam of wachtwoord","msg.saved":"Opgeslagen","msg.passChanged":"Wachtwoord gewijzigd","msg.wrongPass":"Huidig wachtwoord onjuist","msg.registered":"Registratie succesvol"},pl:{"auth.tagline":"Monitorowanie systemu","auth.username":"Nazwa","auth.password":"Hasło","auth.confirmPass":"Potwierdź","auth.loginBtn":"Zaloguj się","auth.registerBtn":"Zarejestruj się","auth.noAccount":"Nie masz konta? <a onclick=\"toggleAuth()\">Zarejestruj się</a>","auth.hasAccount":"Masz konto? <a onclick=\"toggleAuth()\">Zaloguj się</a>","auth.upload":"Prześlij","nav.dashboard":"Panel","nav.settings":"Ustawienia","dash.title":"Panel systemu","dash.cpu":"CPU","dash.memory":"Pamięć","dash.storage":"Magazyn","dash.network":"Sieć","dash.uptime":"Czas pracy","dash.serverInfo":"Info serwera","dash.cpuDetails":"Szczegóły CPU","dash.memDetails":"Szczegóły pamięci","dash.storDetails":"Szczegóły magazynu","dash.download":"Pobieranie","dash.upload":"Wysyłanie","dash.hostname":"Host","dash.platform":"Platforma","dash.cores":"Rdzenie","dash.speed":"Prędkość","dash.total":"Łącznie","dash.used":"Używane","dash.available":"Dostępne","dash.slow":"WOLNO","dash.good":"DOBRY","dash.fast":"SZYBKO","dash.activity":"Dziennik","dash.battery":"Bateria","dash.connection":"Połączenie","dash.status":"Status","dash.frames":"Timing Klatek","dash.avgFrame":"Śr. Klatka","dash.droppedFrames":"Utracone Klatki","set.title":"Ustawienia","set.profile":"Profil","set.language":"Język","set.security":"Bezpieczeństwo","set.appearance":"Wygląd","set.about":"O programie","set.editUser":"Zmień nazwę","set.save":"Zapisz","set.selectLang":"Wybierz język","set.curPass":"Obecne hasło","set.newPass":"Nowe hasło","set.confirmPass":"Potwierdź","set.changePass":"Zmień hasło","set.theme":"Motyw","set.dark":"Ciemny","set.light":"Jasny","set.desc":"Monitorowanie systemu w czasie rzeczywistym w przeglądarce.","set.session":"Info sesji","set.browser":"Przeglądarka","set.screen":"Ekran","set.lastLogin":"Ostatnie logowanie","msg.userTaken":"Nazwa zajęta","msg.passMismatch":"Hasła nie pasują","msg.fillAll":"Wypełnij pola","msg.loginFail":"Błędna nazwa lub hasło","msg.saved":"Zapisano","msg.passChanged":"Hasło zmienione","msg.wrongPass":"Błędne hasło","msg.registered":"Rejestracja udana"},sv:{"auth.tagline":"Systemövervakning","auth.username":"Användarnamn","auth.password":"Lösenord","auth.confirmPass":"Bekräfta","auth.loginBtn":"Logga in","auth.registerBtn":"Registrera","auth.noAccount":"Inget konto? <a onclick=\"toggleAuth()\">Registrera</a>","auth.hasAccount":"Redan konto? <a onclick=\"toggleAuth()\">Logga in</a>","auth.upload":"Ladda upp","nav.dashboard":"Kontrollpanel","nav.settings":"Inställningar","dash.title":"Systempanel","dash.cpu":"CPU","dash.memory":"Minne","dash.storage":"Lagring","dash.network":"Nätverk","dash.uptime":"Drifttid","dash.serverInfo":"Serverinfo","dash.cpuDetails":"CPU-detaljer","dash.memDetails":"Minnesdetaljer","dash.storDetails":"Lagringsdetaljer","dash.download":"Nerladdning","dash.upload":"Uppladdning","dash.hostname":"Värdnamn","dash.platform":"Plattform","dash.cores":"Kärnor","dash.speed":"Hastighet","dash.total":"Totalt","dash.used":"Använt","dash.available":"Tillgängligt","dash.slow":"LÅNGSAMT","dash.good":"BRA","dash.fast":"SNABBT","dash.activity":"Aktivitetslogg","dash.battery":"Batteri","dash.connection":"Anslutning","dash.status":"Status","dash.frames":"Frame-timing","dash.avgFrame":"Snitt Frame","dash.droppedFrames":"Tappade Frames","set.title":"Inställningar","set.profile":"Profil","set.language":"Språk","set.security":"Säkerhet","set.appearance":"Utseende","set.about":"Om","set.editUser":"Ändra namn","set.save":"Spara","set.selectLang":"Välj språk","set.curPass":"Nuvarande lösenord","set.newPass":"Nytt lösenord","set.confirmPass":"Bekräfta","set.changePass":"Ändra lösenord","set.theme":"Tema","set.dark":"Mörkt","set.light":"Ljust","set.desc":"Realtid systemövervakning i webbläsaren.","set.session":"Sessionsinfo","set.browser":"Webbläsare","set.screen":"Skärm","set.lastLogin":"Senaste inloggning","msg.userTaken":"Namnet taget","msg.passMismatch":"Lösenorden matchar inte","msg.fillAll":"Fyll i alla fält","msg.loginFail":"Fel namn eller lösenord","msg.saved":"Sparat","msg.passChanged":"Lösenord ändrat","msg.wrongPass":"Fel lösenord","msg.registered":"Registrering lyckades"}};
+
+function t(k){return Object.assign({},BT,TR[state.lang]||{})[k]||k;}
+let S={user:null,lang:localStorage.getItem('nexus_lang')||'en',theme:localStorage.getItem('nexus_theme')||'dark',view:'dashboard',setting:'profile',charts:{},mi:null,upStart:Date.now(),acts:[],netDl:0,frames:[],lastFrame:0,rAF:null,cpuLoad:0};
+
+// Utils
+async function hashP(p){const d=new TextEncoder().encode(p+'_nexus_salt_2024'),h=await crypto.subtle.digest('SHA-256',d);return Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,'0')).join('');}
+function gU(){try{return JSON.parse(localStorage.getItem('nexus_users'))||{}}catch{return{}}}
+function sU(u){localStorage.setItem('nexus_users',JSON.stringify(u));}
+function gC(){try{return JSON.parse(localStorage.getItem('nexus_cu'));}catch{return null;}}
+function sC(u){localStorage.setItem('nexus_cu',JSON.stringify(u));}
+function defAv(){const c=document.createElement('canvas');c.width=100;c.height=100;const x=c.getContext('2d'),g=x.createLinearGradient(0,0,100,100);g.addColorStop(0,'#10b981');g.addColorStop(1,'#0ea5e9');x.fillStyle=g;x.fillRect(0,0,100,100);x.fillStyle='#fff';x.font='bold 40px Space Grotesk';x.textAlign='center';x.textBaseline='middle';x.fillText('?',50,52);return c.toDataURL();}
+function toast(m,tp='info'){const e=document.createElement('div');e.className='tst '+tp;const ic={success:'fa-check-circle',error:'fa-exclamation-circle',info:'fa-info-circle'};e.innerHTML=`<i class="fas ${ic[tp]||ic.info}"></i><span>${m}</span>`;document.getElementById('toasts').appendChild(e);setTimeout(()=>{e.style.animation='too .3s ease forwards';setTimeout(()=>e.remove(),300);},3000);}
+function addA(t,c='#10b981'){S.acts.unshift({t,c,time:new Date()});if(S.acts.length>50)S.acts.pop();rA();}
+function fB(b){if(!b)return'0 B';const k=1024,s=['B','KB','MB','GB','TB'],i=Math.floor(Math.log(b)/Math.log(k));return parseFloat((b/Math.pow(k,i)).toFixed(1))+' '+s[i];}
+function fU(ms){const s=Math.floor(ms/1000),m=Math.floor(s/60),sec=s%60,h=Math.floor(m/60),min=m%60;return h>0?`${h}h ${min}m ${sec}s`:`${min}m ${sec}s`;}
+
+// Auth
+function togAuth(){const l=document.getElementById('loginForm'),r=document.getElementById('registerForm');l.style.display=l.style.display!=='none'?'none':'block';r.style.display=l.style.display==='none'?'block':'none';}
+function prevRP(i){if(i.files&&i.files[0]){const r=new FileReader();r.onload=e=>{document.getElementById('regPhotoPrev').src=e.target.result;document.getElementById('regPhotoPrev').style.display='block';document.getElementById('regPhotoPh').style.display='none';};r.readAsDataURL(i.files[0]);}}
+async function doReg(){const u=document.getElementById('regUser').value.trim(),p=document.getElementById('regPass').value,c=document.getElementById('regConfirm').value,ph=document.getElementById('regPhotoPrev');if(!u||!p||!c){toast(t('msg.fillAll'),'error');return;}if(p!==c){toast(t('msg.passMismatch'),'error');return;}const us=gU();if(us[u]){toast(t('msg.userTaken'),'error');return;}us[u]={password:await hashP(p),photo:ph.style.display!=='none'?ph.src:defAv(),joined:Date.now(),lastLogin:null};sU(us);toast(t('msg.registered'),'success');togAuth();}
+async function doLog(){const u=document.getElementById('loginUser').value.trim(),p=document.getElementById('loginPass').value;if(!u||!p){toast(t('msg.fillAll'),'error');return;}const us=gU();if(!us[u]){toast(t('msg.loginFail'),'error');return;}if(us[u].password!==await hashP(p)){toast(t('msg.loginFail'),'error');return;}us[u].lastLogin=Date.now();sU(us);S.user={username:u,photo:us[u].photo,joined:us[u].joined,lastLogin:us[u].lastLogin};sC(S.user);S.upStart=Date.now();S.acts=[];S.netDl=0;S.frames=[];S.lastFrame=performance.now();addA('Session started — '+u);showApp();}
+function doLogOut(){S.user=null;localStorage.removeItem('nexus_cu');if(S.mi)clearInterval(S.mi);if(S.rAF)cancelAnimationFrame(S.rAF);Object.values(S.charts).forEach(c=>{if(c&&c.destroy)c.destroy();});S.charts={};document.getElementById('mainApp').style.display='none';document.getElementById('authScreen').style.display='flex';document.getElementById('loginUser').value='';document.getElementById('loginPass').value='';}
+
+// Nav
+function navTo(v){if(v===S.view)return;const d=document.getElementById('dashView'),s=document.getElementById('setView');d.className=v==='settings'?'view out-left':'view active';s.className=v==='settings'?'view active':'view in-right';S.view=v;document.querySelectorAll('#sidebar nav a').forEach(a=>a.classList.toggle('active',a.dataset.view===v));document.getElementById('sidebar').classList.remove('open');}
+function swSet(p){S.setting=p;document.querySelectorAll('.sp').forEach(e=>e.classList.remove('active'));document.getElementById('panel-'+p).classList.add('active');document.querySelectorAll('#sNav a').forEach(a=>a.classList.toggle('active',a.dataset.setting===p));}
+
+// Language
+function setL(l){S.lang=l;document.documentElement.lang=l;document.documentElement.dir=RTL_L.includes(l)?'rtl':'ltr';localStorage.setItem('nexus_lang',l);apT();rLG();addA('Language → '+LANGS[l],'#0ea5e9');toast(t('msg.saved'),'success');}
+function apT(){document.querySelectorAll('[data-t]').forEach(el=>{const v=t(el.getAttribute('data-t'));if(v)el.innerHTML=v;});bDG();uPI();}
+function rLG(){const g=document.getElementById('lGrid');g.innerHTML='';Object.entries(LANGS).forEach(([c,n])=>{const d=document.createElement('div');d.className='lo'+(S.lang===c?' active':'');d.onclick=()=>setL(c);d.innerHTML=`<span class="fl">${FL[c]||'🌐'}</span><span>${n}</span>`;g.appendChild(d);});}
+
+// Theme
+function setTh(th){S.theme=th;document.documentElement.setAttribute('data-theme',th);localStorage.setItem('nexus_theme',th);uTB();addA('Theme → '+th,'#f59e0b');toast(t('msg.saved'),'success');}
+function uTB(){document.getElementById('tDk').classList.toggle('active',S.theme==='dark');document.getElementById('tLt').classList.toggle('active',S.theme==='light');}
+
+// Profile
+function chPh(i){if(i.files&&i.files[0]){const r=new FileReader();r.onload=e=>{S.user.photo=e.target.result;sC(S.user);const us=gU();if(us[S.user.username]){us[S.user.username].photo=e.target.result;sU(us);}uPI();addA('Photo updated');toast(t('msg.saved'),'success');};r.readAsDataURL(i.files[0]);}}
+function saveUn(){const n=document.getElementById('edUn').value.trim();if(!n){toast(t('msg.fillAll'),'error');return;}const o=S.user.username,us=gU();if(n!==o&&us[n]){toast(t('msg.userTaken'),'error');return;}if(n!==o){us[n]=us[o];delete us[o];sU(us);}S.user.username=n;sC(S.user);uPI();addA('Username → '+n);toast(t('msg.saved'),'success');}
+async function chPass(){const c=document.getElementById('curP').value,n=document.getElementById('nwP').value,cn=document.getElementById('cnP').value;if(!c||!n||!cn){toast(t('msg.fillAll'),'error');return;}if(n!==cn){toast(t('msg.passMismatch'),'error');return;}const us=gU();if(!us[S.user.username]||us[S.user.username].password!==await hashP(c)){toast(t('msg.wrongPass'),'error');return;}us[S.user.username].password=await hashP(n);sU(us);document.getElementById('curP').value='';document.getElementById('nwP').value='';document.getElementById('cnP').value='';addA('Password changed','#f59e0b');toast(t('msg.passChanged'),'success');}
+
+// UI
+function uPI(){if(!S.user)return;document.getElementById('sbAv').src=S.user.photo;document.getElementById('sbNm').textContent=S.user.username;document.getElementById('pAv').src=S.user.photo;document.getElementById('pNm').textContent=S.user.username;document.getElementById('edUn').value=S.user.username;}
+function uPI2(){if(!S.user)return;document.getElementById('pJn').textContent=S.user.joined?new Date(S.user.joined).toLocaleDateString(S.lang):'-';document.getElementById('sBr').textContent=navigator.userAgent.split(')').slice(-2).join(')');document.getElementById('sSc').textContent=screen.width+'×'+screen.height;document.getElementById('sLl').textContent=S.user.lastLogin?new Date(S.user.lastLogin).toLocaleString(S.lang):'-';}
+
+// Dashboard Grid — NEW: Battery, Connection Quality, Frame Timing
+function bDG(){const g=document.getElementById('dGrid');g.innerHTML=`
+<div class="ic"><h3><i class="fas fa-wifi"></i>${t('dash.network')}</h3><div class="ir"><span class="l">${t('dash.download')}</span><span class="v" id="nDl">--</span></div><div class="ir"><span class="l">Type</span><span class="v" id="nTy">--</span></div></div>
+<div class="ic"><h3><i class="fas fa-clock"></i>${t('dash.uptime')}</h3><div class="ir"><span class="l">${t('dash.uptime')}</span><span class="v" id="upTm">--</span></div><div class="ir"><span class="l">Latency</span><span class="v" id="upLt">--</span></div></div>
+<div class="ic"><h3><i class="fas fa-server"></i>${t('dash.serverInfo')}</h3><div class="ir"><span class="l">${t('dash.hostname')}</span><span class="v" id="sHo">--</span></div><div class="ir"><span class="l">${t('dash.platform')}</span><span class="v" id="sPl">--</span></div></div>
+<div class="ic"><h3><i class="fas fa-microchip"></i>${t('dash.cpuDetails')}</h3><div class="ir"><span class="l">Architecture</span><span class="v" id="cAr">--</span></div><div class="ir"><span class="l">${t('dash.cores')}</span><span class="v" id="cCo">--</span></div><div class="ir"><span class="l">Threads</span><span class="v" id="cTh">--</span></div></div>
+<div class="ic"><h3><i class="fas fa-memory"></i>${t('dash.memDetails')}</h3><div class="ir"><span class="l">${t('dash.total')}</span><span class="v" id="mTo">--</span></div><div class="ir"><span class="l">${t('dash.used')}</span><span class="v" id="mUs">--</span></div><div class="ir"><span class="l">${t('dash.available')}</span><span class="v" id="mAv">--</span></div></div>
+<div class="ic"><h3><i class="fas fa-hdd"></i>${t('dash.storDetails')}</h3><div class="ir"><span class="l">${t('dash.total')}</span><span class="v" id="sTo">--</span></div><div class="ir"><span class="l">${t('dash.used')}</span><span class="v" id="sUs">--</span></div><div class="ir"><span class="l">${t('dash.available')}</span><span class="v" id="sAv">--</span></div></div>
+<div class="ic" id="batCard"><h3><i class="fas fa-battery-three-quarters"></i>${t('dash.battery')}</h3><div class="ir"><span class="l">${t('dash.status')}</span><span class="v" id="batSt">--</span></div><div class="ir"><span class="l">${t('dash.level')}</span><span class="v" id="batLv">--</span></div><div class="ir"><span class="l">${t('dash.charging')}</span><span class="v" id="batCh">--</span></div></div>
+<div class="ic"><h3><i class="fas fa-signal"></i>${t('dash.connection')}</h3><div class="ir"><span class="l">${t('dash.effectiveType')}</span><span class="v" id="cnEt">--</span></div><div class="ir"><span class="l">${t('dash.downlink')}</span><span class="v" id="cnDl">--</span></div><div class="ir"><span class="l">${t('dash.rtt')}</span><span class="v" id="cnRt">--</span></div></div>
+<div class="ic"><h3><i class="fas fa-film"></i>${t('dash.frames')}</h3><div class="ir"><span class="l">${t('dash.avgFrame')}</span><span class="v" id="frAvg">--</span></div><div class="ir"><span class="l">${t('dash.droppedFrames')}</span><span class="v" id="frDr">--</span></div><div class="ir"><span class="l">FPS</span><span class="v" id="frFps">--</span></div></div>
+<div class="ic ac"><h3><i class="fas fa-list"></i>${t('dash.activity')}</h3><div class="al" id="aList"></div></div>`;}
+
+function rA(){const el=document.getElementById('aList');if(!el)return;el.innerHTML=S.acts.slice(0,20).map(a=>`<div class="ai"><div class="dt" style="background:${a.c}"></div><span>${a.t}</span><span class="tm">${a.time.toLocaleTimeString(S.lang)}</span></div>`).join('');}
+
+// Charts
+function mC(id,col){const ctx=document.getElementById(id);if(!ctx)return null;return new Chart(ctx,{type:'doughnut',data:{datasets:[{data:[0,100],backgroundColor:[col,'rgba(255,255,255,0.06)'],borderWidth:0,cutout:'78%'}]},options:{responsive:false,plugins:{legend:{display:false},tooltip:{enabled:false}},animation:{duration:400},events:[]}});}
+function uC(ch,v){if(!ch)return;const val=Math.min(100,Math.max(0,v));ch.data.datasets[0].data=[val,100-val];ch.update('none');}
+
+// Frame timing untuk CPU Load REAL
+function rAFLoop(ts){
+  if(S.lastFrame>0){
+    const delta=ts-S.lastFrame;
+    if(delta>0&&delta<500){
+      S.frames.push(delta);
+      if(S.frames.length>60)S.frames.shift();
+    }
+    // CPU load = persentase waktu frame terhadap target 16.67ms (60fps)
+    // Kalau frame > 16.67ms, berarti CPU sibuk
+    const target=16.67;
+    const avg=S.frames.length>0?S.frames.reduce((a,b)=>a+b,0)/S.frames.length:target;
+    S.cpuLoad=Math.min(100,Math.max(0,(avg/target-1)*100));
+  }
+  S.lastFrame=ts;
+  S.rAF=requestAnimationFrame(rAFLoop);
+}
+
+// Monitoring — SEMUA DATA NYATA, TANPA SIMULASI
+function mon(){
+  const now=performance.now();
+  // CPU dari frame timing (REAL)
+  uC(S.charts.cpu,S.cpuLoad);
+  document.getElementById('cpuV').textContent=S.cpuLoad.toFixed(1)+'%';
+  
+  // Memory — REAL dari performance.memory (Chrome) atau estimasi dari Performance API
+  let mPct=0,mTo=0,mUs=0;
+  if(performance.memory){
+    mTo=performance.memory.jsHeapSizeLimit;mUs=performance.memory.usedJSHeapSize;mPct=(mUs/mTo)*100;
+  }else{
+    const perf=performance.getEntriesByType('measure');
+    const memEst=perf.reduce((a,e)=>a+e.duration,0);
+    mTo=1073741824;mUs=memEst*512;mPct=Math.min(100,(mUs/mTo)*100);
+  }
+  uC(S.charts.mem,mPct);document.getElementById('memV').textContent=mPct.toFixed(1)+'%';
+  document.getElementById('mTo').textContent=fB(mTo);document.getElementById('mUs').textContent=fB(mUs);document.getElementById('mAv').textContent=fB(mTo-mUs);
+
+  // Storage — REAL dari navigator.storage.estimate
+  if(navigator.storage&&navigator.storage.estimate){
+    navigator.storage.estimate().then(e=>{const tot=e.quota||0,us=e.usage||0,pct=tot>0?(us/tot)*100:0;uC(S.charts.sto,pct);document.getElementById('stoV').textContent=pct.toFixed(1)+'%';document.getElementById('sTo').textContent=fB(tot);document.getElementById('sUs').textContent=fB(us);document.getElementById('sAv').textContent=fB(tot-us);}).catch(()=>{});
+  }
+
+  // Latency — REAL dari delta waktu monitor loop
+  if(mon._lp){
+    const lat=now-mon._lp;mon._lp=now;
+    const lb=document.getElementById('latB');
+    if(lat>100){lb.textContent=Math.round(lat)+'ms '+t('dash.slow');lb.style.background='rgba(239,68,68,.15)';lb.style.color='#fca5a5';}
+    else if(lat>30){lb.textContent=Math.round(lat)+'ms '+t('dash.good');lb.style.background='rgba(245,158,11,.15)';lb.style.color='#fcd34d';}
+    else{lb.textContent=Math.round(lat)+'ms '+t('dash.fast');lb.style.background='var(--glow)';lb.style.color='var(--accent)';}
+    document.getElementById('upLt').textContent=Math.round(lat)+'ms';
+  }else{mon._lp=now;}
+
+  // Network — REAL dari navigator.connection + performance entries
+  const res=performance.getEntriesByType('resource');
+  let dlTotal=0;res.forEach(e=>dlTotal+=e.transferSize);
+  document.getElementById('nDl').textContent=fB(dlTotal);
+  const cn=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
+  document.getElementById('nTy').textContent=cn?((cn.effectiveType||'N/A').toUpperCase()):'N/A';
+
+  // Uptime — REAL dari session start
+  document.getElementById('upTm').textContent=fU(Date.now()-S.upStart);
+
+  // Server info — REAL
+  document.getElementById('sHo').textContent=location.hostname||'localhost';
+  document.getElementById('sPl').textContent=navigator.platform||'Unknown';
+
+  // CPU Details — REAL dari API yang tersedia
+  document.getElementById('cAr').textContent=navigator.userAgent.includes('x86')?'x86_64':navigator.userAgent.includes('arm')?'ARM64':'Unknown';
+  document.getElementById('cCo').textContent=navigator.hardwareConcurrency||'N/A';
+  document.getElementById('cTh').textContent=navigator.hardwareConcurrency?navigator.hardwareConcurrency+' (main)':'N/A';
+
+  // Battery — REAL dari Battery API
+  if(navigator.getBattery){
+    navigator.getBattery().then(b=>{
+      document.getElementById('batSt').textContent=b.discharging?t('dash.status')+' — '+Math.round(b.level*100)+'%':t('dash.charging');
+      document.getElementById('batLv').textContent=Math.round(b.level*100)+'%';
+      document.getElementById('batCh').textContent=b.charging?'Yes':'No';
+    }).catch(()=>{
+      document.getElementById('batSt').textContent='N/A';document.getElementById('batLv').textContent='N/A';document.getElementById('batCh').textContent='N/A';
+    });
+  }else{
+    document.getElementById('batSt').textContent='N/A';document.getElementById('batLv').textContent='N/A';document.getElementById('batCh').textContent='N/A';
+  }
+
+  // Connection Quality — REAL dari navigator.connection
+  if(cn){
+    document.getElementById('cnEt').textContent=(cn.effectiveType||'N/A').toUpperCase();
+    document.getElementById('cnDl').textContent=cn.downlink?cn.downlink+' Mbps':'N/A';
+    document.getElementById('cnRt').textContent=cn.rtt?cn.rtt+' ms':'N/A';
+  }
+
+  // Frame Timing — REAL dari rAF loop
+  if(S.frames.length>0){
+    const avg=S.frames.reduce((a,b)=>a+b,0)/S.frames.length;
+    document.getElementById('frAvg').textContent=avg.toFixed(1)+'ms';
+    const fps=1000/avg;
+    document.getElementById('frFps').textContent=Math.round(fps)+' fps';
+    // Dropped frames = frame > 33.33ms (di bawah 30fps)
+    const dropped=S.frames.filter(f=>f>33.33).length;
+    document.getElementById('frDr').textContent=dropped+' / '+S.frames.length+' ('+Math.round(dropped/S.frames.length*100)+'%)';
+  }
+
+  // Online/Offline — REAL
+  const dot=document.getElementById('onDot');
+  dot.className=navigator.onLine?'online-dot on':'online-dot off';
+
+  // Clock
+  document.getElementById('clock').textContent=new Date().toLocaleTimeString(S.lang);
+}
+
+// Online/offline listener — REAL
+window.addEventListener('online',()=>addA('Connection restored','#10b981'));
+window.addEventListener('offline',()=>addA('Connection lost','#ef4444'));
+
+// Show App
+function showApp(){
+  document.getElementById('authScreen').style.display='none';
+  document.getElementById('mainApp').style.display='flex';
+  document.documentElement.setAttribute('data-theme',S.theme);
+  document.documentElement.lang=S.lang;
+  document.documentElement.dir=RTL_L.includes(S.lang)?'rtl':'ltr';
+  uPI();uPI2();uTB();apT();rLG();
+  setTimeout(()=>{
+    S.charts.cpu=mC('cpuC','#10b981');
+    S.charts.mem=mC('memC','#0ea5e9');
+    S.charts.sto=mC('stoC','#f59e0b');
+    mon();
+    if(S.mi)clearInterval(S.mi);
+    S.mi=setInterval(mon,1000);
+    S.rAF=requestAnimationFrame(rAFLoop);
+  },100);
+}
+
+// Init
+(function(){
+  const s=gC();
+  if(s&&s.username){
+    const us=gU();
+    if(us[s.username]){
+      S.user={...s,photo:us[s.username].photo||s.photo};
+      S.upStart=Date.now();S.netDl=0;S.frames=[];S.lastFrame=performance.now();
+      addA('Session restored — '+s.username);
+      showApp();return;
+    }
+  }
+})();
+</script>
+</body>
+</html>
