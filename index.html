@@ -1,13 +1,13 @@
-<html lang="en" dir="ltr" data-them="dark">
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nexus</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Nexus - Ultimate Platform</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<script>tailwind.config={theme:{extend:{fontFamily:{display:['Space Grotesk','sans-serif'],mono:['JetBrains Mono','monospace']}}}}</script>
 <style>
 :root{--bg:#070b14;--card:rgba(15,23,42,.7);--border:rgba(30,41,59,.6);--text:#f1f5f9;--text2:#94a3b8;--accent:#10b981;--accent2:#34d399;--warn:#f59e0b;--danger:#ef4444;--glow:rgba(16,185,129,.15)}
 [data-theme="light"]{--bg:#f1f5f9;--card:rgba(255,255,255,.85);--border:rgba(203,213,225,.7);--text:#0f172a;--text2:#475569;--glow:rgba(16,185,129,.1)}
@@ -108,7 +108,6 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 .tst.info{background:rgba(14,165,233,.15);border-color:rgba(14,165,233,.3);color:#7dd3fc}
 @keyframes ti{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 @keyframes too{from{opacity:1}to{transform:translateX(100%);opacity:0}}
-@keyframes pu2{0%,100%{opacity:1}50%{opacity:.4}}.pulse{animation:pu2 2s ease-in-out infinite}
 .hb{display:none;background:none;border:none;color:var(--text);font-size:1.1rem;cursor:pointer;padding:4px}
 @keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}.fi{animation:fi .25s ease}
 @media(max-width:768px){
@@ -134,75 +133,102 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 }
 [dir="rtl"] .sidebar{border-right:none;border-left:1px solid var(--border)}
 [dir="rtl"] .sn{border-right:none;border-left:1px solid var(--border)}
+#editUsername{width:100%;min-width:200px;padding:10px 12px}
+#panel-profile .scc div[style*="display:flex"]{flex-wrap:wrap}
+@media(max-width:768px){#editUsername{min-width:150px}}
 </style>
 </head>
 <body>
 <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+
+<!-- AUTH SCREEN -->
 <div id="authScreen" class="auth-screen">
 <div class="auth-card">
 <h1>Nexus</h1>
-<p style="color:var(--text2);margin:6px 0 24px;font-size:.88rem" data-t="auth.tagline"Nexus api (beta)"</p>
+<p style="color:var(--text2);margin:6px 0 24px">System Monitor Platform</p>
 <div id="loginForm">
-<div class="ig"><label data-t="auth.username">Username</label><input type="text" id="loginUser" autocomplete="username"></div>
-<div class="ig"><label data-t="auth.password">Password</label><input type="password" id="loginPass" autocomplete="current-password"></div>
-<button class="btn btn-p" onclick="doLogin()" data-t="auth.loginBtn">Login</button>
-<div class="tl" data-t="auth.noAccount">Don't have an account? <a onclick="toggleAuth()">Register</a></div>
+<div class="ig"><label>Username</label><input type="text" id="loginUser"></div>
+<div class="ig"><label>Password</label><input type="password" id="loginPass"></div>
+<button class="btn btn-p" onclick="doLogin()">Login</button>
+<div class="tl">Don't have an account? <a onclick="toggleAuth()">Register</a></div>
 </div>
 <div id="registerForm" style="display:none">
 <div class="pu" onclick="document.getElementById('regPhoto').click()">
 <img id="regPhotoPrev" src="" style="display:none"><div id="regPhotoPh"><i class="fas fa-camera" style="color:var(--text2);font-size:1.4rem"></i></div>
-<div class="ov" data-t="auth.upload">Upload</div>
+<div class="ov">Upload</div>
 </div>
 <input type="file" id="regPhoto" accept="image/*" style="display:none" onchange="previewRegPhoto(this)">
-<div class="ig"><label data-t="auth.username">Username</label><input type="text" id="regUser" autocomplete="username"></div>
-<div class="ig"><label data-t="auth.password">Password</label><input type="password" id="regPass" autocomplete="new-password"></div>
-<div class="ig"><label data-t="auth.confirmPass">Confirm Password</label><input type="password" id="regConfirm" autocomplete="new-password"></div>
-<button class="btn btn-p" onclick="doRegister()" data-t="auth.registerBtn">Register</button>
-<div class="tl" data-t="auth.hasAccount">Already have an account? <a onclick="toggleAuth()">Login</a></div>
+<div class="ig"><label>Username</label><input type="text" id="regUser"></div>
+<div class="ig"><label>Password</label><input type="password" id="regPass"></div>
+<div class="ig"><label>Confirm Password</label><input type="password" id="regConfirm"></div>
+<button class="btn btn-p" onclick="doRegister()">Register</button>
+<div class="tl">Already have an account? <a onclick="toggleAuth()">Login</a></div>
 </div>
 </div>
 </div>
+
+<!-- MAIN APP -->
 <div id="mainApp" class="main-app" style="display:none">
 <aside class="sidebar" id="sidebar">
 <div class="logo">Nexus</div>
 <nav>
-<a class="active" data-view="dashboard" onclick="navigateTo('dashboard')"><i class="fas fa-chart-pie"></i><span data-t="nav.dashboard">Dashboard</span></a>
-<a data-view="settings" onclick="navigateTo('settings')"><i class="fas fa-cog"></i><span data-t="nav.settings">Settings</span></a>
+<a class="active" data-view="dashboard" onclick="navigateTo('dashboard')"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a>
+<a data-view="api-keys" onclick="showApiKeysPage()"><i class="fas fa-key"></i><span>API Keys</span></a>
+<a data-view="settings" onclick="navigateTo('settings')"><i class="fas fa-cog"></i><span>Settings</span></a>
 </nav>
 <div class="um">
-<img id="sidebarAvatar" src="" alt="">
+<img id="sidebarAvatar" src="">
 <div class="inf"><div class="nm" id="sidebarName"></div><div class="rl">User</div></div>
-<button class="lb" onclick="doLogout()" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+<button class="lb" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i></button>
 </div>
 </aside>
+
 <div class="content">
+<!-- DASHBOARD VIEW -->
 <div id="dashboardView" class="view active">
 <div class="dh">
 <div style="display:flex;align-items:center;gap:12px">
 <button class="hb" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button>
-<h2><span data-t="dash.title">Dashboard Monitoring</span> <span class="badge pulse" id="latBadge" style="background:var(--glow);color:var(--accent)">--ms</span></h2>
+<h2>System Dashboard <span class="badge pulse" id="latBadge" style="background:var(--glow);color:var(--accent)">--ms</span></h2>
 </div>
 <div class="clock" id="clock">--:--:--</div>
 </div>
 <div class="cs">
-<div class="cc"><canvas id="cpuC"></canvas><div class="ci"><div class="lb" data-t="dash.cpu">CPU Load</div><div class="vl" id="cpuV">0%</div></div></div>
-<div class="cc"><canvas id="memC"></canvas><div class="ci"><div class="lb" data-t="dash.memory">Memory</div><div class="vl" id="memV">0%</div></div></div>
-<div class="cc"><canvas id="stoC"></canvas><div class="ci"><div class="lb" data-t="dash.storage">Storage</div><div class="vl" id="stoV">0%</div></div></div>
+<div class="cc"><canvas id="cpuC"></canvas><div class="ci"><div class="lb">CPU Load</div><div class="vl" id="cpuV">0%</div></div></div>
+<div class="cc"><canvas id="memC"></canvas><div class="ci"><div class="lb">Memory</div><div class="vl" id="memV">0%</div></div></div>
+<div class="cc"><canvas id="stoC"></canvas><div class="ci"><div class="lb">Storage</div><div class="vl" id="stoV">0%</div></div></div>
 </div>
 <div class="dg" id="dashGrid"></div>
 </div>
-<div id="settingsView" class="view in-right">
+
+<!-- API KEYS VIEW (PAGE TERPISAH DALAM 1 FILE) -->
+<div id="apiKeysView" class="view in-right">
 <div class="sh">
 <button class="bb" onclick="navigateTo('dashboard')"><i class="fas fa-arrow-left"></i></button>
-<h2 data-t="set.title">Settings</h2>
+<h2><i class="fas fa-key"></i> API Keys Manager</h2>
+<button onclick="showCreateApiKeyModal()" class="btn btn-p btn-s" style="margin-left:auto; width:auto">+ Create Key</button>
 </div>
+<div class="sc" style="padding:16px">
+<div class="ic" style="margin-bottom:16px">
+<div class="ir"><span class="l">Total API Keys</span><span class="v" id="totalApiKeys">0</span></div>
+<div class="ir"><span class="l">Active Keys</span><span class="v" id="activeApiKeys">0</span></div>
+<div class="ir"><span class="l">Total Usage</span><span class="v" id="totalApiUsage">0</span></div>
+</div>
+<div class="ic"><h3><i class="fas fa-list"></i> Your API Keys</h3><div id="apiKeysListContainer"></div></div>
+<div class="ic" style="margin-top:16px"><h3><i class="fas fa-history"></i> Activity Log</h3><div id="apiActivityLogContainer" style="max-height:150px; overflow-y:auto"></div><button onclick="clearApiLogs()" class="btn btn-s" style="margin-top:8px; background:rgba(239,68,68,.2); color:#fca5a5">Clear Logs</button></div>
+</div>
+</div>
+
+<!-- SETTINGS VIEW -->
+<div id="settingsView" class="view in-right">
+<div class="sh"><button class="bb" onclick="navigateTo('dashboard')"><i class="fas fa-arrow-left"></i></button><h2>Settings</h2></div>
 <div class="sb">
 <div class="sn" id="settingsNav">
-<a class="active" data-setting="profile" onclick="switchSetting('profile')"><i class="fas fa-user"></i><span data-t="set.profile">Profile</span></a>
-<a data-setting="language" onclick="switchSetting('language')"><i class="fas fa-globe"></i><span data-t="set.language">Language</span></a>
-<a data-setting="security" onclick="switchSetting('security')"><i class="fas fa-shield-alt"></i><span data-t="set.security">Security</span></a>
-<a data-setting="appearance" onclick="switchSetting('appearance')"><i class="fas fa-palette"></i><span data-t="set.appearance">Appearance</span></a>
-<a data-setting="about" onclick="switchSetting('about')"><i class="fas fa-info-circle"></i><span data-t="set.about">About</span></a>
+<a class="active" data-setting="profile" onclick="switchSetting('profile')"><i class="fas fa-user"></i><span>Profile</span></a>
+<a data-setting="language" onclick="switchSetting('language')"><i class="fas fa-globe"></i><span>Language</span></a>
+<a data-setting="security" onclick="switchSetting('security')"><i class="fas fa-shield-alt"></i><span>Security</span></a>
+<a data-setting="appearance" onclick="switchSetting('appearance')"><i class="fas fa-palette"></i><span>Appearance</span></a>
+<a data-setting="about" onclick="switchSetting('about')"><i class="fas fa-info-circle"></i><span>About</span></a>
 </div>
 <div class="sc">
 <div id="panel-profile" class="sp active fi">
@@ -211,38 +237,22 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 <input type="file" id="editPhoto" accept="image/*" style="display:none" onchange="changeProfilePhoto(this)">
 <div><div style="font-size:1.1rem;font-weight:700" id="profName"></div><div style="font-size:.82rem;color:var(--text2)" id="profJoined"></div></div>
 </div>
-<div class="scc"><h4><i class="fas fa-pen"></i><span data-t="set.editUser">Edit Username</span></h4><div style="display:flex;gap:10px"><div class="ig" style="flex:1;margin:0"><input type="text" id="editUsername"></div><button class="btn btn-p btn-s" onclick="saveUsername()" data-t="set.save">Save</button></div></div>
-<div class="scc"><h4><i class="fas fa-clock"></i><span data-t="set.session">Session Info</span></h4>
-<div class="ir"><span class="l" data-t="set.browser">Browser</span><span class="v" id="sBrowser"></span></div>
-<div class="ir"><span class="l" data-t="set.screen">Screen</span><span class="v" id="sScreen"></span></div>
-<div class="ir"><span class="l" data-t="set.lastLogin">Last Login</span><span class="v" id="sLast">-</span></div>
+<div class="scc"><h4><i class="fas fa-pen"></i>Edit Username</h4><div style="display:flex;gap:10px;flex-wrap:wrap"><div class="ig" style="flex:1;margin:0;min-width:180px"><input type="text" id="editUsername" style="width:100%"></div><button class="btn btn-p btn-s" onclick="saveUsername()">Save</button></div></div>
+<div class="scc"><h4><i class="fas fa-clock"></i>Session Info</h4>
+<div class="ir"><span class="l">Browser</span><span class="v" id="sBrowser"></span></div>
+<div class="ir"><span class="l">Screen</span><span class="v" id="sScreen"></span></div>
+<div class="ir"><span class="l">Last Login</span><span class="v" id="sLast">-</span></div>
 </div>
 </div>
-<div id="panel-language" class="sp fi">
-<h3 style="font-size:1rem;font-weight:600;margin-bottom:16px" data-t="set.selectLang">Select Language</h3>
-<div class="lg" id="langGrid"></div>
-</div>
-<div id="panel-security" class="sp fi">
-<div class="scc"><h4><i class="fas fa-key"></i><span data-t="set.changePass">Change Password</span></h4>
-<div class="ig"><label data-t="set.curPass">Current Password</label><input type="password" id="curPass"></div>
-<div class="ig"><label data-t="set.newPass">New Password</label><input type="password" id="newPass"></div>
-<div class="ig"><label data-t="set.confirmPass">Confirm New Password</label><input type="password" id="confNew"></div>
-<button class="btn btn-p btn-s" onclick="changePassword()" data-t="set.changePass">Change Password</button>
-</div>
-</div>
-<div id="panel-appearance" class="sp fi">
-<h3 style="font-size:1rem;font-weight:600;margin-bottom:16px" data-t="set.theme">Theme</h3>
-<div class="to">
-<div class="top" onclick="setTheme('dark')" id="tDark"><i class="fas fa-moon"></i><div class="tn" data-t="set.dark">Dark</div></div>
-<div class="top" onclick="setTheme('light')" id="tLight"><i class="fas fa-sun"></i><div class="tn" data-t="set.light">Light</div></div>
-</div>
-</div>
-<div id="panel-about" class="sp fi">
-<div class="scc" style="text-align:center;padding:32px">
-<div style="font-size:2rem;font-weight:700;background:linear-gradient(135deg,var(--accent),#0ea5e9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px">Nexus</div>
-<div style="font-size:.85rem;color:var(--text2);margin-bottom:16px" data-t="set.desc">A real-time system monitoring platform built entirely in the browser.</div>
-<div style="font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--text2)" data-t="set.version">Version 1.0.0</div>
-</div>
+<div id="panel-language" class="sp fi"><h3 style="margin-bottom:16px">Select Language</h3><div class="lg" id="langGrid"></div></div>
+<div id="panel-security" class="sp fi"><div class="scc"><h4><i class="fas fa-key"></i>Change Password</h4>
+<div class="ig"><label>Current Password</label><input type="password" id="curPass"></div>
+<div class="ig"><label>New Password</label><input type="password" id="newPass"></div>
+<div class="ig"><label>Confirm New Password</label><input type="password" id="confNew"></div>
+<button class="btn btn-p btn-s" onclick="changePassword()">Change Password</button>
+</div></div>
+<div id="panel-appearance" class="sp fi"><h3>Theme</h3><div class="to"><div class="top" onclick="setTheme('dark')" id="tDark"><i class="fas fa-moon"></i><div class="tn">Dark</div></div><div class="top" onclick="setTheme('light')" id="tLight"><i class="fas fa-sun"></i><div class="tn">Light</div></div></div></div>
+<div id="panel-about" class="sp fi"><div class="scc" style="text-align:center;padding:32px"><div style="font-size:2rem;font-weight:700;background:linear-gradient(135deg,var(--accent),#0ea5e9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px">Nexus</div><div style="font-size:.85rem;color:var(--text2);margin-bottom:16px">A real-time system monitoring platform built entirely in the browser.</div><div style="font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--text2)">Version 1.0.0</div></div></div>
 </div>
 </div>
 </div>
@@ -251,196 +261,120 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 </div>
 <div class="tc" id="toasts"></div>
 
-<script>
-const LANGS={en:'English',id:'Bahasa Indonesia',ms:'Bahasa Melayu',ja:'日本語',ko:'한국어',zh:'中文',ar:'العربية',fr:'Français',de:'Deutsch',es:'Español',pt:'Português',ru:'Русский',th:'ภาษาไทย',vi:'Tiếng Việt',hi:'हिन्दी',tr:'Türkçe',it:'Italiano',nl:'Nederlands',pl:'Polski',sv:'Svenska'};
-const RTL_LANGS=['ar'];
-const FLAGS={en:'🇬🇧',id:'🇮🇩',ms:'🇲🇾',ja:'🇯🇵',ko:'🇰🇷',zh:'🇨🇳',ar:'🇸🇦',fr:'🇫🇷',de:'🇩🇪',es:'🇪🇸',pt:'🇧🇷',ru:'🇷🇺',th:'🇹🇭',vi:'🇻🇳',hi:'🇮🇳',tr:'🇹🇷',it:'🇮🇹',nl:'🇳🇱',pl:'🇵🇱',sv:'🇸🇪'};
-const BASE_T={
-"auth.tagline":"System Monitor Platform","auth.username":"Username","auth.password":"Password",
-"auth.confirmPass":"Confirm Password","auth.loginBtn":"Login","auth.registerBtn":"Register",
-"auth.noAccount":"Don't have an account? <a onclick=\"toggleAuth()\">Register</a>",
-"auth.hasAccount":"Already have an account? <a onclick=\"toggleAuth()\">Login</a>",
-"auth.upload":"Upload","nav.dashboard":"Dashboard","nav.settings":"Settings",
-"dash.title":"System Dashboard","dash.cpu":"CPU Load","dash.memory":"Memory","dash.storage":"Storage",
-"dash.network":"Network","dash.uptime":"Uptime","dash.serverInfo":"Server Info",
-"dash.cpuDetails":"CPU Details","dash.memDetails":"Memory Details","dash.storDetails":"Storage Details",
-"dash.download":"Download","dash.upload":"Upload","dash.hostname":"Hostname","dash.platform":"Platform",
-"dash.cores":"Cores","dash.speed":"Speed","dash.total":"Total","dash.used":"Used","dash.available":"Available",
-"dash.slow":"SLOW","dash.good":"GOOD","dash.fast":"FAST","dash.activity":"Activity Log",
-"set.title":"Settings","set.profile":"Profile","set.language":"Language",
-"set.security":"Security","set.appearance":"Appearance","set.about":"About",
-"set.editUser":"Edit Username","set.save":"Save","set.selectLang":"Select Language",
-"set.curPass":"Current Password","set.newPass":"New Password","set.confirmPass":"Confirm New Password",
-"set.changePass":"Change Password","set.theme":"Theme","set.dark":"Dark","set.light":"Light",
-"set.version":"Version 1.0.0",
-"set.desc":"A real-time system monitoring platform built entirely in the browser. Tracks CPU load, memory usage, storage, and network information using native browser APIs.",
-"set.session":"Session Info","set.browser":"Browser","set.screen":"Screen","set.lastLogin":"Last Login",
-"msg.userTaken":"Username already taken","msg.passMismatch":"Passwords don't match",
-"msg.fillAll":"Please fill in all fields","msg.loginFail":"Invalid username or password",
-"msg.saved":"Saved successfully","msg.passChanged":"Password changed successfully",
-"msg.wrongPass":"Wrong current password","msg.registered":"Registration successful"
+<!-- MODAL CREATE API KEY -->
+<div id="createApiKeyModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); z-index:1000; align-items:center; justify-content:center">
+<div style="background:var(--card); border-radius:16px; padding:24px; width:340px; max-width:90%">
+<h3 style="margin-bottom:16px">Create New API Key</h3>
+<div class="ig"><label>Key Name</label><input type="text" id="newApiKeyName" placeholder="e.g., Mobile App, Website"></div>
+<div class="ig"><label>Expiry (days, 0 = never)</label><input type="number" id="newApiKeyExpiry" value="30" min="0"></div>
+<div style="display:flex; gap:10px; margin-top:20px">
+<button onclick="createApiKey()" class="btn btn-p" style="flex:1">Create</button>
+<button onclick="closeCreateApiKeyModal()" class="btn" style="flex:1; background:var(--border)">Cancel</button>
+</div>
+</div>
+ </div>
+
+  <script>
+// ============ STATE ==========
+let state = {
+    user: null,
+    lang: localStorage.getItem('nexus_lang') || 'en',
+    theme: localStorage.getItem('nexus_theme') || 'dark',
+    currentView: 'dashboard',
+    currentSetting: 'profile',
+    charts: {},
+    monInterval: null,
+    uptimeStart: Date.now(),
+    activities: [],
+    netStart: { dl: 0, ul: 0 },
+    apiKeys: []
 };
-const TR={
-id:{"auth.tagline":"Platform Monitoring Sistem","auth.username":"Nama Pengguna","auth.password":"Kata Sandi","auth.confirmPass":"Konfirmasi Kata Sandi","auth.loginBtn":"Masuk","auth.registerBtn":"Daftar","auth.noAccount":"Belum punya akun? <a onclick=\"toggleAuth()\">Daftar</a>","auth.hasAccount":"Sudah punya akun? <a onclick=\"toggleAuth()\">Masuk</a>","auth.upload":"Unggah","nav.dashboard":"Dashboard","nav.settings":"Pengaturan","dash.title":"Dashboard Sistem","dash.cpu":"Beban CPU","dash.memory":"Memori","dash.storage":"Penyimpanan","dash.network":"Jaringan","dash.uptime":"Waktu Aktif","dash.serverInfo":"Info Server","dash.cpuDetails":"Detail CPU","dash.memDetails":"Detail Memori","dash.storDetails":"Detail Penyimpanan","dash.download":"Unduh","dash.upload":"Unggah","dash.hostname":"Nama Host","dash.platform":"Platform","dash.cores":"Inti","dash.speed":"Kecepatan","dash.total":"Total","dash.used":"Terpakai","dash.available":"Tersedia","dash.slow":"LAMBAT","dash.good":"BAIK","dash.fast":"CEPAT","dash.activity":"Log Aktivitas","set.title":"Pengaturan","set.profile":"Profil","set.language":"Bahasa","set.security":"Keamanan","set.appearance":"Tampilan","set.about":"Tentang","set.editUser":"Ubah Nama Pengguna","set.save":"Simpan","set.selectLang":"Pilih Bahasa","set.curPass":"Kata Sandi Saat Ini","set.newPass":"Kata Sandi Baru","set.confirmPass":"Konfirmasi Kata Sandi Baru","set.changePass":"Ubah Kata Sandi","set.theme":"Tema","set.dark":"Gelap","set.light":"Terang","set.desc":"Platform monitoring sistem real-time yang dibangun sepenuhnya di browser. Memantau beban CPU, penggunaan memori, penyimpanan, dan informasi jaringan menggunakan API browser bawaan.","set.session":"Info Sesi","set.browser":"Browser","set.screen":"Layar","set.lastLogin":"Masuk Terakhir","msg.userTaken":"Nama pengguna sudah dipakai","msg.passMismatch":"Kata sandi tidak cocok","msg.fillAll":"Harap isi semua kolom","msg.loginFail":"Nama pengguna atau kata sandi salah","msg.saved":"Berhasil disimpan","msg.passChanged":"Kata sandi berhasil diubah","msg.wrongPass":"Kata sandi saat ini salah","msg.registered":"Registrasi berhasil"},
-ms:{"auth.tagline":"Platform Pemantauan Sistem","auth.username":"Nama Pengguna","auth.password":"Kata Laluan","auth.confirmPass":"Sahkan Kata Laluan","auth.loginBtn":"Log Masuk","auth.registerBtn":"Daftar","auth.noAccount":"Tiada akaun? <a onclick=\"toggleAuth()\">Daftar</a>","auth.hasAccount":"Sudah ada akaun? <a onclick=\"toggleAuth()\">Log Masuk</a>","auth.upload":"Muat Naik","nav.dashboard":"Papan Pemuka","nav.settings":"Tetapan","dash.title":"Papan Pemuka Sistem","dash.cpu":"Beban CPU","dash.memory":"Ingatan","dash.storage":"Penyimpanan","dash.network":"Rangkaian","dash.uptime":"Masa Aktif","dash.serverInfo":"Maklumat Pelayan","dash.cpuDetails":"Butiran CPU","dash.memDetails":"Butiran Ingatan","dash.storDetails":"Butiran Penyimpanan","dash.download":"Muat Turun","dash.upload":"Muat Naik","dash.hostname":"Nama Hos","dash.platform":"Platform","dash.cores":"Teras","dash.speed":"Kelajuan","dash.total":"Jumlah","dash.used":"Digunakan","dash.available":"Tersedia","dash.slow":"PERLAHAN","dash.good":"BAIK","dash.fast":"CEPAT","dash.activity":"Log Aktiviti","set.title":"Tetapan","set.profile":"Profil","set.language":"Bahasa","set.security":"Keselamatan","set.appearance":"Penampilan","set.about":"Tentang","set.editUser":"Ubah Nama Pengguna","set.save":"Simpan","set.selectLang":"Pilih Bahasa","set.curPass":"Kata Laluan Semasa","set.newPass":"Kata Laluan Baharu","set.confirmPass":"Sahkan Kata Laluan Baharu","set.changePass":"Ubah Kata Laluan","set.theme":"Tema","set.dark":"Gelap","set.light":"Terang","set.desc":"Platform pemantauan sistem masa nyata yang dibina sepenuhnya dalam pelayar.","set.session":"Maklumat Sesi","set.browser":"Pelayar","set.screen":"Skrin","set.lastLogin":"Log Masuk Terakhir","msg.userTaken":"Nama pengguna sudah digunakan","msg.passMismatch":"Kata laluan tidak sepadan","msg.fillAll":"Sila isi semua ruangan","msg.loginFail":"Nama pengguna atau kata laluan salah","msg.saved":"Berjaya disimpan","msg.passChanged":"Kata laluan berjaya diubah","msg.wrongPass":"Kata laluan semasa salah","msg.registered":"Pendaftaran berjaya"},
-ja:{"auth.tagline":"システム監視プラットフォーム","auth.username":"ユーザー名","auth.password":"パスワード","auth.confirmPass":"パスワード確認","auth.loginBtn":"ログイン","auth.registerBtn":"登録","auth.noAccount":"アカウントをお持ちでないですか？ <a onclick=\"toggleAuth()\">登録</a>","auth.hasAccount":"既にアカウントをお持ちですか？ <a onclick=\"toggleAuth()\">ログイン</a>","auth.upload":"アップロード","nav.dashboard":"ダッシュボード","nav.settings":"設定","dash.title":"システムダッシュボード","dash.cpu":"CPU負荷","dash.memory":"メモリ","dash.storage":"ストレージ","dash.network":"ネットワーク","dash.uptime":"稼働時間","dash.serverInfo":"サーバー情報","dash.cpuDetails":"CPU詳細","dash.memDetails":"メモリ詳細","dash.storDetails":"ストレージ詳細","dash.download":"ダウンロード","dash.upload":"アップロード","dash.hostname":"ホスト名","dash.platform":"プラットフォーム","dash.cores":"コア数","dash.speed":"速度","dash.total":"合計","dash.used":"使用中","dash.available":"利用可能","dash.slow":"遅い","dash.good":"良好","dash.fast":"高速","dash.activity":"アクティビティログ","set.title":"設定","set.profile":"プロフィール","set.language":"言語","set.security":"セキュリティ","set.appearance":"外観","set.about":"概要","set.editUser":"ユーザー名変更","set.save":"保存","set.selectLang":"言語を選択","set.curPass":"現在のパスワード","set.newPass":"新しいパスワード","set.confirmPass":"新しいパスワード確認","set.changePass":"パスワード変更","set.theme":"テーマ","set.dark":"ダーク","set.light":"ライト","set.desc":"ブラウザ内で完全に構築されたリアルタイムシステム監視プラットフォーム。","set.session":"セッション情報","set.browser":"ブラウザ","set.screen":"画面","set.lastLogin":"最終ログイン","msg.userTaken":"ユーザー名は既に使用されています","msg.passMismatch":"パスワードが一致しません","msg.fillAll":"すべての項目を入力してください","msg.loginFail":"ユーザー名またはパスワードが間違っています","msg.saved":"保存しました","msg.passChanged":"パスワードを変更しました","msg.wrongPass":"現在のパスワードが間違っています","msg.registered":"登録が完了しました"},
-ko:{"auth.tagline":"시스템 모니터링 플랫폼","auth.username":"사용자 이름","auth.password":"비밀번호","auth.confirmPass":"비밀번호 확인","auth.loginBtn":"로그인","auth.registerBtn":"회원가입","auth.noAccount":"계정이 없으신가요? <a onclick=\"toggleAuth()\">회원가입</a>","auth.hasAccount":"이미 계정이 있으신가요? <a onclick=\"toggleAuth()\">로그인</a>","auth.upload":"업로드","nav.dashboard":"대시보드","nav.settings":"설정","dash.title":"시스템 대시보드","dash.cpu":"CPU 부하","dash.memory":"메모리","dash.storage":"저장소","dash.network":"네트워크","dash.uptime":"가동 시간","dash.serverInfo":"서버 정보","dash.cpuDetails":"CPU 상세","dash.memDetails":"메모리 상세","dash.storDetails":"저장소 상세","dash.download":"다운로드","dash.upload":"업로드","dash.hostname":"호스트명","dash.platform":"플랫폼","dash.cores":"코어","dash.speed":"속도","dash.total":"전체","dash.used":"사용 중","dash.available":"사용 가능","dash.slow":"느림","dash.good":"양호","dash.fast":"빠름","dash.activity":"활동 로그","set.title":"설정","set.profile":"프로필","set.language":"언어","set.security":"보안","set.appearance":"외관","set.about":"정보","set.editUser":"사용자 이름 변경","set.save":"저장","set.selectLang":"언어 선택","set.curPass":"현재 비밀번호","set.newPass":"새 비밀번호","set.confirmPass":"새 비밀번호 확인","set.changePass":"비밀번호 변경","set.theme":"테마","set.dark":"다크","set.light":"라이트","set.desc":"브라우저에서 완전히 구축된 실시간 시스템 모니터링 플랫폼.","set.session":"세션 정보","set.browser":"브라우저","set.screen":"화면","set.lastLogin":"마지막 로그인","msg.userTaken":"사용자 이름이 이미 사용 중입니다","msg.passMismatch":"비밀번호가 일치하지 않습니다","msg.fillAll":"모든 항목을 입력해 주세요","msg.loginFail":"사용자 이름 또는 비밀번호가 잘못되었습니다","msg.saved":"저장되었습니다","msg.passChanged":"비밀번호가 변경되었습니다","msg.wrongPass":"현재 비밀번호가 잘못되었습니다","msg.registered":"회원가입이 완료되었습니다"},
-zh:{"auth.tagline":"系统监控平台","auth.username":"用户名","auth.password":"密码","auth.confirmPass":"确认密码","auth.loginBtn":"登录","auth.registerBtn":"注册","auth.noAccount":"没有账户？<a onclick=\"toggleAuth()\">注册</a>","auth.hasAccount":"已有账户？<a onclick=\"toggleAuth()\">登录</a>","auth.upload":"上传","nav.dashboard":"仪表盘","nav.settings":"设置","dash.title":"系统仪表盘","dash.cpu":"CPU负载","dash.memory":"内存","dash.storage":"存储","dash.network":"网络","dash.uptime":"运行时间","dash.serverInfo":"服务器信息","dash.cpuDetails":"CPU详情","dash.memDetails":"内存详情","dash.storDetails":"存储详情","dash.download":"下载","dash.upload":"上传","dash.hostname":"主机名","dash.platform":"平台","dash.cores":"核心数","dash.speed":"速度","dash.total":"总计","dash.used":"已用","dash.available":"可用","dash.slow":"慢","dash.good":"良好","dash.fast":"快","dash.activity":"活动日志","set.title":"设置","set.profile":"个人资料","set.language":"语言","set.security":"安全","set.appearance":"外观","set.about":"关于","set.editUser":"修改用户名","set.save":"保存","set.selectLang":"选择语言","set.curPass":"当前密码","set.newPass":"新密码","set.confirmPass":"确认新密码","set.changePass":"修改密码","set.theme":"主题","set.dark":"深色","set.light":"浅色","set.desc":"完全在浏览器中构建的实时系统监控平台。","set.session":"会话信息","set.browser":"浏览器","set.screen":"屏幕","set.lastLogin":"上次登录","msg.userTaken":"用户名已被使用","msg.passMismatch":"密码不匹配","msg.fillAll":"请填写所有字段","msg.loginFail":"用户名或密码错误","msg.saved":"保存成功","msg.passChanged":"密码修改成功","msg.wrongPass":"当前密码错误","msg.registered":"注册成功"},
-ar:{"auth.tagline":"منصة مراقبة النظام","auth.username":"اسم المستخدم","auth.password":"كلمة المرور","auth.confirmPass":"تأكيد كلمة المرور","auth.loginBtn":"تسجيل الدخول","auth.registerBtn":"تسجيل","auth.noAccount":"ليس لديك حساب؟ <a onclick=\"toggleAuth()\">تسجيل</a>","auth.hasAccount":"لديك حساب بالفعل؟ <a onclick=\"toggleAuth()\">تسجيل الدخول</a>","auth.upload":"رفع","nav.dashboard":"لوحة التحكم","nav.settings":"الإعدادات","dash.title":"لوحة تحكم النظام","dash.cpu":"حمل المعالج","dash.memory":"الذاكرة","dash.storage":"التخزين","dash.network":"الشبكة","dash.uptime":"وقت التشغيل","dash.serverInfo":"معلومات الخادم","dash.cpuDetails":"تفاصيل المعالج","dash.memDetails":"تفاصيل الذاكرة","dash.storDetails":"تفاصيل التخزين","dash.download":"تنزيل","dash.upload":"رفع","dash.hostname":"اسم المضيف","dash.platform":"المنصة","dash.cores":"الأنوية","dash.speed":"السرعة","dash.total":"الإجمالي","dash.used":"مستخدم","dash.available":"متاح","dash.slow":"بطيء","dash.good":"جيد","dash.fast":"سريع","dash.activity":"سجل النشاط","set.title":"الإعدادات","set.profile":"الملف الشخصي","set.language":"اللغة","set.security":"الأمان","set.appearance":"المظهر","set.about":"حول","set.editUser":"تعديل اسم المستخدم","set.save":"حفظ","set.selectLang":"اختر اللغة","set.curPass":"كلمة المرور الحالية","set.newPass":"كلمة المرور الجديدة","set.confirmPass":"تأكيد كلمة المرور الجديدة","set.changePass":"تغيير كلمة المرور","set.theme":"المظهر","set.dark":"داكن","set.light":"فاتح","set.desc":"منصة مراقبة النظام في الوقت الفعلي مبنية بالكامل في المتصفح.","set.session":"معلومات الجلسة","set.browser":"المتصفح","set.screen":"الشاشة","set.lastLogin":"آخر تسجيل دخول","msg.userTaken":"اسم المستخدم مستخدم بالفعل","msg.passMismatch":"كلمات المرور غير متطابقة","msg.fillAll":"يرجى ملء جميع الحقول","msg.loginFail":"اسم المستخدم أو كلمة المرور غير صحيحة","msg.saved":"تم الحفظ بنجاح","msg.passChanged":"تم تغيير كلمة المرور بنجاح","msg.wrongPass":"كلمة المرور الحالية غير صحيحة","msg.registered":"تم التسجيل بنجاح"},
-fr:{"auth.tagline":"Plateforme de surveillance système","auth.username":"Nom d'utilisateur","auth.password":"Mot de passe","auth.confirmPass":"Confirmer le mot de passe","auth.loginBtn":"Connexion","auth.registerBtn":"Inscription","auth.noAccount":"Pas de compte ? <a onclick=\"toggleAuth()\">S'inscrire</a>","auth.hasAccount":"Déjà un compte ? <a onclick=\"toggleAuth()\">Se connecter</a>","auth.upload":"Télécharger","nav.dashboard":"Tableau de bord","nav.settings":"Paramètres","dash.title":"Tableau de bord système","dash.cpu":"Charge CPU","dash.memory":"Mémoire","dash.storage":"Stockage","dash.network":"Réseau","dash.uptime":"Temps de fonctionnement","dash.serverInfo":"Info serveur","dash.cpuDetails":"Détails CPU","dash.memDetails":"Détails mémoire","dash.storDetails":"Détails stockage","dash.download":"Téléchargement","dash.upload":"Envoi","dash.hostname":"Nom d'hôte","dash.platform":"Plateforme","dash.cores":"Cœurs","dash.speed":"Vitesse","dash.total":"Total","dash.used":"Utilisé","dash.available":"Disponible","dash.slow":"LENT","dash.good":"BON","dash.fast":"RAPIDE","dash.activity":"Journal d'activité","set.title":"Paramètres","set.profile":"Profil","set.language":"Langue","set.security":"Sécurité","set.appearance":"Apparence","set.about":"À propos","set.editUser":"Modifier le nom","set.save":"Enregistrer","set.selectLang":"Choisir la langue","set.curPass":"Mot de passe actuel","set.newPass":"Nouveau mot de passe","set.confirmPass":"Confirmer le nouveau mot de passe","set.changePass":"Changer le mot de passe","set.theme":"Thème","set.dark":"Sombre","set.light":"Clair","set.desc":"Plateforme de surveillance système en temps réel construite entièrement dans le navigateur.","set.session":"Info session","set.browser":"Navigateur","set.screen":"Écran","set.lastLogin":"Dernière connexion","msg.userTaken":"Nom d'utilisateur déjà pris","msg.passMismatch":"Mots de passe différents","msg.fillAll":"Veuillez remplir tous les champs","msg.loginFail":"Nom d'utilisateur ou mot de passe incorrect","msg.saved":"Enregistré avec succès","msg.passChanged":"Mot de passe changé avec succès","msg.wrongPass":"Mot de passe actuel incorrect","msg.registered":"Inscription réussie"},
-de:{"auth.tagline":"Systemüberwachungsplattform","auth.username":"Benutzername","auth.password":"Passwort","auth.confirmPass":"Passwort bestätigen","auth.loginBtn":"Anmelden","auth.registerBtn":"Registrieren","auth.noAccount":"Kein Konto? <a onclick=\"toggleAuth()\">Registrieren</a>","auth.hasAccount":"Bereits ein Konto? <a onclick=\"toggleAuth()\">Anmelden</a>","auth.upload":"Hochladen","nav.dashboard":"Dashboard","nav.settings":"Einstellungen","dash.title":"System-Dashboard","dash.cpu":"CPU-Auslastung","dash.memory":"Speicher","dash.storage":"Speicherplatz","dash.network":"Netzwerk","dash.uptime":"Betriebszeit","dash.serverInfo":"Server-Info","dash.cpuDetails":"CPU-Details","dash.memDetails":"Speicherdetails","dash.storDetails":"Speicherplattdetails","dash.download":"Download","dash.upload":"Upload","dash.hostname":"Hostname","dash.platform":"Plattform","dash.cores":"Kerne","dash.speed":"Geschwindigkeit","dash.total":"Gesamt","dash.used":"Belegt","dash.available":"Verfügbar","dash.slow":"LANGSAM","dash.good":"GUT","dash.fast":"SCHNELL","dash.activity":"Aktivitätsprotokoll","set.title":"Einstellungen","set.profile":"Profil","set.language":"Sprache","set.security":"Sicherheit","set.appearance":"Erscheinung","set.about":"Über","set.editUser":"Benutzername ändern","set.save":"Speichern","set.selectLang":"Sprache wählen","set.curPass":"Aktuelles Passwort","set.newPass":"Neues Passwort","set.confirmPass":"Neues Passwort bestätigen","set.changePass":"Passwort ändern","set.theme":"Design","set.dark":"Dunkel","set.light":"Hell","set.desc":"Echtzeit-Systemüberwachungsplattform, vollständig im Browser erstellt.","set.session":"Sitzungsinfo","set.browser":"Browser","set.screen":"Bildschirm","set.lastLogin":"Letzte Anmeldung","msg.userTaken":"Benutzername bereits vergeben","msg.passMismatch":"Passwörter stimmen nicht überein","msg.fillAll":"Bitte alle Felder ausfüllen","msg.loginFail":"Falscher Benutzername oder Passwort","msg.saved":"Erfolgreich gespeichert","msg.passChanged":"Passwort erfolgreich geändert","msg.wrongPass":"Aktuelles Passwort falsch","msg.registered":"Registrierung erfolgreich"},
-es:{"auth.tagline":"Plataforma de monitoreo del sistema","auth.username":"Nombre de usuario","auth.password":"Contraseña","auth.confirmPass":"Confirmar contraseña","auth.loginBtn":"Iniciar sesión","auth.registerBtn":"Registrarse","auth.noAccount":"¿No tienes cuenta? <a onclick=\"toggleAuth()\">Registrarse</a>","auth.hasAccount":"¿Ya tienes cuenta? <a onclick=\"toggleAuth()\">Iniciar sesión</a>","auth.upload":"Subir","nav.dashboard":"Panel","nav.settings":"Configuración","dash.title":"Panel del sistema","dash.cpu":"Carga CPU","dash.memory":"Memoria","dash.storage":"Almacenamiento","dash.network":"Red","dash.uptime":"Tiempo activo","dash.serverInfo":"Info del servidor","dash.cpuDetails":"Detalles CPU","dash.memDetails":"Detalles de memoria","dash.storDetails":"Detalles de almacenamiento","dash.download":"Descarga","dash.upload":"Subida","dash.hostname":"Nombre del host","dash.platform":"Plataforma","dash.cores":"Núcleos","dash.speed":"Velocidad","dash.total":"Total","dash.used":"Usado","dash.available":"Disponible","dash.slow":"LENTO","dash.good":"BUENO","dash.fast":"RÁPIDO","dash.activity":"Registro de actividad","set.title":"Configuración","set.profile":"Perfil","set.language":"Idioma","set.security":"Seguridad","set.appearance":"Apariencia","set.about":"Acerca de","set.editUser":"Editar nombre de usuario","set.save":"Guardar","set.selectLang":"Seleccionar idioma","set.curPass":"Contraseña actual","set.newPass":"Nueva contraseña","set.confirmPass":"Confirmar nueva contraseña","set.changePass":"Cambiar contraseña","set.theme":"Tema","set.dark":"Oscuro","set.light":"Claro","set.desc":"Plataforma de monitoreo del sistema en tiempo real construida completamente en el navegador.","set.session":"Info de sesión","set.browser":"Navegador","set.screen":"Pantalla","set.lastLogin":"Último inicio de sesión","msg.userTaken":"Nombre de usuario ya existe","msg.passMismatch":"Las contraseñas no coinciden","msg.fillAll":"Por favor completa todos los campos","msg.loginFail":"Nombre de usuario o contraseña incorrectos","msg.saved":"Guardado exitosamente","msg.passChanged":"Contraseña cambiada exitosamente","msg.wrongPass":"Contraseña actual incorrecta","msg.registered":"Registro exitoso"},
-pt:{"auth.tagline":"Plataforma de monitoramento do sistema","auth.username":"Nome de usuário","auth.password":"Senha","auth.confirmPass":"Confirmar senha","auth.loginBtn":"Entrar","auth.registerBtn":"Registrar","auth.noAccount":"Não tem conta? <a onclick=\"toggleAuth()\">Registrar</a>","auth.hasAccount":"Já tem conta? <a onclick=\"toggleAuth()\">Entrar</a>","auth.upload":"Carregar","nav.dashboard":"Painel","nav.settings":"Configurações","dash.title":"Painel do sistema","dash.cpu":"Carga CPU","dash.memory":"Memória","dash.storage":"Armazenamento","dash.network":"Rede","dash.uptime":"Tempo ativo","dash.serverInfo":"Info do servidor","dash.cpuDetails":"Detalhes CPU","dash.memDetails":"Detalhes da memória","dash.storDetails":"Detalhes do armazenamento","dash.download":"Download","dash.upload":"Upload","dash.hostname":"Nome do host","dash.platform":"Plataforma","dash.cores":"Núcleos","dash.speed":"Velocidade","dash.total":"Total","dash.used":"Usado","dash.available":"Disponível","dash.slow":"LENTO","dash.good":"BOM","dash.fast":"RÁPIDO","dash.activity":"Registro de atividade","set.title":"Configurações","set.profile":"Perfil","set.language":"Idioma","set.security":"Segurança","set.appearance":"Aparência","set.about":"Sobre","set.editUser":"Editar nome de usuário","set.save":"Salvar","set.selectLang":"Selecionar idioma","set.curPass":"Senha atual","set.newPass":"Nova senha","set.confirmPass":"Confirmar nova senha","set.changePass":"Alterar senha","set.theme":"Tema","set.dark":"Escuro","set.light":"Claro","set.desc":"Plataforma de monitoramento de sistema em tempo real construída inteiramente no navegador.","set.session":"Info da sessão","set.browser":"Navegador","set.screen":"Tela","set.lastLogin":"Último login","msg.userTaken":"Nome de usuário já existe","msg.passMismatch":"As senhas não coincidem","msg.fillAll":"Por favor preencha todos os campos","msg.loginFail":"Nome de usuário ou senha incorretos","msg.saved":"Salvo com sucesso","msg.passChanged":"Senha alterada com sucesso","msg.wrongPass":"Senha atual incorreta","msg.registered":"Registro bem-sucedido"},
-ru:{"auth.tagline":"Платформа мониторинга системы","auth.username":"Имя пользователя","auth.password":"Пароль","auth.confirmPass":"Подтвердите пароль","auth.loginBtn":"Войти","auth.registerBtn":"Регистрация","auth.noAccount":"Нет аккаунта? <a onclick=\"toggleAuth()\">Регистрация</a>","auth.hasAccount":"Уже есть аккаунт? <a onclick=\"toggleAuth()\">Войти</a>","auth.upload":"Загрузить","nav.dashboard":"Панель","nav.settings":"Настройки","dash.title":"Панель системы","dash.cpu":"Нагрузка ЦП","dash.memory":"Память","dash.storage":"Хранилище","dash.network":"Сеть","dash.uptime":"Время работы","dash.serverInfo":"Инфо сервера","dash.cpuDetails":"Детали ЦП","dash.memDetails":"Детали памяти","dash.storDetails":"Детали хранилища","dash.download":"Загрузка","dash.upload":"Отдача","dash.hostname":"Имя хоста","dash.platform":"Платформа","dash.cores":"Ядра","dash.speed":"Скорость","dash.total":"Всего","dash.used":"Используется","dash.available":"Доступно","dash.slow":"МЕДЛЕННО","dash.good":"ХОРОШО","dash.fast":"БЫСТРО","dash.activity":"Журнал активности","set.title":"Настройки","set.profile":"Профиль","set.language":"Язык","set.security":"Безопасность","set.appearance":"Внешний вид","set.about":"О программе","set.editUser":"Изменить имя","set.save":"Сохранить","set.selectLang":"Выбрать язык","set.curPass":"Текущий пароль","set.newPass":"Новый пароль","set.confirmPass":"Подтвердите новый пароль","set.changePass":"Изменить пароль","set.theme":"Тема","set.dark":"Тёмная","set.light":"Светлая","set.desc":"Платформа мониторинга системы в реальном времени, полностью построенная в браузере.","set.session":"Инфо сессии","set.browser":"Браузер","set.screen":"Экран","set.lastLogin":"Последний вход","msg.userTaken":"Имя пользователя уже занято","msg.passMismatch":"Пароли не совпадают","msg.fillAll":"Пожалуйста, заполните все поля","msg.loginFail":"Неверное имя пользователя или пароль","msg.saved":"Успешно сохранено","msg.passChanged":"Пароль успешно изменён","msg.wrongPass":"Неверный текущий пароль","msg.registered":"Регистрация успешна"},
-th:{"auth.tagline":"แพลตฟอร์มติดตามระบบ","auth.username":"ชื่อผู้ใช้","auth.password":"รหัสผ่าน","auth.confirmPass":"ยืนยันรหัสผ่าน","auth.loginBtn":"เข้าสู่ระบบ","auth.registerBtn":"ลงทะเบียน","auth.noAccount":"ยังไม่มีบัญชี? <a onclick=\"toggleAuth()\">ลงทะเบียน</a>","auth.hasAccount":"มีบัญชีอยู่แล้ว? <a onclick=\"toggleAuth()\">เข้าสู่ระบบ</a>","auth.upload":"อัปโหลด","nav.dashboard":"แดชบอร์ด","nav.settings":"ตั้งค่า","dash.title":"แดชบอร์ดระบบ","dash.cpu":"โหลด CPU","dash.memory":"หน่วยความจำ","dash.storage":"พื้นที่เก็บข้อมูล","dash.network":"เครือข่าย","dash.uptime":"เวลาทำงาน","dash.serverInfo":"ข้อมูลเซิร์ฟเวอร์","dash.cpuDetails":"รายละเอียด CPU","dash.memDetails":"รายละเอียดหน่วยความจำ","dash.storDetails":"รายละเอียดพื้นที่เก็บข้อมูล","dash.download":"ดาวน์โหลด","dash.upload":"อัปโหลด","dash.hostname":"ชื่อโฮสต์","dash.platform":"แพลตฟอร์ม","dash.cores":"คอร์","dash.speed":"ความเร็ว","dash.total":"ทั้งหมด","dash.used":"ใช้แล้ว","dash.available":"ว่าง","dash.slow":"ช้า","dash.good":"ดี","dash.fast":"เร็ว","dash.activity":"บันทึกกิจกรรม","set.title":"ตั้งค่า","set.profile":"โปรไฟล์","set.language":"ภาษา","set.security":"ความปลอดภัย","set.appearance":"ธีม","set.about":"เกี่ยวกับ","set.editUser":"แก้ไขชื่อผู้ใช้","set.save":"บันทึก","set.selectLang":"เลือกภาษา","set.curPass":"รหัสผ่านปัจจุบัน","set.newPass":"รหัสผ่านใหม่","set.confirmPass":"ยืนยันรหัสผ่านใหม่","set.changePass":"เปลี่ยนรหัสผ่าน","set.theme":"ธีม","set.dark":"มืด","set.light":"สว่าง","set.desc":"แพลตฟอร์มติดตามระบบแบบเรียลไทม์ที่สร้างขึ้นทั้งหมดในเบราว์เซอร์","set.session":"ข้อมูลเซสชัน","set.browser":"เบราว์เซอร์","set.screen":"หน้าจอ","set.lastLogin":"เข้าสู่ระบบล่าสุด","msg.userTaken":"ชื่อผู้ใช้ถูกใช้แล้ว","msg.passMismatch":"รหัสผ่านไม่ตรงกัน","msg.fillAll":"กรุณากรอกข้อมูลให้ครบ","msg.loginFail":"ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง","msg.saved":"บันทึกสำเร็จ","msg.passChanged":"เปลี่ยนรหัสผ่านสำเร็จ","msg.wrongPass":"รหัสผ่านปัจจุบันไม่ถูกต้อง","msg.registered":"ลงทะเบียนสำเร็จ"},
-vi:{"auth.tagline":"Nền tảng giám sát hệ thống","auth.username":"Tên người dùng","auth.password":"Mật khẩu","auth.confirmPass":"Xác nhận mật khẩu","auth.loginBtn":"Đăng nhập","auth.registerBtn":"Đăng ký","auth.noAccount":"Chưa có tài khoản? <a onclick=\"toggleAuth()\">Đăng ký</a>","auth.hasAccount":"Đã có tài khoản? <a onclick=\"toggleAuth()\">Đăng nhập</a>","auth.upload":"Tải lên","nav.dashboard":"Bảng điều khiển","nav.settings":"Cài đặt","dash.title":"Bảng điều khiển hệ thống","dash.cpu":"Tải CPU","dash.memory":"Bộ nhớ","dash.storage":"Lưu trữ","dash.network":"Mạng","dash.uptime":"Thời gian hoạt động","dash.serverInfo":"Thông tin máy chủ","dash.cpuDetails":"Chi tiết CPU","dash.memDetails":"Chi tiết bộ nhớ","dash.storDetails":"Chi tiết lưu trữ","dash.download":"Tải xuống","dash.upload":"Tải lên","dash.hostname":"Tên máy chủ","dash.platform":"Nền tảng","dash.cores":"Lõi","dash.speed":"Tốc độ","dash.total":"Tổng","dash.used":"Đã dùng","dash.available":"Còn trống","dash.slow":"CHẬM","dash.good":"TỐT","dash.fast":"NHANH","dash.activity":"Nhật ký hoạt động","set.title":"Cài đặt","set.profile":"Hồ sơ","set.language":"Ngôn ngữ","set.security":"Bảo mật","set.appearance":"Giao diện","set.about":"Giới thiệu","set.editUser":"Sửa tên người dùng","set.save":"Lưu","set.selectLang":"Chọn ngôn ngữ","set.curPass":"Mật khẩu hiện tại","set.newPass":"Mật khẩu mới","set.confirmPass":"Xác nhận mật khẩu mới","set.changePass":"Đổi mật khẩu","set.theme":"Chủ đề","set.dark":"Tối","set.light":"Sáng","set.desc":"Nền tảng giám sát hệ thống thời gian thực được xây dựng hoàn toàn trong trình duyệt.","set.session":"Thông tin phiên","set.browser":"Trình duyệt","set.screen":"Màn hình","set.lastLogin":"Đăng nhập cuối","msg.userTaken":"Tên người dùng đã tồn tại","msg.passMismatch":"Mật khẩu không khớp","msg.fillAll":"Vui lòng điền tất cả các trường","msg.loginFail":"Tên người dùng hoặc mật khẩu sai","msg.saved":"Đã lưu thành công","msg.passChanged":"Đã đổi mật khẩu thành công","msg.wrongPass":"Mật khẩu hiện tại sai","msg.registered":"Đăng ký thành công"},
-hi:{"auth.tagline":"सिस्टम मॉनिटरिंग प्लेटफॉर्म","auth.username":"उपयोगकर्ता नाम","auth.password":"पासवर्ड","auth.confirmPass":"पासवर्ड की पुष्टि करें","auth.loginBtn":"लॉग इन","auth.registerBtn":"रजिस्टर","auth.noAccount":"खाता नहीं है? <a onclick=\"toggleAuth()\">रजिस्टर</a>","auth.hasAccount":"पहले से खाता है? <a onclick=\"toggleAuth()\">लॉग इन</a>","auth.upload":"अपलोड","nav.dashboard":"डैशबोर्ड","nav.settings":"सेटिंग्स","dash.title":"सिस्टम डैशबोर्ड","dash.cpu":"CPU लोड","dash.memory":"मेमोरी","dash.storage":"स्टोरेज","dash.network":"नेटवर्क","dash.uptime":"अपटाइम","dash.serverInfo":"सर्वर जानकारी","dash.cpuDetails":"CPU विवरण","dash.memDetails":"मेमोरी विवरण","dash.storDetails":"स्टोरेज विवरण","dash.download":"डाउनलोड","dash.upload":"अपलोड","dash.hostname":"होस्टनाम","dash.platform":"प्लेटफॉर्म","dash.cores":"कोर","dash.speed":"गति","dash.total":"कुल","dash.used":"उपयोग में","dash.available":"उपलब्ध","dash.slow":"धीमा","dash.good":"अच्छा","dash.fast":"तेज़","dash.activity":"गतिविधि लॉग","set.title":"सेटिंग्स","set.profile":"प्रोफ़ाइल","set.language":"भाषा","set.security":"सुरक्षा","set.appearance":"दिखावट","set.about":"के बारे में","set.editUser":"उपयोगकर्ता नाम बदलें","set.save":"सहेजें","set.selectLang":"भाषा चुनें","set.curPass":"वर्तमान पासवर्ड","set.newPass":"नया पासवर्ड","set.confirmPass":"नए पासवर्ड की पुष्टि करें","set.changePass":"पासवर्ड बदलें","set.theme":"थीम","set.dark":"डार्क","set.light":"लाइट","set.desc":"ब्राउज़र में पूरी तरह से बनाया गया रियल-टाइम सिस्टम मॉनिटरिंग प्लेटफॉर्म।","set.session":"सेशन जानकारी","set.browser":"ब्राउज़र","set.screen":"स्क्रीन","set.lastLogin":"अंतिम लॉगिन","msg.userTaken":"उपयोगकर्ता नाम पहले से लिया हुआ है","msg.passMismatch":"पासवर्ड मेल नहीं खाते","msg.fillAll":"कृपया सभी फ़ील्ड भरें","msg.loginFail":"गलत उपयोगकर्ता नाम या पासवर्ड","msg.saved":"सफलतापूर्वक सहेजा गया","msg.passChanged":"पासवर्ड सफलतापूर्वक बदला गया","msg.wrongPass":"वर्तमान पासवर्ड गलत है","msg.registered":"पंजीकरण सफल"},
-tr:{"auth.tagline":"Sistem İzleme Platformu","auth.username":"Kullanıcı Adı","auth.password":"Şifre","auth.confirmPass":"Şifre Onayı","auth.loginBtn":"Giriş Yap","auth.registerBtn":"Kayıt Ol","auth.noAccount":"Hesabınız yok mu? <a onclick=\"toggleAuth()\">Kayıt Ol</a>","auth.hasAccount":"Zaten hesabınız var mı? <a onclick=\"toggleAuth()\">Giriş Yap</a>","auth.upload":"Yükle","nav.dashboard":"Kontrol Paneli","nav.settings":"Ayarlar","dash.title":"Sistem Kontrol Paneli","dash.cpu":"CPU Yükü","dash.memory":"Bellek","dash.storage":"Depolama","dash.network":"Ağ","dash.uptime":"Çalışma Süresi","dash.serverInfo":"Sunucu Bilgisi","dash.cpuDetails":"CPU Detayları","dash.memDetails":"Bellek Detayları","dash.storDetails":"Depolama Detayları","dash.download":"İndirme","dash.upload":"Yükleme","dash.hostname":"Sunucu Adı","dash.platform":"Platform","dash.cores":"Çekirdek","dash.speed":"Hız","dash.total":"Toplam","dash.used":"Kullanılan","dash.available":"Müsait","dash.slow":"YAVAŞ","dash.good":"İYİ","dash.fast":"HIZLI","dash.activity":"Etkinlik Günlüğü","set.title":"Ayarlar","set.profile":"Profil","set.language":"Dil","set.security":"Güvenlik","set.appearance":"Görünüm","set.about":"Hakkında","set.editUser":"Kullanıcı Adını Düzenle","set.save":"Kaydet","set.selectLang":"Dil Seçin","set.curPass":"Mevcut Şifre","set.newPass":"Yeni Şifre","set.confirmPass":"Yeni Şifre Onayı","set.changePass":"Şifre Değiştir","set.theme":"Tema","set.dark":"Koyu","set.light":"Açık","set.desc":"Tamamen tarayıcıda oluşturulmuş gerçek zamanlı sistem izleme platformu.","set.session":"Oturum Bilgisi","set.browser":"Tarayıcı","set.screen":"Ekran","set.lastLogin":"Son Giriş","msg.userTaken":"Kullanıcı adı zaten alınmış","msg.passMismatch":"Şifreler eşleşmiyor","msg.fillAll":"Lütfen tüm alanları doldurun","msg.loginFail":"Geçersiz kullanıcı adı veya şifre","msg.saved":"Başarıyla kaydedildi","msg.passChanged":"Şifre başarıyla değiştirildi","msg.wrongPass":"Mevcut şifre yanlış","msg.registered":"Kayıt başarılı"},
-it:{"auth.tagline":"Piattaforma di monitoraggio del sistema","auth.username":"Nome utente","auth.password":"Password","auth.confirmPass":"Conferma password","auth.loginBtn":"Accedi","auth.registerBtn":"Registrati","auth.noAccount":"Non hai un account? <a onclick=\"toggleAuth()\">Registrati</a>","auth.hasAccount":"Hai già un account? <a onclick=\"toggleAuth()\">Accedi</a>","auth.upload":"Carica","nav.dashboard":"Cruscotto","nav.settings":"Impostazioni","dash.title":"Cruscotto di sistema","dash.cpu":"Carico CPU","dash.memory":"Memoria","dash.storage":"Archiviazione","dash.network":"Rete","dash.uptime":"Tempo di attività","dash.serverInfo":"Info server","dash.cpuDetails":"Dettagli CPU","dash.memDetails":"Dettagli memoria","dash.storDetails":"Dettagli archiviazione","dash.download":"Download","dash.upload":"Upload","dash.hostname":"Nome host","dash.platform":"Piattaforma","dash.cores":"Core","dash.speed":"Velocità","dash.total":"Totale","dash.used":"Usato","dash.available":"Disponibile","dash.slow":"LENTO","dash.good":"BUONO","dash.fast":"VELOCE","dash.activity":"Registro attività","set.title":"Impostazioni","set.profile":"Profilo","set.language":"Lingua","set.security":"Sicurezza","set.appearance":"Aspetto","set.about":"Info","set.editUser":"Modifica nome utente","set.save":"Salva","set.selectLang":"Seleziona lingua","set.curPass":"Password attuale","set.newPass":"Nuova password","set.confirmPass":"Conferma nuova password","set.changePass":"Cambia password","set.theme":"Tema","set.dark":"Scuro","set.light":"Chiaro","set.desc":"Piattaforma di monitoraggio di sistema in tempo reale costruita interamente nel browser.","set.session":"Info sessione","set.browser":"Browser","set.screen":"Schermo","set.lastLogin":"Ultimo accesso","msg.userTaken":"Nome utente già in uso","msg.passMismatch":"Le password non corrispondono","msg.fillAll":"Compila tutti i campi","msg.loginFail":"Nome utente o password errati","msg.saved":"Salvato con successo","msg.passChanged":"Password cambiata con successo","msg.wrongPass":"Password attuale errata","msg.registered":"Registrazione riuscita"},
-nl:{"auth.tagline":"Systeemmonitoringplatform","auth.username":"Gebruikersnaam","auth.password":"Wachtwoord","auth.confirmPass":"Bevestig wachtwoord","auth.loginBtn":"Inloggen","auth.registerBtn":"Registreren","auth.noAccount":"Geen account? <a onclick=\"toggleAuth()\">Registreren</a>","auth.hasAccount":"Al een account? <a onclick=\"toggleAuth()\">Inloggen</a>","auth.upload":"Uploaden","nav.dashboard":"Dashboard","nav.settings":"Instellingen","dash.title":"Systeemdashboard","dash.cpu":"CPU-belasting","dash.memory":"Geheugen","dash.storage":"Opslag","dash.network":"Netwerk","dash.uptime":"Uptime","dash.serverInfo":"Serverinfo","dash.cpuDetails":"CPU-details","dash.memDetails":"Geheugendetails","dash.storDetails":"Opslagdetails","dash.download":"Download","dash.upload":"Upload","dash.hostname":"Hostnaam","dash.platform":"Platform","dash.cores":"Kernen","dash.speed":"Snelheid","dash.total":"Totaal","dash.used":"Gebruikt","dash.available":"Beschikbaar","dash.slow":"LANGZAAM","dash.good":"GOED","dash.fast":"SNEL","dash.activity":"Activiteitenlog","set.title":"Instellingen","set.profile":"Profiel","set.language":"Taal","set.security":"Beveiliging","set.appearance":"Uiterlijk","set.about":"Over","set.editUser":"Gebruikersnaam wijzigen","set.save":"Opslaan","set.selectLang":"Taal kiezen","set.curPass":"Huidig wachtwoord","set.newPass":"Nieuw wachtwoord","set.confirmPass":"Bevestig nieuw wachtwoord","set.changePass":"Wachtwoord wijzigen","set.theme":"Thema","set.dark":"Donker","set.light":"Licht","set.desc":"Realtime systeemmonitoringplatform volledig gebouwd in de browser.","set.session":"Sessieinfo","set.browser":"Browser","set.screen":"Scherm","set.lastLogin":"Laatste login","msg.userTaken":"Gebruikersnaam al in gebruik","msg.passMismatch":"Wachtwoorden komen niet overeen","msg.fillAll":"Vul alle velden in","msg.loginFail":"Ongeldige gebruikersnaam of wachtwoord","msg.saved":"Succesvol opgeslagen","msg.passChanged":"Wachtwoord succesvol gewijzigd","msg.wrongPass":"Huidig wachtwoord onjuist","msg.registered":"Registratie succesvol"},
-pl:{"auth.tagline":"Platforma monitorowania systemu","auth.username":"Nazwa użytkownika","auth.password":"Hasło","auth.confirmPass":"Potwierdź hasło","auth.loginBtn":"Zaloguj się","auth.registerBtn":"Zarejestruj się","auth.noAccount":"Nie masz konta? <a onclick=\"toggleAuth()\">Zarejestruj się</a>","auth.hasAccount":"Masz już konto? <a onclick=\"toggleAuth()\">Zaloguj się</a>","auth.upload":"Prześlij","nav.dashboard":"Panel","nav.settings":"Ustawienia","dash.title":"Panel systemowy","dash.cpu":"Obciążenie CPU","dash.memory":"Pamięć","dash.storage":"Magazyn","dash.network":"Sieć","dash.uptime":"Czas pracy","dash.serverInfo":"Info serwera","dash.cpuDetails":"Szczegóły CPU","dash.memDetails":"Szczegóły pamięci","dash.storDetails":"Szczegóły magazynu","dash.download":"Pobieranie","dash.upload":"Wysyłanie","dash.hostname":"Nazwa hosta","dash.platform":"Platforma","dash.cores":"Rdzenie","dash.speed":"Prędkość","dash.total":"Łącznie","dash.used":"Używane","dash.available":"Dostępne","dash.slow":"WOLNO","dash.good":"DOBRY","dash.fast":"SZYBKO","dash.activity":"Dziennik aktywności","set.title":"Ustawienia","set.profile":"Profil","set.language":"Język","set.security":"Bezpieczeństwo","set.appearance":"Wygląd","set.about":"O programie","set.editUser":"Zmień nazwę","set.save":"Zapisz","set.selectLang":"Wybierz język","set.curPass":"Obecne hasło","set.newPass":"Nowe hasło","set.confirmPass":"Potwierdź nowe hasło","set.changePass":"Zmień hasło","set.theme":"Motyw","set.dark":"Ciemny","set.light":"Jasny","set.desc":"Platforma monitorowania systemu w czasie rzeczywistym, zbudowana całkowicie w przeglądarce.","set.session":"Info sesji","set.browser":"Przeglądarka","set.screen":"Ekran","set.lastLogin":"Ostatnie logowanie","msg.userTaken":"Nazwa użytkownika jest już zajęta","msg.passMismatch":"Hasła nie pasują","msg.fillAll":"Wypełnij wszystkie pola","msg.loginFail":"Nieprawidłowa nazwa użytkownika lub hasło","msg.saved":"Zapisano pomyślnie","msg.passChanged":"Hasło zmienione pomyślnie","msg.wrongPass":"Obecne hasło jest nieprawidłowe","msg.registered":"Rejestracja udana"},
-sv:{"auth.tagline":"Systemövervakningsplattform","auth.username":"Användarnamn","auth.password":"Lösenord","auth.confirmPass":"Bekräfta lösenord","auth.loginBtn":"Logga in","auth.registerBtn":"Registrera","auth.noAccount":"Inget konto? <a onclick=\"toggleAuth()\">Registrera</a>","auth.hasAccount":"Redan ett konto? <a onclick=\"toggleAuth()\">Logga in</a>","auth.upload":"Ladda upp","nav.dashboard":"Kontrollpanel","nav.settings":"Inställningar","dash.title":"Systemkontrollpanel","dash.cpu":"CPU-belastning","dash.memory":"Minne","dash.storage":"Lagring","dash.network":"Nätverk","dash.uptime":"Drifttid","dash.serverInfo":"Serverinfo","dash.cpuDetails":"CPU-detaljer","dash.memDetails":"Minnesdetaljer","dash.storDetails":"Lagringsdetaljer","dash.download":"Nerladdning","dash.upload":"Uppladdning","dash.hostname":"Värdnamn","dash.platform":"Plattform","dash.cores":"Kärnor","dash.speed":"Hastighet","dash.total":"Totalt","dash.used":"Använt","dash.available":"Tillgängligt","dash.slow":"LÅNGSAMT","dash.good":"BRA","dash.fast":"SNABBT","dash.activity":"Aktivitetslogg","set.title":"Inställningar","set.profile":"Profil","set.language":"Språk","set.security":"Säkerhet","set.appearance":"Utseende","set.about":"Om","set.editUser":"Ändra användarnamn","set.save":"Spara","set.selectLang":"Välj språk","set.curPass":"Nuvarande lösenord","set.newPass":"Nytt lösenord","set.confirmPass":"Bekräfta nytt lösenord","set.changePass":"Ändra lösenord","set.theme":"Tema","set.dark":"Mörkt","set.light":"Ljust","set.desc":"Realtid systemövervakningsplattform byggd helt i webbläsaren.","set.session":"Sessionsinfo","set.browser":"Webbläsare","set.screen":"Skärm","set.lastLogin":"Senaste inloggning","msg.userTaken":"Användarnamnet är redan taget","msg.passMismatch":"Lösenorden matchar inte","msg.fillAll":"Fyll i alla fält","msg.loginFail":"Fel användarnamn eller lösenord","msg.saved":"Sparat framgångsrikt","msg.passChanged":"Lösenord ändrat framgångsrikt","msg.wrongPass":"Nuvarande lösenord fel","msg.registered":"Registrering lyckades"}
-};
- 
-function getT(lang){ return Object.assign({}, BASE_T, TR[lang] || {}); }
-function t(key){ return (getT(state.lang)[key]) || key; }
 
-let state={user:null,lang:localStorage.getItem('nexus_lang')||'en',theme:localStorage.getItem('nexus_theme')||'dark',currentView:'dashboard',currentSetting:'profile',charts:{},monInterval:null,uptimeStart:Date.now(),activities:[],netStart:{dl:0,ul:0}};
-async function hashPwd(pwd){const e=new TextEncoder(),d=e.encode(pwd+'_nexus_salt_2024'),h=await crypto.subtle.digest('SHA-256',d);return Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,'0')).join('');}
-function getU(){try{return JSON.parse(localStorage.getItem('nexus_users'))||{}}catch{return{}}}
-function saveU(u){localStorage.setItem('nexus_users',JSON.stringify(u));}
-function getCUser(){try{return JSON.parse(localStorage.getItem('nexus_cu'));}catch{return null;}}
-function saveCUser(u){localStorage.setItem('nexus_cu',JSON.stringify(u));}
-function defAvatar(){const c=document.createElement('canvas');c.width=100;c.height=100;const x=c.getContext('2d'),g=x.createLinearGradient(0,0,100,100);g.addColorStop(0,'#10b981');g.addColorStop(1,'#0ea5e9');x.fillStyle=g;x.fillRect(0,0,100,100);x.fillStyle='#fff';x.font='bold 40px Space Grotesk';x.textAlign='center';x.textBaseline='middle';x.fillText('?',50,52);return c.toDataURL();}
-function toast(m,tp='info'){const e=document.createElement('div');e.className='tst '+tp;const ic={success:'fa-check-circle',error:'fa-exclamation-circle',info:'fa-info-circle'};e.innerHTML=`<i class="fas ${ic[tp]||ic.info}"></i><span>${m}</span>`;document.getElementById('toasts').appendChild(e);setTimeout(()=>{e.style.animation='too .3s ease forwards';setTimeout(()=>e.remove(),300);},3000);}
-function addAct(txt,col='#10b981'){state.activities.unshift({txt,col,time:new Date()});if(state.activities.length>50)state.activities.pop();renderAct();}
-function fmtB(b){if(b===0)return'0 B';const k=1024,s=['B','KB','MB','GB','TB'],i=Math.floor(Math.log(b)/Math.log(k));return parseFloat((b/Math.pow(k,i)).toFixed(1))+' '+s[i];}
-function fmtUp(ms){const s=Math.floor(ms/1000),m=Math.floor(s/60),sec=s%60,h=Math.floor(m/60),min=m%60;return h>0?`${h}h ${min}m ${sec}s`:`${min}m ${sec}s`;}
+// ============ MULTI LANGUAGE ==========
+const LANGS = {en:'English',id:'Bahasa Indonesia',ms:'Bahasa Melayu',ja:'日本語',ko:'한국어',zh:'中文',ar:'العربية',fr:'Français',de:'Deutsch',es:'Español',pt:'Português',ru:'Русский',th:'ภาษาไทย',vi:'Tiếng Việt',hi:'हिन्दी',tr:'Türkçe',it:'Italiano',nl:'Nederlands',pl:'Polski',sv:'Svenska'};
+const RTL_LANGS = ['ar'];
+const FLAGS = {en:'🇬🇧',id:'🇮🇩',ms:'🇲🇾',ja:'🇯🇵',ko:'🇰🇷',zh:'🇨🇳',ar:'🇸🇦',fr:'🇫🇷',de:'🇩🇪',es:'🇪🇸',pt:'🇧🇷',ru:'🇷🇺',th:'🇹🇭',vi:'🇻🇳',hi:'🇮🇳',tr:'🇹🇷',it:'🇮🇹',nl:'🇳🇱',pl:'🇵🇱',sv:'🇸🇪'};
 
-function toggleAuth(){const l=document.getElementById('loginForm'),r=document.getElementById('registerForm'),sh=l.style.display!=='none';l.style.display=sh?'none':'block';r.style.display=sh?'block':'none';}
-function previewRegPhoto(inp){if(inp.files&&inp.files[0]){const rd=new FileReader();rd.onload=e=>{document.getElementById('regPhotoPrev').src=e.target.result;document.getElementById('regPhotoPrev').style.display='block';document.getElementById('regPhotoPh').style.display='none';};rd.readAsDataURL(inp.files[0]);}}
-async function doRegister(){const u=document.getElementById('regUser').value.trim(),p=document.getElementById('regPass').value,c=document.getElementById('regConfirm').value,ph=document.getElementById('regPhotoPrev');if(!u||!p||!c){toast(t('msg.fillAll'),'error');return;}if(p!==c){toast(t('msg.passMismatch'),'error');return;}const us=getU();if(us[u]){toast(t('msg.userTaken'),'error');return;}const photo=ph.style.display!=='none'?ph.src:defAvatar();us[u]={password:await hashPwd(p),photo,joined:Date.now(),lastLogin:null};saveU(us);toast(t('msg.registered'),'success');toggleAuth();}
-async function doLogin(){const u=document.getElementById('loginUser').value.trim(),p=document.getElementById('loginPass').value;if(!u||!p){toast(t('msg.fillAll'),'error');return;}const us=getU();if(!us[u]){toast(t('msg.loginFail'),'error');return;}const h=await hashPwd(p);if(us[u].password!==h){toast(t('msg.loginFail'),'error');return;}us[u].lastLogin=Date.now();saveU(us);state.user={username:u,photo:us[u].photo,joined:us[u].joined,lastLogin:us[u].lastLogin};saveCUser(state.user);state.uptimeStart=Date.now();state.activities=[];state.netStart={dl:performance.getEntriesByType('resource').reduce((a,e)=>a+e.transferSize,0),ul:0};addAct('Session started — '+u,'#10b981');showApp();}
-function doLogout(){state.user=null;localStorage.removeItem('nexus_cu');if(state.monInterval)clearInterval(state.monInterval);Object.values(state.charts).forEach(c=>{if(c&&c.destroy)c.destroy();});state.charts={};document.getElementById('mainApp').style.display='none';document.getElementById('authScreen').style.display='flex';document.getElementById('loginUser').value='';document.getElementById('loginPass').value='';}
-function navigateTo(v){if(v===state.currentView)return;const d=document.getElementById('dashboardView'),s=document.getElementById('settingsView');if(v==='settings'){d.className='view out-left';s.className='view active';}else{d.className='view active';s.className='view in-right';}state.currentView=v;document.querySelectorAll('#sidebar nav a').forEach(a=>a.classList.toggle('active',a.dataset.view===v));document.getElementById('sidebar').classList.remove('open');}
-function switchSetting(p){state.currentSetting=p;document.querySelectorAll('.sp').forEach(el=>el.classList.remove('active'));document.getElementById('panel-'+p).classList.add('active');document.querySelectorAll('#settingsNav a').forEach(a=>a.classList.toggle('active',a.dataset.setting===p));}
+function t(key) { const dict = {}; return dict[key] || key; }
 
-function setLang(l){state.lang=l;document.documentElement.lang=l;document.documentElement.dir=RTL_LANGS.includes(l)?'rtl':'ltr';localStorage.setItem('nexus_lang',l);applyTr();renderLangGrid();addAct('Language changed to '+LANGS[l],'#0ea5e9');toast(t('msg.saved'),'success');}
-function applyTr(){document.querySelectorAll('[data-t]').forEach(el=>{const k=el.getAttribute('data-t'),v=t(k);if(v)el.innerHTML=v;});buildDashGrid();updateProfileInfo();}
-function renderLangGrid(){const g=document.getElementById('langGrid');g.innerHTML='';Object.entries(LANGS).forEach(([c,n])=>{const d=document.createElement('div');d.className='lo'+(state.lang===c?' active':'');d.onclick=()=>setLang(c);d.innerHTML=`<span class="fl">${FLAGS[c]||'🌐'}</span><span>${n}</span>`;g.appendChild(d);});}
-function setTheme(th){state.theme=th;document.documentElement.setAttribute('data-theme',th);localStorage.setItem('nexus_theme',th);updateThemeBtns();addAct('Theme changed to '+th,'#f59e0b');toast(t('msg.saved'),'success');}
-function updateThemeBtns(){document.getElementById('tDark').classList.toggle('active',state.theme==='dark');document.getElementById('tLight').classList.toggle('active',state.theme==='light');}
-function changeProfilePhoto(inp){if(inp.files&&inp.files[0]){const rd=new FileReader();rd.onload=e=>{const src=e.target.result;state.user.photo=src;saveCUser(state.user);const us=getU();if(us[state.user.username]){us[state.user.username].photo=src;saveU(us);}updateProfileUI();addAct('Profile photo updated','#10b981');toast(t('msg.saved'),'success');};rd.readAsDataURL(inp.files[0]);}}
-function saveUsername(){const nm=document.getElementById('editUsername').value.trim();if(!nm){toast(t('msg.fillAll'),'error');return;}const old=state.user.username,us=getU();if(nm!==old&&us[nm]){toast(t('msg.userTaken'),'error');return;}if(nm!==old){us[nm]=us[old];delete us[old];saveU(us);}state.user.username=nm;saveCUser(state.user);updateProfileUI();addAct('Username changed to '+nm,'#10b981');toast(t('msg.saved'),'success');}
-async function changePassword(){const cur=document.getElementById('curPass').value,nw=document.getElementById('newPass').value,cn=document.getElementById('confNew').value;if(!cur||!nw||!cn){toast(t('msg.fillAll'),'error');return;}if(nw!==cn){toast(t('msg.passMismatch'),'error');return;}const h=await hashPwd(cur),us=getU();if(!us[state.user.username]||us[state.user.username].password!==h){toast(t('msg.wrongPass'),'error');return;}us[state.user.username].password=await hashPwd(nw);saveU(us);document.getElementById('curPass').value='';document.getElementById('newPass').value='';document.getElementById('confNew').value='';addAct('Password changed','#f59e0b');toast(t('msg.passChanged'),'success');}
+// ============ UTILS ==========
+async function hashPwd(pwd) { const e = new TextEncoder(), d = e.encode(pwd + '_nexus_salt_2024'), h = await crypto.subtle.digest('SHA-256', d); return Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2, '0')).join(''); }
+function getU() { try { return JSON.parse(localStorage.getItem('nexus_users')) || {}; } catch { return {}; } }
+function saveU(u) { localStorage.setItem('nexus_users', JSON.stringify(u)); }
+function getCUser() { try { return JSON.parse(localStorage.getItem('nexus_cu')); } catch { return null; } }
+function saveCUser(u) { localStorage.setItem('nexus_cu', JSON.stringify(u)); }
+function defAvatar() { const c = document.createElement('canvas'); c.width = 100; c.height = 100; const x = c.getContext('2d'), g = x.createLinearGradient(0, 0, 100, 100); g.addColorStop(0, '#10b981'); g.addColorStop(1, '#0ea5e9'); x.fillStyle = g; x.fillRect(0, 0, 100, 100); x.fillStyle = '#fff'; x.font = 'bold 40px Space Grotesk'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('?', 50, 52); return c.toDataURL(); }
+function toast(m, tp = 'info') { const e = document.createElement('div'); e.className = 'tst ' + tp; const ic = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' }; e.innerHTML = `<i class="fas ${ic[tp] || ic.info}"></i><span>${m}</span>`; document.getElementById('toasts').appendChild(e); setTimeout(() => { e.style.animation = 'too .3s ease forwards'; setTimeout(() => e.remove(), 300); }, 3000); }
+function addAct(txt, col = '#10b981') { state.activities.unshift({ txt, col, time: new Date() }); if (state.activities.length > 50) state.activities.pop(); renderAct(); }
+function fmtB(b) { if (b === 0) return '0 B'; const k = 1024, s = ['B', 'KB', 'MB', 'GB', 'TB'], i = Math.floor(Math.log(b) / Math.log(k)); return parseFloat((b / Math.pow(k, i)).toFixed(1)) + ' ' + s[i]; }
+function fmtUp(ms) { const s = Math.floor(ms / 1000), m = Math.floor(s / 60), sec = s % 60, h = Math.floor(m / 60), min = m % 60; return h > 0 ? `${h}h ${min}m ${sec}s` : `${min}m ${sec}s`; }
+function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, function(m) { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; return m; }); }
 
-function updateProfileUI(){if(!state.user)return;document.getElementById('sidebarAvatar').src=state.user.photo;document.getElementById('sidebarName').textContent=state.user.username;document.getElementById('profAv').src=state.user.photo;document.getElementById('profName').textContent=state.user.username;document.getElementById('editUsername').value=state.user.username;}
-function updateProfileInfo(){if(!state.user)return;const j=state.user.joined?new Date(state.user.joined).toLocaleDateString(state.lang):'-';document.getElementById('profJoined').textContent=j;document.getElementById('sBrowser').textContent=navigator.userAgent.split(' ').slice(-3).join(' ');document.getElementById('sScreen').textContent=screen.width+'x'+screen.height;document.getElementById('sLast').textContent=state.user.lastLogin?new Date(state.user.lastLogin).toLocaleString(state.lang):'-';}
-function buildDashGrid(){const g=document.getElementById('dashGrid');g.innerHTML=`
-<div class="ic"><h3><i class="fas fa-wifi"></i>${t('dash.network')}</h3><div class="ir"><span class="l">${t('dash.download')}</span><span class="v" id="nDl">--</span></div><div class="ir"><span class="l">${t('dash.upload')}</span><span class="v" id="nUl">--</span></div><div class="ir"><span class="l">Type</span><span class="v" id="nType">--</span></div></div>
-<div class="ic"><h3><i class="fas fa-clock"></i>${t('dash.uptime')}</h3><div class="ir"><span class="l">${t('dash.uptime')}</span><span class="v" id="upTime">--</span></div><div class="ir"><span class="l">Latency</span><span class="v" id="upLat">--</span></div></div>
-<div class="ic"><h3><i class="fas fa-server"></i>${t('dash.serverInfo')}</h3><div class="ir"><span class="l">${t('dash.hostname')}</span><span class="v" id="sHost">--</span></div><div class="ir"><span class="l">${t('dash.platform')}</span><span class="v" id="sPlat">--</span></div><div class="ir"><span class="l">Language</span><span class="v" id="sLang">--</span></div></div>
-<div class="ic"><h3><i class="fas fa-microchip"></i>${t('dash.cpuDetails')}</h3><div class="ir"><span class="l">Architecture</span><span class="v" id="cArch">--</span></div><div class="ir"><span class="l">${t('dash.cores')}</span><span class="v" id="cCores">--</span></div><div class="ir"><span class="l">${t('dash.speed')}</span><span class="v" id="cSpeed">--</span></div></div>
-<div class="ic"><h3><i class="fas fa-memory"></i>${t('dash.memDetails')}</h3><div class="ir"><span class="l">${t('dash.total')}</span><span class="v" id="mTot">--</span></div><div class="ir"><span class="l">${t('dash.used')}</span><span class="v" id="mUsed">--</span></div><div class="ir"><span class="l">${t('dash.available')}</span><span class="v" id="mAvail">--</span></div></div>
-<div class="ic"><h3><i class="fas fa-hdd"></i>${t('dash.storDetails')}</h3><div class="ir"><span class="l">${t('dash.total')}</span><span class="v" id="sTot">--</span></div><div class="ir"><span class="l">${t('dash.used')}</span><span class="v" id="sUsed">--</span></div><div class="ir"><span class="l">${t('dash.available')}</span><span class="v" id="sAvail">--</span></div></div>
-<div class="ic ac"><h3><i class="fas fa-list"></i>${t('dash.activity')}</h3><div class="al" id="actList"></div></div>
-`;}
+// ============ AUTH ==========
+function toggleAuth() { const l = document.getElementById('loginForm'), r = document.getElementById('registerForm'), sh = l.style.display !== 'none'; l.style.display = sh ? 'none' : 'block'; r.style.display = sh ? 'block' : 'none'; }
+function previewRegPhoto(inp) { if (inp.files && inp.files[0]) { const rd = new FileReader(); rd.onload = e => { document.getElementById('regPhotoPrev').src = e.target.result; document.getElementById('regPhotoPrev').style.display = 'block'; document.getElementById('regPhotoPh').style.display = 'none'; }; rd.readAsDataURL(inp.files[0]); } }
+async function doRegister() { const u = document.getElementById('regUser').value.trim(), p = document.getElementById('regPass').value, c = document.getElementById('regConfirm').value, ph = document.getElementById('regPhotoPrev'); if (!u || !p || !c) { toast('Fill all fields', 'error'); return; } if (p !== c) { toast('Passwords do not match', 'error'); return; } const us = getU(); if (us[u]) { toast('Username taken', 'error'); return; } const photo = ph.style.display !== 'none' ? ph.src : defAvatar(); us[u] = { password: await hashPwd(p), photo, joined: Date.now(), lastLogin: null }; saveU(us); toast('Registration successful', 'success'); toggleAuth(); }
+async function doLogin() { const u = document.getElementById('loginUser').value.trim(), p = document.getElementById('loginPass').value; if (!u || !p) { toast('Fill all fields', 'error'); return; } const us = getU(); if (!us[u]) { toast('Invalid credentials', 'error'); return; } const h = await hashPwd(p); if (us[u].password !== h) { toast('Invalid credentials', 'error'); return; } us[u].lastLogin = Date.now(); saveU(us); state.user = { username: u, photo: us[u].photo, joined: us[u].joined, lastLogin: us[u].lastLogin }; saveCUser(state.user); state.uptimeStart = Date.now(); state.activities = []; state.netStart = { dl: performance.getEntriesByType('resource').reduce((a, e) => a + e.transferSize, 0), ul: 0 }; addAct('Session started — ' + u, '#10b981'); showApp(); }
+function doLogout() { state.user = null; localStorage.removeItem('nexus_cu'); if (state.monInterval) clearInterval(state.monInterval); Object.values(state.charts).forEach(c => { if (c && c.destroy) c.destroy(); }); state.charts = {}; document.getElementById('mainApp').style.display = 'none'; document.getElementById('authScreen').style.display = 'flex'; document.getElementById('loginUser').value = ''; document.getElementById('loginPass').value = ''; }
 
-function renderAct(){const el=document.getElementById('actList');if(!el)return;el.innerHTML=state.activities.slice(0,20).map(a=>`<div class="ai"><div class="dt" style="background:${a.col}"></div><span>${a.txt}</span><span class="tm">${a.time.toLocaleTimeString(state.lang)}</span></div>`).join('');}
-function makeChart(id,color){const ctx=document.getElementById(id);if(!ctx)return null;return new Chart(ctx,{type:'doughnut',data:{datasets:[{data:[0,100],backgroundColor:[color,'rgba(255,255,255,0.06)'],borderWidth:0,cutout:'78%'}]},options:{responsive:false,plugins:{legend:{display:false},tooltip:{enabled:false}},animation:{duration:400},events:[]}});}
-function updateChart(chart,val){if(!chart)return;const v=Math.min(100,Math.max(0,val));chart.data.datasets[0].data=[v,100-v];chart.update('none');}
-let lastPerf=performance.now();
-function monitor(){const now=performance.now();
-let cpuLoad=0;try{const entries=performance.getEntriesByType('navigation');if(entries.length>0){const nav=entries[entries.length-1];const work=nav.loadEventEnd-nav.startTime;const total=now-nav.startTime;if(total>0)cpuLoad=Math.min(100,(work/total)*100*0.5);}}catch(e){}
-if(!monitor._cpuBase)monitor._cpuBase=Math.random()*5+1;
-monitor._cpuBase+=((Math.random()-0.5)*2);monitor._cpuBase=Math.max(0.1,Math.min(30,monitor._cpuBase));
-cpuLoad=monitor._cpuBase+(performance.now()%1000)/100;
+// ============ NAVIGATION ==========
+function navigateTo(v) { if (v === state.currentView) return; const d = document.getElementById('dashboardView'), a = document.getElementById('apiKeysView'), s = document.getElementById('settingsView'); d.className = 'view'; a.className = 'view'; s.className = 'view'; if (v === 'dashboard') { d.classList.add('active'); } else if (v === 'api-keys') { a.classList.add('active'); } else if (v === 'settings') { s.classList.add('active'); } state.currentView = v; document.querySelectorAll('#sidebar nav a').forEach(el => el.classList.toggle('active', el.dataset.view === v)); document.getElementById('sidebar').classList.remove('open'); }
+function showApiKeysPage() { navigateTo('api-keys'); loadApiKeysList(); }
+function switchSetting(p) { state.currentSetting = p; document.querySelectorAll('.sp').forEach(el => el.classList.remove('active')); document.getElementById('panel-' + p).classList.add('active'); document.querySelectorAll('#settingsNav a').forEach(a => a.classList.toggle('active', a.dataset.setting === p)); }
 
-// Memory
-let memPct=0,memTotal=0,memUsed=0;
-if(performance.memory){memTotal=performance.memory.jsHeapSizeLimit;memUsed=performance.memory.usedJSHeapSize;memPct=(memUsed/memTotal)*100;}else{memTotal=536870912;memUsed=50*1024*1024+Math.random()*30*1024*1024;memPct=(memUsed/memTotal)*100;}
+// ============ LANGUAGE & THEME ==========
+function setLang(l) { state.lang = l; document.documentElement.lang = l; document.documentElement.dir = RTL_LANGS.includes(l) ? 'rtl' : 'ltr'; localStorage.setItem('nexus_lang', l); renderLangGrid(); addAct('Language changed to ' + LANGS[l], '#0ea5e9'); toast('Saved', 'success'); }
+function renderLangGrid() { const g = document.getElementById('langGrid'); g.innerHTML = ''; Object.entries(LANGS).forEach(([c, n]) => { const d = document.createElement('div'); d.className = 'lo' + (state.lang === c ? ' active' : ''); d.onclick = () => setLang(c); d.innerHTML = `<span class="fl">${FLAGS[c] || '🌐'}</span><span>${n}</span>`; g.appendChild(d); }); }
+function setTheme(th) { state.theme = th; document.documentElement.setAttribute('data-theme', th); localStorage.setItem('nexus_theme', th); updateThemeBtns(); addAct('Theme changed to ' + th, '#f59e0b'); toast('Saved', 'success'); }
+function updateThemeBtns() { document.getElementById('tDark').classList.toggle('active', state.theme === 'dark'); document.getElementById('tLight').classList.toggle('active', state.theme === 'light'); }
 
-// Storage
-let stoTotal=0,stoUsed=0;if(navigator.storage&&navigator.storage.estimate){navigator.storage.estimate().then(est=>{stoTotal=est.quota||0;stoUsed=est.usage||0;const stoPct=stoTotal>0?(stoUsed/stoTotal)*100:0;updateChart(state.charts.sto,stoPct);document.getElementById('stoV').textContent=stoPct.toFixed(1)+'%';document.getElementById('sTot').textContent=fmtB(stoTotal);document.getElementById('sUsed').textContent=fmtB(stoUsed);document.getElementById('sAvail').textContent=fmtB(stoTotal-stoUsed);}).catch(()=>{});}
-updateChart(state.charts.cpu,cpuLoad);
-updateChart(state.charts.mem,memPct);
-document.getElementById('cpuV').textContent=cpuLoad.toFixed(1)+'%';
-document.getElementById('memV').textContent=memPct.toFixed(1)+'%';
+// ============ PROFILE ==========
+function changeProfilePhoto(inp) { if (inp.files && inp.files[0]) { const rd = new FileReader(); rd.onload = e => { const src = e.target.result; state.user.photo = src; saveCUser(state.user); const us = getU(); if (us[state.user.username]) { us[state.user.username].photo = src; saveU(us); } updateProfileUI(); addAct('Profile photo updated', '#10b981'); toast('Saved', 'success'); }; rd.readAsDataURL(inp.files[0]); } }
+function saveUsername() { const nm = document.getElementById('editUsername').value.trim(); if (!nm) { toast('Fill all fields', 'error'); return; } const old = state.user.username, us = getU(); if (nm !== old && us[nm]) { toast('Username taken', 'error'); return; } if (nm !== old) { us[nm] = us[old]; delete us[old]; saveU(us); } state.user.username = nm; saveCUser(state.user); updateProfileUI(); addAct('Username changed to ' + nm, '#10b981'); toast('Saved', 'success'); }
+async function changePassword() { const cur = document.getElementById('curPass').value, nw = document.getElementById('newPass').value, cn = document.getElementById('confNew').value; if (!cur || !nw || !cn) { toast('Fill all fields', 'error'); return; } if (nw !== cn) { toast('Passwords do not match', 'error'); return; } const h = await hashPwd(cur), us = getU(); if (!us[state.user.username] || us[state.user.username].password !== h) { toast('Wrong password', 'error'); return; } us[state.user.username].password = await hashPwd(nw); saveU(us); document.getElementById('curPass').value = ''; document.getElementById('newPass').value = ''; document.getElementById('confNew').value = ''; addAct('Password changed', '#f59e0b'); toast('Password changed', 'success'); }
+function updateProfileUI() { if (!state.user) return; document.getElementById('sidebarAvatar').src = state.user.photo; document.getElementById('sidebarName').textContent = state.user.username; document.getElementById('profAv').src = state.user.photo; document.getElementById('profName').textContent = state.user.username; document.getElementById('editUsername').value = state.user.username; }
+function updateProfileInfo() { if (!state.user) return; const j = state.user.joined ? new Date(state.user.joined).toLocaleDateString(state.lang) : '-'; document.getElementById('profJoined').textContent = j; document.getElementById('sBrowser').textContent = navigator.userAgent.split(' ').slice(-3).join(' '); document.getElementById('sScreen').textContent = screen.width + 'x' + screen.height; document.getElementById('sLast').textContent = state.user.lastLogin ? new Date(state.user.lastLogin).toLocaleString(state.lang) : '-'; }
 
-const lat=now-lastPerf;lastPerf=now;
-const latBadge=document.getElementById('latBadge');
-latBadge.textContent=Math.round(lat)+'ms';
-if(lat>100){latBadge.textContent=Math.round(lat)+'ms '+t('dash.slow');latBadge.style.background='rgba(239,68,68,.15)';latBadge.style.color='#fca5a5';}
-else if(lat>30){latBadge.textContent=Math.round(lat)+'ms '+t('dash.good');latBadge.style.background='rgba(245,158,11,.15)';latBadge.style.color='#fcd34d';}
-else{latBadge.textContent=Math.round(lat)+'ms '+t('dash.fast');latBadge.style.background='var(--glow)';latBadge.style.color='var(--accent)';}
+// ============ DASHBOARD GRID ==========
+function buildDashGrid() { const g = document.getElementById('dashGrid'); g.innerHTML = `<div class="ic"><h3><i class="fas fa-wifi"></i>Network</h3><div class="ir"><span class="l">Download</span><span class="v" id="nDl">--</span></div><div class="ir"><span class="l">Upload</span><span class="v" id="nUl">--</span></div><div class="ir"><span class="l">Type</span><span class="v" id="nType">--</span></div></div><div class="ic"><h3><i class="fas fa-clock"></i>Uptime</h3><div class="ir"><span class="l">Uptime</span><span class="v" id="upTime">--</span></div><div class="ir"><span class="l">Latency</span><span class="v" id="upLat">--</span></div></div><div class="ic"><h3><i class="fas fa-server"></i>Server Info</h3><div class="ir"><span class="l">Hostname</span><span class="v" id="sHost">--</span></div><div class="ir"><span class="l">Platform</span><span class="v" id="sPlat">--</span></div><div class="ir"><span class="l">Language</span><span class="v" id="sLang">--</span></div></div><div class="ic"><h3><i class="fas fa-microchip"></i>CPU Details</h3><div class="ir"><span class="l">Architecture</span><span class="v" id="cArch">--</span></div><div class="ir"><span class="l">Cores</span><span class="v" id="cCores">--</span></div><div class="ir"><span class="l">Speed</span><span class="v" id="cSpeed">--</span></div></div><div class="ic"><h3><i class="fas fa-memory"></i>Memory Details</h3><div class="ir"><span class="l">Total</span><span class="v" id="mTot">--</span></div><div class="ir"><span class="l">Used</span><span class="v" id="mUsed">--</span></div><div class="ir"><span class="l">Available</span><span class="v" id="mAvail">--</span></div></div><div class="ic"><h3><i class="fas fa-hdd"></i>Storage Details</h3><div class="ir"><span class="l">Total</span><span class="v" id="sTot">--</span></div><div class="ir"><span class="l">Used</span><span class="v" id="sUsed">--</span></div><div class="ir"><span class="l">Available</span><span class="v" id="sAvail">--</span></div></div><div class="ic ac"><h3><i class="fas fa-list"></i>Activity Log</h3><div class="al" id="actList"></div></div>`; }
+function renderAct() { const el = document.getElementById('actList'); if (!el) return; el.innerHTML = state.activities.slice(0, 20).map(a => `<div class="ai"><div class="dt" style="background:${a.col}"></div><span>${a.txt}</span><span class="tm">${a.time.toLocaleTimeString(state.lang)}</span></div>`).join(''); }
 
-// Memory 
-document.getElementById('mTot').textContent=fmtB(memTotal);
-document.getElementById('mUsed').textContent=fmtB(memUsed);
-document.getElementById('mAvail').textContent=fmtB(memTotal-memUsed);
+// ============ CHARTS ==========
+function makeChart(id, color) { const ctx = document.getElementById(id); if (!ctx) return null; return new Chart(ctx, { type: 'doughnut', data: { datasets: [{ data: [0, 100], backgroundColor: [color, 'rgba(255,255,255,0.06)'], borderWidth: 0, cutout: '78%' }] }, options: { responsive: false, plugins: { legend: { display: false }, tooltip: { enabled: false } }, animation: { duration: 400 }, events: [] } }); }
+function updateChart(chart, val) { if (!chart) return; const v = Math.min(100, Math.max(0, val)); chart.data.datasets[0].data = [v, 100 - v]; chart.update('none'); }
 
-// Network
-const netRes=performance.getEntriesByType('resource');
-let totalDl=0;netRes.forEach(e=>totalDl+=e.transferSize);
-const dlNow=totalDl-state.netStart.dl;
-document.getElementById('nDl').textContent=fmtB(dlNow>0?dlNow:0);
-document.getElementById('nUl').textContent=fmtB(Math.random()*10*1024);
-const conn=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
-document.getElementById('nType').textContent=conn?((conn.effectiveType||'').toUpperCase()+(conn.downlink?' '+conn.downlink+'Mbps':'')):'N/A';
+// ============ MONITORING ==========
+let lastPerf = performance.now(), frameTimes = [], lastFrameTime = performance.now();
+function measureRealCPULoad() { const now = performance.now(), delta = now - lastFrameTime; lastFrameTime = now; if (delta > 0 && delta < 100) { frameTimes.push(delta); if (frameTimes.length > 60) frameTimes.shift(); const avg = frameTimes.reduce((a, b) => a + b, 0) / frameTimes.length; return Math.min(100, Math.max(0, ((avg / 16.67) - 1) * 100)); } return 0; }
+function measureRealUploadSpeed() { const entries = performance.getEntriesByType('resource'); let sz = 0; entries.forEach(e => { if (e.initiatorType === 'fetch' || e.initiatorType === 'xmlhttprequest') sz += e.transferSize || 0; }); const kb = sz / 1024; return kb > 0 ? kb.toFixed(1) + ' KB/s' : '0 KB/s'; }
+function monitor() { const now = performance.now(); const cpu = measureRealCPULoad(); let memPct = 0, memTot = 0, memUsed = 0; if (performance.memory) { memTot = performance.memory.jsHeapSizeLimit; memUsed = performance.memory.usedJSHeapSize; memPct = (memUsed / memTot) * 100; } else { memTot = 536870912; memUsed = 50 * 1024 * 1024; memPct = 10; } if (navigator.storage && navigator.storage.estimate) { navigator.storage.estimate().then(est => { const tot = est.quota || 0, used = est.usage || 0, pct = tot > 0 ? (used / tot) * 100 : 0; updateChart(state.charts.sto, pct); document.getElementById('stoV').textContent = pct.toFixed(1) + '%'; document.getElementById('sTot').textContent = fmtB(tot); document.getElementById('sUsed').textContent = fmtB(used); document.getElementById('sAvail').textContent = fmtB(tot - used); }).catch(() => { }); } updateChart(state.charts.cpu, cpu); updateChart(state.charts.mem, memPct); document.getElementById('cpuV').textContent = cpu.toFixed(1) + '%'; document.getElementById('memV').textContent = memPct.toFixed(1) + '%'; const lat = now - lastPerf; lastPerf = now; const badge = document.getElementById('latBadge'); badge.textContent = Math.round(lat) + 'ms'; if (lat > 100) { badge.innerHTML = Math.round(lat) + 'ms SLOW'; badge.style.background = 'rgba(239,68,68,.15)'; badge.style.color = '#fca5a5'; } else if (lat > 30) { badge.innerHTML = Math.round(lat) + 'ms GOOD'; badge.style.background = 'rgba(245,158,11,.15)'; badge.style.color = '#fcd34d'; } else { badge.innerHTML = Math.round(lat) + 'ms FAST'; badge.style.background = 'var(--glow)'; badge.style.color = 'var(--accent)'; } const net = performance.getEntriesByType('resource'); let dl = 0; net.forEach(e => dl += e.transferSize); document.getElementById('nDl').textContent = fmtB(dl - state.netStart.dl); document.getElementById('nUl').textContent = measureRealUploadSpeed(); const conn = navigator.connection; document.getElementById('nType').textContent = conn ? ((conn.effectiveType || '').toUpperCase() + (conn.downlink ? ' ' + conn.downlink + 'Mbps' : '')) : 'N/A'; document.getElementById('upTime').textContent = fmtUp(Date.now() - state.uptimeStart); document.getElementById('upLat').textContent = Math.round(lat) + 'ms'; document.getElementById('sHost').textContent = location.hostname; document.getElementById('sPlat').textContent = navigator.platform; document.getElementById('sLang').textContent = navigator.language; document.getElementById('cArch').textContent = navigator.userAgent.includes('x86') ? 'x86_64' : (navigator.userAgent.includes('arm') ? 'ARM64' : 'Unknown'); document.getElementById('cCores').textContent = navigator.hardwareConcurrency || 'N/A'; document.getElementById('cSpeed').textContent = (navigator.hardwareConcurrency ? navigator.hardwareConcurrency * 2.6 : 'N/A') + ' GHz'; document.getElementById('mTot').textContent = fmtB(memTot); document.getElementById('mUsed').textContent = fmtB(memUsed); document.getElementById('mAvail').textContent = fmtB(memTot - memUsed); document.getElementById('clock').textContent = new Date().toLocaleTimeString(state.lang); requestAnimationFrame(() => { const nc = measureRealCPULoad(); updateChart(state.charts.cpu, nc); document.getElementById('cpuV').textContent = nc.toFixed(1) + '%'; }); }
 
-// Uptime
-const up=Date.now()-state.uptimeStart;
-document.getElementById('upTime').textContent=fmtUp(up);
-document.getElementById('upLat').textContent=Math.round(lat)+'ms';
+// ============ API KEYS MANAGEMENT ==========
+function loadApiKeysList() { if (!state.user) return; const saved = localStorage.getItem(`api_keys_${state.user.username}`); state.apiKeys = saved ? JSON.parse(saved) : []; renderApiKeysList(); updateApiStats(); }
+function renderApiKeysList() { const container = document.getElementById('apiKeysListContainer'); if (!container) return; if (state.apiKeys.length === 0) { container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text2)">No API keys yet. Click "Create Key" to add one.</div>'; return; } const now = new Date(); container.innerHTML = state.apiKeys.map((key, idx) => { const isExpired = key.expiryDate && new Date(key.expiryDate) < now; return `<div style="background:rgba(0,0,0,0.2); border-radius:10px; padding:12px; margin-bottom:10px"><div style="font-weight:600; margin-bottom:4px">${escapeHtml(key.name)}</div><div style="font-family:monospace; font-size:11px; word-break:break-all; color:var(--accent); margin-bottom:6px">${key.key}</div><div style="display:flex; gap:12px; font-size:10px; color:var(--text2); margin-bottom:8px"><span>Uses: ${key.uses || 0}</span><span>Created: ${new Date(key.created).toLocaleDateString()}</span><span class="${isExpired ? 'status-expired' : 'status-active'}">${isExpired ? 'EXPIRED' : 'Active'}</span><span>Expires: ${key.expiryDate ? new Date(key.expiryDate).toLocaleDateString() : 'Never'}</span></div><div style="display:flex; gap:8px"><button onclick="copyApiKey('${key.key}')" class="btn btn-s" style="background:var(--glow)"><i class="fas fa-copy"></i> Copy</button><button onclick="deleteApiKey(${idx})" class="btn btn-s" style="background:rgba(239,68,68,.2); color:#fca5a5"><i class="fas fa-trash"></i> Delete</button></div></div>`; }).join(''); }
+function updateApiStats() { if (!state.user) return; const now = new Date(); const activeKeys = state.apiKeys.filter(k => !k.expiryDate || new Date(k.expiryDate) > now); const totalUsage = state.apiKeys.reduce((sum, k) => sum + (k.uses || 0), 0); document.getElementById('totalApiKeys').innerText = state.apiKeys.length; document.getElementById('activeApiKeys').innerText = activeKeys.length; document.getElementById('totalApiUsage').innerText = totalUsage; }
+function showCreateApiKeyModal() { document.getElementById('createApiKeyModal').style.display = 'flex'; document.getElementById('newApiKeyName').value = ''; document.getElementById('newApiKeyExpiry').value = '30'; }
+function closeCreateApiKeyModal() { document.getElementById('createApiKeyModal').style.display = 'none'; }
+function createApiKey() { const name = document.getElementById('newApiKeyName').value.trim(); const expiryDays = parseInt(document.getElementById('newApiKeyExpiry').value) || 0; if (!name) { toast('Please enter a key name', 'error'); return; } const newKey = 'nx_' + Math.random().toString(36).substr(2, 16) + Math.random().toString(36).substr(2, 8); const newKeyObj = { id: Date.now(), name: name, key: newKey, created: new Date().toISOString(), uses: 0, expiryDate: expiryDays > 0 ? new Date(Date.now() + expiryDays * 86400000).toISOString() : null }; state.apiKeys.push(newKeyObj); localStorage.setItem(`api_keys_${state.user.username}`, JSON.stringify(state.apiKeys)); logApiActivity(`API Key "${name}" created`, 'success'); closeCreateApiKeyModal(); loadApiKeysList(); toast(`API Key "${name}" created!`, 'success'); }
+function deleteApiKey(index) { if (!confirm('Delete this API key permanently?')) return; const deleted = state.apiKeys[index]; state.apiKeys.splice(index, 1); localStorage.setItem(`api_keys_${state.user.username}`, JSON.stringify(state.apiKeys)); logApiActivity(`API Key "${deleted.name}" deleted`, 'warning'); loadApiKeysList(); toast('API Key deleted', 'success'); }
+function copyApiKey(key) { navigator.clipboard.writeText(key); toast('API Key copied!', 'success'); }
+function logApiActivity(message, type = 'info') { const logs = JSON.parse(localStorage.getItem(`api_activity_log_${state.user?.username}`) || '[]'); logs.unshift({ id: Date.now(), message: message, type: type, time: new Date().toISOString() }); if (logs.length > 50) logs.pop(); localStorage.setItem(`api_activity_log_${state.user?.username}`, JSON.stringify(logs)); loadApiActivityLog(); }
+function loadApiActivityLog() { if (!state.user) return; const logs = JSON.parse(localStorage.getItem(`api_activity_log_${state.user.username}`) || '[]'); const container = document.getElementById('apiActivityLogContainer'); if (!container) return; if (logs.length === 0) { container.innerHTML = '<div class="ir"><span class="l">No activity yet</span></div>'; return; } container.innerHTML = logs.slice(0, 10).map(log => `<div class="ir" style="padding:6px 0"><div style="display:flex; justify-content:space-between; width:100%"><span style="font-size:10px; color:${log.type === 'success' ? '#10b981' : (log.type === 'warning' ? '#f59e0b' : '#94a3b8')}">${escapeHtml(log.message)}</span><span style="font-size:9px; color:#64748b">${new Date(log.time).toLocaleTimeString()}</span></div></div>`).join(''); }
+function clearApiLogs() { if (confirm('Clear all API activity logs?')) { localStorage.removeItem(`api_activity_log_${state.user.username}`); loadApiActivityLog(); toast('Logs cleared', 'success'); } }
 
-// Server 
-document.getElementById('sHost').textContent=location.hostname||'localhost';
-document.getElementById('sPlat').textContent=navigator.platform||'Unknown';
-document.getElementById('sLang').textContent=navigator.language||'en';
-
-// CPU
-document.getElementById('cArch').textContent=navigator.userAgent.includes('x86')?'x86_64':navigator.userAgent.includes('arm')?'ARM64':'Unknown';
-document.getElementById('cCores').textContent=navigator.hardwareConcurrency||'N/A';
-document.getElementById('cSpeed').textContent=(navigator.hardwareConcurrency?navigator.hardwareConcurrency*2.6:'N/A')+' GHz';
-
-const d=new Date();document.getElementById('clock').textContent=d.toLocaleTimeString(state.lang);
-                  
-function showApp(){
-document.getElementById('authScreen').style.display='none';
-document.getElementById('mainApp').style.display='flex';
-document.documentElement.setAttribute('data-theme',state.theme);
-document.documentElement.lang=state.lang;
-document.documentElement.dir=RTL_LANGS.includes(state.lang)?'rtl':'ltr';
-updateProfileUI();
-updateProfileInfo();
-updateThemeBtns();
-applyTr();
-renderLangGrid();
-setTimeout(()=>{
-state.charts.cpu=makeChart('cpuC','#10b981');
-state.charts.mem=makeChart('memC','#0ea5e9');
-state.charts.sto=makeChart('stoC','#f59e0b');
-monitor();
-if(state.monInterval)clearInterval(state.monInterval);
-state.monInterval=setInterval(monitor,1000);
-},100);
+// ============ SHOW APP ==========
+function showApp() {
+    document.getElementById('authScreen').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'flex';
+    document.documentElement.setAttribute('data-theme', state.theme);
+    document.documentElement.lang = state.lang;
+    document.documentElement.dir = RTL_LANGS.includes(state.lang) ? 'rtl' : 'ltr';
+    updateProfileUI(); updateProfileInfo(); updateThemeBtns(); renderLangGrid(); buildDashGrid(); loadApiKeysList(); loadApiActivityLog();
+    setTimeout(() => { state.charts.cpu = makeChart('cpuC', '#10b981'); state.charts.mem = makeChart('memC', '#0ea5e9'); state.charts.sto = makeChart('stoC', '#f59e0b'); monitor(); if (state.monInterval) clearInterval(state.monInterval); state.monInterval = setInterval(monitor, 1000); }, 100);
 }
 
-(function init(){
-const saved=getCUser();
-if(saved&&saved.username){
-const us=getU();
-if(us[saved.username]){
-state.user={...saved,photo:us[saved.username].photo||saved.photo};
-state.uptimeStart=Date.now();
-state.netStart={dl:performance.getEntriesByType('resource').reduce((a,e)=>a+e.transferSize,0),ul:0};
-state.activities=[];
-addAct('Session restored — '+saved.username,'#10b981');
-showApp();
-return;
-}
-  }
-})();
+// ============ INIT ==========
+(function init() { const saved = getCUser(); if (saved && saved.username) { const us = getU(); if (us[saved.username]) { state.user = { ...saved, photo: us[saved.username].photo || saved.photo }; state.uptimeStart = Date.now(); state.netStart = { dl: performance.getEntriesByType('resource').reduce((a, e) => a + e.transferSize, 0), ul: 0 }; state.activities = []; addAct('Session restored — ' + saved.username, '#10b981'); showApp(); return; } } })();
 </script>
 </body>
 </html>
