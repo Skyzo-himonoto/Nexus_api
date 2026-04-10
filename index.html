@@ -2,19 +2,19 @@
 <html lang="en" dir="ltr" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
 <title>Nexus - Ultimate Platform</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
-:root{--bg:#070b14;--card:rgba(15,23,42,.7);--border:rgba(30,41,59,.6);--text:#f1f5f9;--text2:#94a3b8;--accent:#10b981;--accent2:#34d399;--warn:#f59e0b;--danger:#ef4444;--glow:rgba(16,185,129,.15)}
-[data-theme="light"]{--bg:#f1f5f9;--card:rgba(255,255,255,.85);--border:rgba(203,213,225,.7);--text:#0f172a;--text2:#475569;--glow:rgba(16,185,129,.1)}
+:root{--bg:#070b14;--card:rgba(15,23,42,.92);--border:rgba(30,41,59,.6);--text:#f1f5f9;--text2:#94a3b8;--accent:#10b981;--accent2:#34d399;--warn:#f59e0b;--danger:#ef4444;--glow:rgba(16,185,129,.15)}
+[data-theme="light"]{--bg:#f1f5f9;--card:rgba(255,255,255,.95);--border:rgba(203,213,225,.7);--text:#0f172a;--text2:#475569;--glow:rgba(16,185,129,.1)}
 *{margin:0;padding:0;box-sizing:border-box;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
 ::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow:hidden}
-.blob{position:fixed;border-radius:50%;filter:blur(120px);opacity:.25;pointer-events:none;z-index:0}
+.blob{position:fixed;border-radius:50%;filter:blur(120px);opacity:.25;pointer-events:none;z-index:-1}
 .b1{width:400px;height:400px;background:radial-gradient(circle,#10b981,transparent);top:-100px;left:-80px;animation:bm1 20s ease-in-out infinite}
 .b2{width:300px;height:300px;background:radial-gradient(circle,#0ea5e9,transparent);bottom:-60px;right:-60px;animation:bm2 25s ease-in-out infinite}
 .b3{width:200px;height:200px;background:radial-gradient(circle,#f59e0b,transparent);top:40%;left:60%;animation:bm3 18s ease-in-out infinite}
@@ -22,23 +22,23 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 @keyframes bm2{0%,100%{transform:translate(0,0)}50%{transform:translate(-40px,-60px)}}
 @keyframes bm3{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-30%,-70%)}}
 [data-theme="light"] .blob{opacity:.1}
-.auth-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:100;background:var(--bg)}
-.auth-card{background:var(--card);backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:16px;padding:22px;width:380px;max-width:92vw;position:relative;overflow:hidden}
-.auth-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),#0ea5e9,var(--warn))}
-.auth-card h1{font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,var(--accent),#0ea5e9);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.auth-card>p{color:var(--text2);margin:2px 0 14px;font-size:.8rem}
-.ig{margin:8px 0}.ig label{display:block;font-size:.68rem;color:var(--text2);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
-.ig input{width:100%;padding:9px 12px;background:rgba(0,0,0,.25);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:.88rem;outline:none;transition:border .2s}
+.auth-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:100;background:var(--bg);padding:20px}
+.auth-card{background:var(--card);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:16px;padding:22px;width:380px;max-width:92vw;position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.3);z-index:101}
+.auth-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),#0ea5e9,var(--warn));z-index:102}
+.auth-card h1{font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,var(--accent),#0ea5e9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;position:relative;z-index:103}
+.auth-card>p{color:var(--text2);margin:2px 0 14px;font-size:.8rem;position:relative;z-index:103}
+.ig{margin:8px 0;position:relative;z-index:103}.ig label{display:block;font-size:.68rem;color:var(--text2);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.ig input{width:100%;padding:9px 12px;background:rgba(0,0,0,.25);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:.88rem;outline:none;transition:border .2s;position:relative;z-index:2}
 [data-theme="light"] .ig input{background:rgba(0,0,0,.04)}.ig input:focus{border-color:var(--accent);box-shadow:0 0 0 2px var(--glow)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 18px;border-radius:8px;font-family:inherit;font-size:.85rem;font-weight:600;border:none;cursor:pointer;transition:all .2s}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 18px;border-radius:8px;font-family:inherit;font-size:.85rem;font-weight:600;border:none;cursor:pointer;transition:all .2s;position:relative;z-index:104}
 .btn-p{background:var(--accent);color:#fff;width:100%}.btn-p:hover{background:var(--accent2);transform:translateY(-1px)}
 .btn-s{padding:6px 12px;font-size:.78rem}
-.pu{width:80px;height:80px;border-radius:50%;border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;margin:0 auto 12px;overflow:hidden;position:relative}
+.pu{width:80px;height:80px;border-radius:50%;border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;margin:0 auto 12px;overflow:hidden;position:relative;z-index:103;background:rgba(0,0,0,0.1)}
 .pu:hover{border-color:var(--accent)}.pu img{width:100%;height:100%;object-fit:cover}
 .pu .ov{position:absolute;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;color:#fff;font-size:.68rem}.pu:hover .ov{opacity:1}
-.tl{text-align:center;margin-top:10px;font-size:.8rem;color:var(--text2)}.tl a{color:var(--accent);cursor:pointer;font-weight:600}
-.main-app{display:flex;height:100vh;position:relative;z-index:1}
-.sidebar{width:200px;min-width:200px;background:var(--card);backdrop-filter:blur(20px);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:12px 8px;transition:transform .3s}
+.tl{text-align:center;margin-top:10px;font-size:.8rem;color:var(--text2);position:relative;z-index:103}.tl a{color:var(--accent);cursor:pointer;font-weight:600}
+.main-app{display:flex;height:100vh;position:relative;z-index:10}
+.sidebar{width:200px;min-width:200px;background:var(--card);backdrop-filter:blur(20px);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:12px 8px;transition:transform .3s;z-index:20}
 .sidebar .logo{font-size:1.3rem;font-weight:700;background:linear-gradient(135deg,var(--accent),#0ea5e9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:16px;padding:0 4px}
 .sidebar nav{flex:1;display:flex;flex-direction:column;gap:2px}
 .sidebar nav a{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;color:var(--text2);text-decoration:none;font-size:.84rem;font-weight:500;transition:all .2s;cursor:pointer}
@@ -50,7 +50,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 .um .inf .rl{font-size:.65rem;color:var(--text2)}
 .um .lb{background:none;border:none;color:var(--text2);cursor:pointer;padding:5px;border-radius:6px;transition:all .2s;font-size:.8rem}
 .um .lb:hover{color:var(--danger);background:rgba(239,68,68,.1)}
-.content{flex:1;overflow:hidden;position:relative}
+.content{flex:1;overflow:hidden;position:relative;background:rgba(0,0,0,0.1)}
 .view{position:absolute;inset:0;transition:transform .4s cubic-bezier(.4,0,.2,1),opacity .4s;overflow-y:auto;overflow-x:hidden}
 .view.active{transform:translateX(0);opacity:1;pointer-events:all}
 .view.out-left{transform:translateX(-25%);opacity:0;pointer-events:none}
@@ -82,33 +82,35 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 .sh .bb:hover{border-color:var(--accent);color:var(--accent)}
 .sh h2{font-size:1rem;font-weight:700}
 .sb{display:flex;min-height:0;flex:1}
-.sn{width:160px;min-width:160px;border-right:1px solid var(--border);padding:6px 6px;display:flex;flex-direction:column;gap:1px;overflow-y:auto}
+.sn{width:160px;min-width:160px;border-right:1px solid var(--border);padding:6px 6px;display:flex;flex-direction:column;gap:1px;overflow-y:auto;background:rgba(0,0,0,0.05)}
 .sn a{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:6px;color:var(--text2);font-size:.78rem;cursor:pointer;transition:all .15s;text-decoration:none;white-space:nowrap}
 .sn a:hover{background:var(--glow);color:var(--text)}.sn a.active{background:var(--glow);color:var(--accent);font-weight:600}
 .sn a i{width:14px;text-align:center;font-size:.75rem}
-.sc{flex:1;padding:10px 14px;overflow-y:auto;min-height:0}.sp{display:none}.sp.active{display:block}
+.sc{flex:1;padding:10px 14px;overflow-y:auto;min-height:0;background:rgba(0,0,0,0.1)} /* Added bg for content area */
+[data-theme="light"] .sc{background:rgba(255,255,255,0.2)}
+.sp{display:none}.sp.active{display:block}
 .ph{display:flex;align-items:center;gap:12px;margin-bottom:12px}
 .pa{width:52px;height:52px;border-radius:50%;border:2px solid var(--accent);overflow:hidden;cursor:pointer;position:relative;flex-shrink:0}
 .pa img{width:100%;height:100%;object-fit:cover}
 .pa .ov{position:absolute;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;color:#fff;font-size:.6rem}.pa:hover .ov{opacity:1}
 .lg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
-.lo{padding:8px 10px;border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;font-size:.8rem}
+.lo{padding:8px 10px;border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;font-size:.8rem;background:var(--card)}
 .lo:hover{border-color:var(--accent);background:var(--glow)}.lo.active{border-color:var(--accent);background:var(--glow);color:var(--accent);font-weight:600}
 .lo .fl{font-size:1.05rem}
 .scc{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:8px}
 .scc h4{font-size:.8rem;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:5px}.scc h4 i{color:var(--accent)}
 .to{display:flex;gap:8px}
-.top{flex:1;padding:12px;border:2px solid var(--border);border-radius:8px;cursor:pointer;transition:all .15s;text-align:center}
+.top{flex:1;padding:12px;border:2px solid var(--border);border-radius:8px;cursor:pointer;transition:all .15s;text-align:center;background:var(--card)}
 .top:hover{border-color:var(--accent)}.top.active{border-color:var(--accent);background:var(--glow)}
 .top i{font-size:1.4rem;margin-bottom:4px;display:block}.top .tn{font-size:.78rem;font-weight:600}
-.tc{position:fixed;top:12px;right:12px;z-index:9999;display:flex;flex-direction:column;gap:4px}
-.tst{padding:10px 14px;border-radius:6px;font-size:.78rem;font-weight:500;backdrop-filter:blur(16px);border:1px solid var(--border);animation:ti .25s ease;display:flex;align-items:center;gap:6px;min-width:220px}
+.tc{position:fixed;top:12px;right:12px;z-index:9999;display:flex;flex-direction:column;gap:4px;pointer-events:none}
+.tst{padding:10px 14px;border-radius:6px;font-size:.78rem;font-weight:500;backdrop-filter:blur(16px);border:1px solid var(--border);animation:ti .25s ease;display:flex;align-items:center;gap:6px;min-width:220px;pointer-events:auto}
 .tst.success{background:rgba(16,185,129,.15);border-color:rgba(16,185,129,.3);color:var(--accent2)}
 .tst.error{background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.3);color:#fca5a5}
 .tst.info{background:rgba(14,165,233,.15);border-color:rgba(14,165,233,.3);color:#7dd3fc}
 @keyframes ti{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 @keyframes too{from{opacity:1}to{transform:translateX(100%);opacity:0}}
-.hb{display:none;background:none;border:none;color:var(--text);font-size:1.1rem;cursor:pointer;padding:4px}
+.hb{display:none;background:none;border:none;color:var(--text);font-size:1.1rem;cursor:pointer;padding:4px;z-index:30}
 @keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}.fi{animation:fi .25s ease}
 @media(max-width:768px){
   .sidebar{position:fixed;left:0;top:0;bottom:0;z-index:50;transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}
@@ -258,12 +260,11 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 </div>
 </div>
 </div>
-</div>
 <div class="tc" id="toasts"></div>
 
 <!-- MODAL CREATE API KEY -->
 <div id="createApiKeyModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); z-index:1000; align-items:center; justify-content:center">
-<div style="background:var(--card); border-radius:16px; padding:24px; width:340px; max-width:90%">
+<div style="background:var(--card); border-radius:16px; padding:24px; width:340px; max-width:90%; border:1px solid var(--border)">
 <h3 style="margin-bottom:16px">Create New API Key</h3>
 <div class="ig"><label>Key Name</label><input type="text" id="newApiKeyName" placeholder="e.g., Mobile App, Website"></div>
 <div class="ig"><label>Expiry (days, 0 = never)</label><input type="number" id="newApiKeyExpiry" value="30" min="0"></div>
@@ -274,7 +275,7 @@ body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--tex
 </div>
 </div>
 
-  <script>
+<script>
 // ============ STATE ==========
 let state = {
     user: null,
@@ -313,8 +314,45 @@ function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, fun
 // ============ AUTH ==========
 function toggleAuth() { const l = document.getElementById('loginForm'), r = document.getElementById('registerForm'), sh = l.style.display !== 'none'; l.style.display = sh ? 'none' : 'block'; r.style.display = sh ? 'block' : 'none'; }
 function previewRegPhoto(inp) { if (inp.files && inp.files[0]) { const rd = new FileReader(); rd.onload = e => { document.getElementById('regPhotoPrev').src = e.target.result; document.getElementById('regPhotoPrev').style.display = 'block'; document.getElementById('regPhotoPh').style.display = 'none'; }; rd.readAsDataURL(inp.files[0]); } }
-async function doRegister() { const u = document.getElementById('regUser').value.trim(), p = document.getElementById('regPass').value, c = document.getElementById('regConfirm').value, ph = document.getElementById('regPhotoPrev'); if (!u || !p || !c) { toast('Fill all fields', 'error'); return; } if (p !== c) { toast('Passwords do not match', 'error'); return; } const us = getU(); if (us[u]) { toast('Username taken', 'error'); return; } const photo = ph.style.display !== 'none' ? ph.src : defAvatar(); us[u] = { password: await hashPwd(p), photo, joined: Date.now(), lastLogin: null }; saveU(us); toast('Registration successful', 'success'); toggleAuth(); }
-async function doLogin() { const u = document.getElementById('loginUser').value.trim(), p = document.getElementById('loginPass').value; if (!u || !p) { toast('Fill all fields', 'error'); return; } const us = getU(); if (!us[u]) { toast('Invalid credentials', 'error'); return; } const h = await hashPwd(p); if (us[u].password !== h) { toast('Invalid credentials', 'error'); return; } us[u].lastLogin = Date.now(); saveU(us); state.user = { username: u, photo: us[u].photo, joined: us[u].joined, lastLogin: us[u].lastLogin }; saveCUser(state.user); state.uptimeStart = Date.now(); state.activities = []; state.netStart = { dl: performance.getEntriesByType('resource').reduce((a, e) => a + e.transferSize, 0), ul: 0 }; addAct('Session started — ' + u, '#10b981'); showApp(); }
+async function doRegister() { 
+    try {
+        const u = document.getElementById('regUser').value.trim(), p = document.getElementById('regPass').value, c = document.getElementById('regConfirm').value, ph = document.getElementById('regPhotoPrev'); 
+        if (!u || !p || !c) { toast('Fill all fields', 'error'); return; } 
+        if (p !== c) { toast('Passwords do not match', 'error'); return; } 
+        const us = getU(); 
+        if (us[u]) { toast('Username taken', 'error'); return; } 
+        const photo = ph.style.display !== 'none' ? ph.src : defAvatar(); 
+        us[u] = { password: await hashPwd(p), photo, joined: Date.now(), lastLogin: null }; 
+        saveU(us); 
+        toast('Registration successful', 'success'); 
+        toggleAuth(); 
+    } catch(err) {
+        console.error(err);
+        toast('Registration Error: ' + err.message, 'error');
+    }
+}
+async function doLogin() { 
+    try {
+        const u = document.getElementById('loginUser').value.trim(), p = document.getElementById('loginPass').value; 
+        if (!u || !p) { toast('Fill all fields', 'error'); return; } 
+        const us = getU(); 
+        if (!us[u]) { toast('Invalid credentials', 'error'); return; } 
+        const h = await hashPwd(p); 
+        if (us[u].password !== h) { toast('Invalid credentials', 'error'); return; } 
+        us[u].lastLogin = Date.now(); 
+        saveU(us); 
+        state.user = { username: u, photo: us[u].photo, joined: us[u].joined, lastLogin: us[u].lastLogin }; 
+        saveCUser(state.user); 
+        state.uptimeStart = Date.now(); 
+        state.activities = []; 
+        state.netStart = { dl: performance.getEntriesByType('resource').reduce((a, e) => a + e.transferSize, 0), ul: 0 }; 
+        addAct('Session started — ' + u, '#10b981'); 
+        showApp(); 
+    } catch(err) {
+        console.error(err);
+        toast('Login Error: ' + err.message, 'error');
+    }
+}
 function doLogout() { state.user = null; localStorage.removeItem('nexus_cu'); if (state.monInterval) clearInterval(state.monInterval); Object.values(state.charts).forEach(c => { if (c && c.destroy) c.destroy(); }); state.charts = {}; document.getElementById('mainApp').style.display = 'none'; document.getElementById('authScreen').style.display = 'flex'; document.getElementById('loginUser').value = ''; document.getElementById('loginPass').value = ''; }
 
 // ============ NAVIGATION ==========
